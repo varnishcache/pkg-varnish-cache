@@ -1,0 +1,118 @@
+#!/bin/bash
+#
+# Build Debian and Ubuntu packages from a tarball.
+#
+# This is the script that our Jenkins/CI system runs. Yes, it is a bit messy.
+#
+#
+# For running this on your own computer (jessie), see https://wiki.debian.org/mk-sbuild
+# for information on setting up sbuild.
+# Short version: 1) apt-get install ubuntu-dev-tools 2) mk-sbuild jessie
+#
+# To CHANGE the golden image: sudo schroot -c source:jessie-amd64 -u root
+# To ENTER an image snapshot: schroot -c jessie-amd64
+# To BUILD within a snapshot: sbuild -A -d jessie-amd64 PACKAGE*.dsc
+
+set -o errexit
+
+BINDISTS=${DEB_BUILD_DISTS:-jessie}
+
+if [ ! -d debiangit ]; then
+	git clone --quiet git://git.varnish-cache.org/varnish-cache-debian debiangit
+	cd debiangit
+	mkdir -p ../d/4.0
+	git archive --prefix=debian/ origin/master | tar xf - -C ../d/4.0
+	#git archive -q --prefix=debian/ origin/4.0 > pkg-4.0.tar.gz
+	cd ..
+fi
+
+rm -rf build
+mkdir -p build
+
+SOURCE=$(ls -1 sources/varnish-*.tar.gz)  # XXX
+tar xf ${SOURCE} -C build
+
+cd build/varnish-*
+
+# Get a packaging file set suitable for this release.
+if [ -z "$UPSTREAMVERSION" ]; then
+  V=$(grep PACKAGE_VERSION= configure | sed "s/.*=//;s/'//g")
+else
+  V="$UPSTREAMVERSION"
+fi
+if [ "$V" = "trunk" ]; then
+  V="4.1"
+  MINOR="0"
+else
+  MINOR="${V##*.}"
+  V="${V%.*}"
+fi
+
+V="4.0"
+
+cp -r ../../d/$V/debian .
+
+#if [ "$V" = "3.0" ]; then
+#  GIT_DIR=../../debiangit/.git git archive --prefix=debian/ origin/3.0 | tar xf -
+#elif [ "$V" = "4.0" ]; then
+#  # We assume that current master works for us.  This might be a lie.
+#  GIT_DIR=../../debiangit/.git git archive --prefix=debian/ origin/master | tar xf -
+#elif [ "$V" = "4.1" ]; then
+#  GIT_DIR=../../debiangit/.git git archive --prefix=debian/ origin/master | tar xf -
+#else
+#  echo "Don't know how to build packages for this branch."
+#  exit 1
+#fi
+
+rm -f debian/libvarnish*.symbols
+rm -f debian/*.manpages
+# enforce 1.0 native
+rm -f debian/source/format
+
+cp ../../$SOURCE ../varnish_$V.$MINOR.orig.tar.gz
+
+if [ -n "$DEBVERSION" ]; then
+  FULL_VERSION="$V.$MINOR-$DEBVERSION"
+  dch --distribution {deb_varnish_dist} -v "$FULL_VERSION" "Release build #$BUILD_NUMBER ID: $BUILD_ID"
+else
+  FULL_VERSION="$V.$MINOR-0+daily+$(date +%Y%m%d.%H%M%S)"
+  dch -v "$V.$MINOR-0+daily+$(date +%Y%m%d.%H%M%S)" "Automatic build from git"
+fi
+
+#if [ -n "{varnish_branch_param}" ]; then
+#  sed -i 's|^Section: \([^/]*\)$|Section: {varnish_branch_param}/\1|' debian/control
+#fi
+
+dpkg-buildpackage -us -uc -S -j10
+cd ..
+
+# By now we are done setting up and building the source package.
+
+# Build binary packages for the requested releases inside chroots.
+for dist in $BINDISTS; do
+  #if [ "$arch" = "amd64" ]; then
+  #  ARCH_ALL="--arch-all"
+  #else
+  #  ARCH_ALL=""
+  #fi
+
+  deb_varnish_dist={deb_varnish_dist}
+  changes_dist="$dist"
+#  if [ "${deb_varnish_dist%%vs-*}" != "{deb_varnish_dist}" ]; then
+#    # We are building for a vs-* component, prefix the changes with that
+#    changes_dist="vs-${changes_dist}"
+#  fi
+
+  export DEBIAN_OVERRIDE_BINARY_VERSION="$FULL_VERSION~$dist"
+	#--arch "$arch" \
+  sbuild $ARCH_ALL -v \
+	-c "$dist-amd64" \
+	-d "$changes_dist" varnish_*.dsc
+#-m 'Varnish Jenkins user <varnish-misc@varnish-cache.org>' \
+
+#  CHANGES_FILE="varnish_${{FULL_VERSION}}_${{arch}}.changes"
+#  if [ -e "$CHANGES_FILE" ]; then
+#    sed -i -e "s/\\(^Source.*\\)/\\1 ($FULL_VERSION)/;s/^Version.*/Version: $DEBIAN_OVERRIDE_BINARY_VERSION/" "$CHANGES_FILE"
+#    rename "s/\\Q$FULL_VERSION\\E/$DEBIAN_OVERRIDE_BINARY_VERSION/" "$CHANGES_FILE"
+#  fi
+done
