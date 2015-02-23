@@ -18,10 +18,11 @@ set -o errexit
 BINDISTS=${DEB_BUILD_DISTS:-jessie}
 
 if [ ! -d debiangit ]; then
-	git clone --quiet git://git.varnish-cache.org/varnish-cache-debian debiangit
+	#git clone --quiet git://git.varnish-cache.org/varnish-cache-debian debiangit
+	git clone --quiet git@git.varnish-cache.org:varnish-cache-debian.git
 	cd debiangit
 	mkdir -p ../d/4.0
-	git archive --prefix=debian/ origin/master | tar xf - -C ../d/4.0
+	git archive origin/master | tar xf - -C ../d/4.0
 	#git archive -q --prefix=debian/ origin/4.0 > pkg-4.0.tar.gz
 	cd ..
 fi
@@ -50,7 +51,7 @@ fi
 
 V="4.0"
 
-cp -r ../../d/$V/debian .
+cp -r ../../d/$V debian
 
 #if [ "$V" = "3.0" ]; then
 #  GIT_DIR=../../debiangit/.git git archive --prefix=debian/ origin/3.0 | tar xf -
