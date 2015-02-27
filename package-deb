@@ -15,7 +15,7 @@
 
 set -o errexit
 
-BINDISTS=${DEB_BUILD_DISTS:-jessie}
+BINDISTS=${BINDISTS:-jessie}
 
 if [ ! -d debiangit ]; then
 	#git clone --quiet git://git.varnish-cache.org/varnish-cache-debian debiangit
