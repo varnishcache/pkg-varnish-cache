@@ -9,15 +9,15 @@ ELVER=${ELVER:-el6}
 CHROOT="epel-${ELVER:2:1}-x86_64"
 MOPT="--uniqueext=worker${EXECUTOR_NUMBER}"
 
-rm -rf unpack rpm-build
+rm -rf rpm-build
+
+rm -rf unpack
 mkdir -p unpack
 tar xf sources/varnish*.tar.gz -C unpack
 
-# build the tgz with helper files. (racy!)
-#redhat/package-helper-files .
+# copy the remaining sources.
 cp unpack/*/redhat/* sources/
 
-#cp unpack/redhat/* .
 # while debugging, disable make check since it takes 15-20 minutes to run.
 sed -i -e 's/^make check/# make check/' sources/*.spec
 
