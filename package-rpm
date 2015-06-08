@@ -1,0 +1,37 @@
+#!/bin/bash -x
+#
+# This script builds Varnish Cache in chroot from a tarball.
+#
+# Author: Lasse Karstensen <lkarsten@varnish-software.com>, March 2015.
+set -o errexit
+
+ELVER=${ELVER:-el6}
+CHROOT="epel-${ELVER:2:1}-x86_64"
+MOPT="--uniqueext=worker${EXECUTOR_NUMBER}"
+
+rm -rf unpack rpm-build
+mkdir -p unpack
+tar xf sources/varnish*.tar.gz -C unpack
+
+# build the tgz with helper files. (racy!)
+#redhat/package-helper-files .
+cp unpack/*/redhat/* sources/
+
+#cp unpack/redhat/* .
+# while debugging, disable make check since it takes 15-20 minutes to run.
+sed -i -e 's/^make check/# make check/' sources/*.spec
+
+mock -r $CHROOT $MOPT --init
+mock -v -r $CHROOT $MOPT --buildsrpm \
+  -D "_smp_mflags -j10" \
+  -D "dist .${ELVER}" \
+  --spec sources/*.spec \
+  --source sources \
+  --resultdir rpm-build/varnish-4.0/${ELVER}
+
+mock -r $CHROOT $MOPT --clean
+mock -v -r $CHROOT $MOPT \
+  -D "_smp_mflags -j10" \
+  -D "dist .${ELVER}" \
+  --resultdir rpm-build/varnish-4.0/${ELVER} \
+  --rebuild rpm-build/varnish-4.0/${ELVER}/varnish*.src.rpm
