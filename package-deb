@@ -19,10 +19,10 @@ BINDISTS=${BINDISTS:-jessie}
 
 if [ ! -d debiangit ]; then
 	#git clone --quiet git://git.varnish-cache.org/varnish-cache-debian debiangit
-	git clone --quiet git@git.varnish-cache.org:varnish-cache-debian.git
+	git clone --quiet git@git.varnish-cache.org:varnish-cache-debian.git debiangit
 	cd debiangit
-	mkdir -p ../d/4.0
-	git archive origin/master | tar xf - -C ../d/4.0
+	mkdir -p ../d/4.1
+	git archive origin/master | tar xf - -C ../d/4.1
 	#git archive -q --prefix=debian/ origin/4.0 > pkg-4.0.tar.gz
 	cd ..
 fi
@@ -41,6 +41,7 @@ if [ -z "$UPSTREAMVERSION" ]; then
 else
   V="$UPSTREAMVERSION"
 fi
+
 if [ "$V" = "trunk" ]; then
   V="4.1"
   MINOR="0"
@@ -48,8 +49,7 @@ else
   MINOR="${V##*.}"
   V="${V%.*}"
 fi
-
-V="4.0"
+V="4.1"
 
 cp -r ../../d/$V debian
 
