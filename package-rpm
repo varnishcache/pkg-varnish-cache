@@ -5,33 +5,36 @@
 # Author: Lasse Karstensen <lkarsten@varnish-software.com>, March 2015.
 set -o errexit
 
-ELVER=${ELVER:-el6}
+ELVER=${ELVER:-el7}
 CHROOT="epel-${ELVER:2:1}-x86_64"
 MOPT="--uniqueext=worker${EXECUTOR_NUMBER}"
 
-rm -rf rpm-build
+rm -rf build
+mkdir -p build
+cd build
 
-rm -rf unpack
-mkdir -p unpack
-tar xf sources/varnish*.tar.gz -C unpack
+SOURCE=$(ls -1 ../sources/varnish-*.tar.gz)
+tar xf $SOURCE
 
-# copy the remaining sources.
-cp unpack/*/redhat/* sources/
+cp -r ../redhat/* .
+# GIT_DIR=../redhat/.git git archive HEAD | tar xf -
+
+ln $SOURCE `basename $SOURCE` 
 
 # while debugging, disable make check since it takes 15-20 minutes to run.
-sed -i -e 's/^make check/# make check/' sources/*.spec
+sed -i -e 's/^make check/# make check/' *.spec
 
 mock -r $CHROOT $MOPT --init
 mock -v -r $CHROOT $MOPT --buildsrpm \
   -D "_smp_mflags -j10" \
   -D "dist .${ELVER}" \
-  --spec sources/*.spec \
-  --source sources \
-  --resultdir rpm-build/varnish-4.?/${ELVER}
+  --spec *.spec \
+  --source . \
+  --resultdir ../rpm-build/varnish-4.1/${ELVER}
 
 mock -r $CHROOT $MOPT --clean
 mock -v -r $CHROOT $MOPT \
   -D "_smp_mflags -j10" \
   -D "dist .${ELVER}" \
-  --resultdir rpm-build/varnish-4.?/${ELVER} \
-  --rebuild rpm-build/varnish-4.?/${ELVER}/varnish*.src.rpm
+  --resultdir ../rpm-build/varnish-4.1/${ELVER} \
+  --rebuild ../rpm-build/varnish-4.1/${ELVER}/varnish*.src.rpm
