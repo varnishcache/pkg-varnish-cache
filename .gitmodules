@@ -1,0 +1,4 @@
+[submodule "redhat"]
+	path = redhat
+	url = https://github.com/varnish/varnish-cache-redhat
+	branch = master
