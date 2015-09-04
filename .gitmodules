@@ -2,3 +2,7 @@
 	path = redhat
 	url = https://github.com/varnish/varnish-cache-redhat
 	branch = master
+[submodule "debian"]
+	path = debian
+	url = git@git.varnish-cache.org:varnish-cache-debian.git
+	branch = 4.1
