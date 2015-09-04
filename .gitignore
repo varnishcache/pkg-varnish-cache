@@ -1,4 +1,4 @@
 /sources
 /build
-/d
-/debiangit
+/rpm-build
+/deb-build
