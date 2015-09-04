@@ -17,16 +17,6 @@ set -o errexit
 
 BINDISTS=${BINDISTS:-jessie}
 
-if [ ! -d debiangit ]; then
-	#git clone --quiet git://git.varnish-cache.org/varnish-cache-debian debiangit
-	git clone --quiet git@git.varnish-cache.org:varnish-cache-debian.git debiangit
-	cd debiangit
-	mkdir -p ../d/4.1
-	git archive origin/master | tar xf - -C ../d/4.1
-	#git archive -q --prefix=debian/ origin/4.0 > pkg-4.0.tar.gz
-	cd ..
-fi
-
 rm -rf build
 mkdir -p build
 
@@ -37,41 +27,29 @@ cd build/varnish-*
 
 # Get a packaging file set suitable for this release.
 if [ -z "$UPSTREAMVERSION" ]; then
-  V=$(grep PACKAGE_VERSION= configure | sed "s/.*=//;s/'//g")
+	V=$(grep PACKAGE_VERSION= configure | sed "s/.*=//;s/'//g")
 else
-  V="$UPSTREAMVERSION"
+	V="$UPSTREAMVERSION"
 fi
 
 if [ "$V" = "trunk" ]; then
-  V="4.1"
-  MINOR="0"
+	V="4.1"
+	MINOR="0"
 else
-  MINOR="${V##*.}"
-  V="${V%.*}"
+	MINOR="${V##*.}"
+	V="${V%.*}"
 fi
-V="4.1"
 
-cp -r ../../d/$V debian
-
-#if [ "$V" = "3.0" ]; then
-#  GIT_DIR=../../debiangit/.git git archive --prefix=debian/ origin/3.0 | tar xf -
-#elif [ "$V" = "4.0" ]; then
-#  # We assume that current master works for us.  This might be a lie.
-#  GIT_DIR=../../debiangit/.git git archive --prefix=debian/ origin/master | tar xf -
-#elif [ "$V" = "4.1" ]; then
-#  GIT_DIR=../../debiangit/.git git archive --prefix=debian/ origin/master | tar xf -
-#else
-#  echo "Don't know how to build packages for this branch."
-#  exit 1
-#fi
+GIT_DIR=../../debian/.git git archive --prefix=debian/ HEAD | tar xf -
 
 rm -f debian/libvarnish*.symbols
 rm -f debian/*.manpages
 # enforce 1.0 native
 rm -f debian/source/format
 
-cp ../../$SOURCE ../varnish_$V.$MINOR.orig.tar.gz
+ln ../../$SOURCE ../varnish_$V.$MINOR.orig.tar.gz
 
+# Take version override set on jenkins builds into account.
 if [ -n "$DEBVERSION" ]; then
   FULL_VERSION="$V.$MINOR-$DEBVERSION"
   dch --distribution {deb_varnish_dist} -v "$FULL_VERSION" "Release build #$BUILD_NUMBER ID: $BUILD_ID"
@@ -80,10 +58,6 @@ else
   dch -v "$V.$MINOR-0+daily+$(date +%Y%m%d.%H%M%S)" "Automatic build from git"
 fi
 
-#if [ -n "{varnish_branch_param}" ]; then
-#  sed -i 's|^Section: \([^/]*\)$|Section: {varnish_branch_param}/\1|' debian/control
-#fi
-
 dpkg-buildpackage -us -uc -S -j10
 cd ..
 
@@ -91,29 +65,6 @@ cd ..
 
 # Build binary packages for the requested releases inside chroots.
 for dist in $BINDISTS; do
-  #if [ "$arch" = "amd64" ]; then
-  #  ARCH_ALL="--arch-all"
-  #else
-  #  ARCH_ALL=""
-  #fi
-
-  deb_varnish_dist={deb_varnish_dist}
-  changes_dist="$dist"
-#  if [ "${deb_varnish_dist%%vs-*}" != "{deb_varnish_dist}" ]; then
-#    # We are building for a vs-* component, prefix the changes with that
-#    changes_dist="vs-${changes_dist}"
-#  fi
-
   export DEBIAN_OVERRIDE_BINARY_VERSION="$FULL_VERSION~$dist"
-	#--arch "$arch" \
-  sbuild $ARCH_ALL -v \
-	-c "$dist-amd64" \
-	-d "$changes_dist" varnish_*.dsc
-#-m 'Varnish Jenkins user <varnish-misc@varnish-cache.org>' \
-
-#  CHANGES_FILE="varnish_${{FULL_VERSION}}_${{arch}}.changes"
-#  if [ -e "$CHANGES_FILE" ]; then
-#    sed -i -e "s/\\(^Source.*\\)/\\1 ($FULL_VERSION)/;s/^Version.*/Version: $DEBIAN_OVERRIDE_BINARY_VERSION/" "$CHANGES_FILE"
-#    rename "s/\\Q$FULL_VERSION\\E/$DEBIAN_OVERRIDE_BINARY_VERSION/" "$CHANGES_FILE"
-#  fi
+  sbuild -v -c "$dist-amd64" -d "$dist" varnish_*.dsc
 done
