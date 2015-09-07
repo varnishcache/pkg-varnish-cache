@@ -40,7 +40,9 @@ else
 	V="${V%.*}"
 fi
 
-GIT_DIR=../../debian/.git git archive --prefix=debian/ HEAD | tar xf -
+
+cp -r ../../debian .
+#GIT_DIR=../../debian/.git git archive --prefix=debian/ HEAD | tar xf -
 
 rm -f debian/libvarnish*.symbols
 rm -f debian/*.manpages
