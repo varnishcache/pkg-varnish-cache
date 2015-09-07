@@ -13,7 +13,10 @@ To get a complete checkout, run:
     git submodule update
 
 
-You may need to change the git remote address in .gitmodules from
-git@git.varnish-cache.org:varnish-cache-debian.git to
-git://git.varnish-cache.org/varnish-cache-debian.git if you don't
-have Varnish Cache project access. Do this before you run init/update.
+If you don't have Varnish Cache project access, you probably don't have
+SSH access to the debian repository. Use this one-liner to use
+the anonymous git service instead:
+
+    sed -i 's|git@git.varnish-cache.org:|git://git.varnish-cache.org/|g' .gitmodules
+
+Do this before you run init/update.
