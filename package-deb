@@ -13,6 +13,10 @@
 # To ENTER an image snapshot: schroot -c jessie-amd64
 # To BUILD within a snapshot: sbuild -A -d jessie-amd64 PACKAGE*.dsc
 
+if [ -n "$JENKINS_HOME" ]; then
+	set -x
+fi
+
 set -o errexit
 
 BINDISTS=${BINDISTS:-jessie}
