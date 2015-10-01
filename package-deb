@@ -54,7 +54,7 @@ ln ../../$SOURCE ../varnish_$V.$MINOR.orig.tar.gz
 # Take version override set on jenkins builds into account.
 if [ -n "$DEBVERSION" ]; then
 	FULL_VERSION="$V.$MINOR-$DEBVERSION"
-	dch --distribution {deb_varnish_dist} -v "$FULL_VERSION" "Release build #$BUILD_NUMBER ID: $BUILD_ID"
+	dch -v "$FULL_VERSION" "Release build #$BUILD_NUMBER ID: $BUILD_ID"
 else
 	FULL_VERSION="$V.$MINOR-0+daily+$(date +%Y%m%d.%H%M%S)"
 	dch -v "$V.$MINOR-0+daily+$(date +%Y%m%d.%H%M%S)" "Automatic build from git"
