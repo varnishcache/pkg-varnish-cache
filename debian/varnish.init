@@ -16,7 +16,7 @@
 # Source function library
 . /lib/lsb/init-functions
 
-NAME=varnishd
+SERVICE="$(basename ${0})"
 DESC="HTTP accelerator"
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/varnishd
@@ -44,7 +44,7 @@ DAEMON_OPTS=${DAEMON_OPTS:--b localhost}
 export PATH="${PATH:+$PATH:}/usr/sbin:/usr/bin:/sbin:/bin"
 
 start_varnishd() {
-    log_daemon_msg "Starting $DESC" "$NAME"
+    log_daemon_msg "Starting $DESC" "$SERVICE"
     output=$(/bin/tempfile -s.varnish)
     if start-stop-daemon \
         --start --pidfile ${PIDFILE} --exec ${DAEMON} -- \
@@ -59,13 +59,13 @@ start_varnishd() {
 }
 
 disabled_varnishd() {
-    log_daemon_msg "Not starting $DESC" "$NAME"
+    log_daemon_msg "Not starting $DESC" "$SERVICE"
     log_progress_msg "disabled in /etc/default/varnish"
     log_end_msg 0
 }
 
 stop_varnishd() {
-    log_daemon_msg "Stopping $DESC" "$NAME"
+    log_daemon_msg "Stopping $DESC" "$SERVICE"
     if start-stop-daemon \
         --stop --pidfile $PIDFILE --retry 10 \
         --exec $DAEMON; then
@@ -85,7 +85,7 @@ stop_varnishd() {
 }
 
 reload_varnishd() {
-    log_daemon_msg "Reloading $DESC" "$NAME"
+    log_daemon_msg "Reloading $DESC" "$SERVICE"
     if /usr/share/varnish/reload-vcl -q; then
         log_end_msg 0
     else
@@ -101,7 +101,7 @@ status_varnishd() {
 }
 
 configtest() {
-	log_daemon_msg "Checking syntax" $NAME
+	log_daemon_msg "Checking syntax" "$SERVICE"
 
 	$DAEMON ${DAEMON_OPTS} -C -n /tmp 2>/dev/null
 	local ret=${?:-1}
@@ -112,6 +112,7 @@ configtest() {
 
 	return $ret
 }
+
 
 case "$1" in
     start)
@@ -134,7 +135,7 @@ case "$1" in
         status_varnishd
         ;;
     restart|force-reload)
-	if status_of_proc -p "${PIDFILE}" "${DAEMON}" "${NAME}" 1>/dev/null; then
+	if status_of_proc -p "${PIDFILE}" "${DAEMON}" "${SERVICE}" 1>/dev/null; then
 	    if ! configtest; then
 		log_failure_msg "Syntax check failed, not restarting"
 		exit 1

@@ -38,7 +38,7 @@ test -x $DAEMON || { echo "${DAEMON} has no execute bit"; exit 0; }
 
 start_varnishlog() {
     output=$(/bin/tempfile -s.varnish)
-    log_daemon_msg "Starting $DESC" "$NAME"
+    log_daemon_msg "Starting $DESC" "$SERVICE"
     create_pid_directory
     if start-stop-daemon --start --pidfile ${PIDFILE} \
         --chuid $USER --exec ${DAEMON} -- ${DAEMON_OPTS} \
@@ -53,7 +53,7 @@ start_varnishlog() {
 }
 
 stop_varnishlog(){
-    log_daemon_msg "Stopping $DESC" "$NAME"
+    log_daemon_msg "Stopping $DESC" "$SERVICE"
     if start-stop-daemon --stop --pidfile $PIDFILE \
         --retry 10 --exec $DAEMON; then
 	log_end_msg 0
@@ -63,7 +63,7 @@ stop_varnishlog(){
 }
 
 reload_varnishlog(){
-    log_daemon_msg "Reloading $DESC" "$NAME"
+    log_daemon_msg "Reloading $DESC" "$SERVICE"
     if kill -HUP $(cat $PIDFILE) >/dev/null 2>&1; then
 	log_end_msg 0
     else
@@ -73,7 +73,7 @@ reload_varnishlog(){
 }
 
 status_varnishlog(){
-    status_of_proc -p "${PIDFILE}" "${DAEMON}" "${NAME}"
+    status_of_proc -p "${PIDFILE}" "${DAEMON}" "${SERVICE}"
     exit $?
 }
 
