@@ -22,7 +22,7 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/varnishd
 PIDFILE=/run/$NAME.pid
 
-test -x $DAEMON || exit 0
+test -x $DAEMON || { echo "${DAEMON} has no execute bit"; exit 0; }
 
 # Include varnish defaults if available
 if [ -f /etc/default/varnish ] ; then

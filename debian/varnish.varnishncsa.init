@@ -34,7 +34,7 @@ if [ -z "${VARNISHNCSA_ENABLED}" ] || \
   exit 0;
 fi
 
-test -x $DAEMON || exit 0
+test -x $DAEMON || { echo "${DAEMON} has no execute bit"; exit 0; }
 
 start_varnishncsa() {
     output=$(/bin/tempfile -s.varnish)
