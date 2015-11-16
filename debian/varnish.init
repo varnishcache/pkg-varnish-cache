@@ -101,13 +101,17 @@ status_varnishd() {
 }
 
 configtest() {
-    $DAEMON ${DAEMON_OPTS} -C -n /tmp 2>/dev/null
-    if [ "$?" != 0 ]; then
-        $DAEMON ${DAEMON_OPTS} -C -n /tmp
-        return $?
-    fi
-}
+	log_daemon_msg "Checking syntax" $NAME
 
+	$DAEMON ${DAEMON_OPTS} -C -n /tmp 2>/dev/null
+	local ret=${?:-1}
+	log_end_msg $ret
+	if [ $ret != 0 ]; then
+		$DAEMON ${DAEMON_OPTS} -C -n /tmp
+	fi
+
+	return $ret
+}
 
 case "$1" in
     start)
@@ -140,7 +144,7 @@ case "$1" in
         $0 start
         ;;
     configtest)
-        configtest && log_success_msg "Syntax ok"
+        configtest
         ;;
     *)
         log_success_msg "Usage: $0 {start|stop|restart|reload|force-reload|configtest}"
