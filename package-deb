@@ -29,33 +29,20 @@ tar xf ${SOURCE} -C build
 
 cd build/varnish-*
 
-# Get a packaging file set suitable for this release.
-if [ -z "$UPSTREAMVERSION" ]; then
-	V=$(grep PACKAGE_VERSION= configure | sed "s/.*=//;s/'//g")
-else
-	V="$UPSTREAMVERSION"
-fi
-
+V=$(grep PACKAGE_VERSION= configure | sed "s/.*=//;s/'//g")
 if [ "$V" = "trunk" ]; then
-	V="4.1"
+	V="5.0"
 	MINOR="0"
 else
 	MINOR="${V##*.}"
 	V="${V%.*}"
 fi
 
-
 cp -r ../../debian .
-#GIT_DIR=../../debian/.git git archive --prefix=debian/ HEAD | tar xf -
-
-rm -f debian/libvarnish*.symbols
-rm -f debian/*.manpages
-# enforce 1.0 native
-rm -f debian/source/format
-
+rm -f debian/*.sw?    # Delete any vim temporary files.
 ln ../../$SOURCE ../varnish_$V.$MINOR.orig.tar.gz
 
-# Take version override set on jenkins builds into account.
+# Take version override set on Jenkins builds into account.
 if [ -n "$DEBVERSION" ]; then
 	FULL_VERSION="$V.$MINOR-$DEBVERSION"
 	dch -v "$FULL_VERSION" "Release build #$BUILD_NUMBER ID: $BUILD_ID"
