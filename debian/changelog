@@ -1,4 +1,4 @@
-varnish (4.0.3-2) UNRELEASED; urgency=medium
+varnish (4.0.3-0) UNRELEASED; urgency=medium
 
   * Under systemd, ensure varnishlog/varnishncsa are running before trying
     to reload them, to avoid a spurious mail.
