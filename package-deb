@@ -16,27 +16,21 @@
 if [ -n "$JENKINS_HOME" ]; then
 	set -x
 fi
+BINDIST=${BINDIST:-jessie}
 
 set -o errexit
 
-BINDISTS=${BINDISTS:-jessie}
+. common.sh
 
 rm -rf build
 mkdir -p build
 
 SOURCE=$(ls -1 sources/varnish-*.tar.gz)  # XXX
+
+findversion $SOURCE
 tar xf ${SOURCE} -C build
 
 cd build/varnish-*
-
-V=$(grep PACKAGE_VERSION= configure | sed "s/.*=//;s/'//g")
-if [ "$V" = "trunk" ]; then
-	V="5.0"
-	MINOR="0"
-else
-	MINOR="${V##*.}"
-	V="${V%.*}"
-fi
 
 cp -r ../../debian .
 rm -f debian/.*.sw?    # Delete any vim temporary files.

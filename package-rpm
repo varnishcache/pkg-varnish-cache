@@ -9,6 +9,8 @@ ELVER=${ELVER:-el7}
 CHROOT="epel-${ELVER:2:1}-x86_64"
 MOPT="--uniqueext=worker${EXECUTOR_NUMBER}"
 
+. common.sh
+
 rm -rf build
 mkdir -p build
 cd build
@@ -17,9 +19,11 @@ SOURCE=$(ls -1 ../sources/varnish-*.tar.gz)
 tar xf $SOURCE
 
 cp -r ../redhat/* .
-# GIT_DIR=../redhat/.git git archive HEAD | tar xf -
 
-ln $SOURCE `basename $SOURCE` 
+ln $SOURCE `basename $SOURCE`
+
+findversion $SOURCE
+sed -i -e "s/^Version:.*/Version: $V.$MINOR/" *.spec
 
 # while debugging, disable make check since it takes 15-20 minutes to run.
 sed -i -e 's/^make check/# make check/' *.spec
@@ -30,11 +34,11 @@ mock -v -r $CHROOT $MOPT --buildsrpm \
   -D "dist .${ELVER}" \
   --spec *.spec \
   --source . \
-  --resultdir ../rpm-build/varnish-4.1/${ELVER}
+  --resultdir ../build/varnish-4.1/${ELVER}
 
 mock -r $CHROOT $MOPT --clean
 mock -v -r $CHROOT $MOPT \
   -D "_smp_mflags -j10" \
   -D "dist .${ELVER}" \
-  --resultdir ../rpm-build/varnish-4.1/${ELVER} \
-  --rebuild ../rpm-build/varnish-4.1/${ELVER}/varnish*.src.rpm
+  --resultdir ../build/varnish-4.1/${ELVER} \
+  --rebuild ../build/varnish-4.1/${ELVER}/varnish*.src.rpm
