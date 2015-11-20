@@ -1,8 +1,8 @@
 [submodule "redhat"]
 	path = redhat
-	url = https://github.com/varnish/varnish-cache-redhat
+	url = https://github.com/varnishcache/pkg-redhat
 	branch = master
 [submodule "debian"]
 	path = debian
-	url = https://github.com/varnish/varnish-cache-debian
+	url = https://github.com/varnishcache/pkg-debian
 	branch = 4.1
