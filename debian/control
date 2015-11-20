@@ -1,5 +1,5 @@
 Source: varnish
-Section: varnish-4.1/web
+Section: web
 Priority: optional
 Maintainer: Varnish Package Maintainers <varnish-dist@varnish-cache.org>
 Build-Depends:
@@ -46,13 +46,13 @@ Description: state of the art, high-performance web accelerator
 
 Package: varnish-doc
 Architecture: all
-Section: varnish-4.1/doc
+Section: doc
 Depends: ${misc:Depends}, libjs-jquery, libjs-underscore
 Description: documentation for Varnish Cache
  This package contains HTML documentation for Varnish Cache.
 
 Package: libvarnishapi1
-Section: varnish-4.1/libs
+Section: libs
 Architecture: any
 Provides: libvarnish1
 Conflicts: libvarnish1
@@ -62,7 +62,7 @@ Description: shared libraries for Varnish
  Shared libraries for Varnish Cache HTTP accelerator.
 
 Package: libvarnishapi-dev
-Section: varnish-4.1/libdevel
+Section: libdevel
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, libvarnishapi1 (= ${binary:Version}), python
 Provides: libvarnish-dev
@@ -71,7 +71,7 @@ Description: development files for Varnish
  Development files for Varnish Cache HTTP accelerator.
 
 Package: varnish-dbg
-Section: varnish-4.1/debug
+Section: debug
 Priority: extra
 Architecture: any
 Depends: varnish (= ${binary:Version}),
