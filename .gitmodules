@@ -4,5 +4,5 @@
 	branch = master
 [submodule "debian"]
 	path = debian
-	url = git@git.varnish-cache.org:varnish-cache-debian.git
+	url = https://github.com/varnish/varnish-cache-debian
 	branch = 4.1
