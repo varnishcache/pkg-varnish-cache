@@ -55,16 +55,10 @@ override_dh_install:
 		$(CURDIR)/debian/varnish/usr/share/varnish/reload-vcl
 
 override_dh_installdocs:
+# In 4.0 the built docs need to be copied to the current/4.1 location.
+	test -d doc/html || cp -pr doc/sphinx/build/html doc/html
 	dh_installdocs
-	@ # Use the packaged javascript libraries
-	if [ -d $(CURDIR)/debian/varnish-doc ]; then \
-		rm -f $(CURDIR)/debian/varnish-doc/usr/share/doc/varnish-doc/html/_static/jquery.js; \
-		ln -s /usr/share/javascript/jquery/jquery.js \
-			$(CURDIR)/debian/varnish-doc/usr/share/doc/varnish-doc/html/_static/jquery.js; \
-		rm -f $(CURDIR)/debian/varnish-doc/usr/share/doc/varnish-doc/html/_static/underscore.js; \
-		ln -s /usr/share/javascript/underscore/underscore.js \
-			$(CURDIR)/debian/varnish-doc/usr/share/doc/varnish-doc/html/_static/underscore.js; \
-	fi
+
 
 override_dh_gencontrol:
 	echo "Varnish:strictABI=$(VMOD_strictABI)" >> debian/substvars
