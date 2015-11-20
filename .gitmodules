@@ -1,4 +1,0 @@
-[submodule "debian"]
-	path = debian
-	url = https://github.com/varnishcache/pkg-debian
-	branch = 4.1
