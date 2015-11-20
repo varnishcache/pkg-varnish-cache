@@ -18,7 +18,7 @@ Branch structure
 ----------------
 
 This repository will contain a master branch and zero or more
-maintenance branches. (4.0, 3.0)
+maintenance branches.
 
 master should be used to build the last stable release _and_ the development
 release, all the way up until development diverges enough that it isn't
@@ -27,6 +27,10 @@ useful/possible any more.
 At that point, a maintenance branch should be branched off. These should be
 deleted from git 12 months after the release is end of life. Before deletion,
 a git archive of the branch should be extracted and made public.
+
+If you can work around branching, do it. Rather have one slightly untidy
+packaging ruleset, than two/three slightly different that needs to be kept in
+sync.
 
 
 Contact
