@@ -138,6 +138,9 @@ make %{?_smp_mflags} V=1
 	varnish.initrc varnishlog.initrc varnishncsa.initrc
 %endif
 
+# In 4.0 the built docs need to be copied to the current/4.1 location.
+test -d doc/html || cp -pr doc/sphinx/build/html doc/html
+
 rm -rf doc/html/_sources
 #rm -rf doc/sphinx/build/html/_sources
 #mv doc/sphinx/build/html doc
