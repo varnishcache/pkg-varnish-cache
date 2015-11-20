@@ -1,0 +1,83 @@
+Source: varnish
+Section: varnish-4.1/web
+Priority: optional
+Maintainer: Varnish Package Maintainers <varnish-dist@varnish-cache.org>
+Build-Depends:
+ automake,
+ autotools-dev,
+ debhelper (>= 9),
+ libedit-dev,
+ libjemalloc-dev,
+ libncurses-dev,
+ libpcre3-dev,
+ libtool,
+ pkg-config,
+ python-docutils,
+ python-sphinx
+Vcs-Git:  git://git.varnish-cache.org/varnish-cache-debian.git
+Homepage: https://varnish-cache.org/
+Standards-Version: 3.9.6
+
+Package: varnish
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ adduser,
+ gcc,
+ libc6-dev | libc6.1-dev | libc-dev,
+ libvarnishapi1 (>= ${binary:Version})
+Suggests: varnish-doc
+Provides: varnish, ${Varnish:ABI}, ${Varnish:strictABI}
+Description: state of the art, high-performance web accelerator
+ Varnish Cache is a state of the art web accelerator written with
+ performance and flexibility in mind.
+ .
+ Varnish Cache stores web pages in memory so web servers don't have to
+ create the same web page over and over again. Varnish serves pages
+ much faster than any application server; giving the website a
+ significant speed up.
+ .
+ Some of the features include:
+  * A modern design
+  * VCL - a very flexible configuration language
+  * Load balancing with health checking of backends
+  * Partial support for ESI - Edge Side Includes
+  * URL rewriting
+  * Graceful handling of "dead" backends
+
+Package: varnish-doc
+Architecture: all
+Section: varnish-4.1/doc
+Depends: ${misc:Depends}, libjs-jquery, libjs-underscore
+Description: documentation for Varnish Cache
+ This package contains HTML documentation for Varnish Cache.
+
+Package: libvarnishapi1
+Section: varnish-4.1/libs
+Architecture: any
+Provides: libvarnish1
+Conflicts: libvarnish1
+Pre-Depends: multiarch-support
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: shared libraries for Varnish
+ Shared libraries for Varnish Cache HTTP accelerator.
+
+Package: libvarnishapi-dev
+Section: varnish-4.1/libdevel
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libvarnishapi1 (= ${binary:Version}), python
+Provides: libvarnish-dev
+Conflicts: libvarnish-dev
+Description: development files for Varnish
+ Development files for Varnish Cache HTTP accelerator.
+
+Package: varnish-dbg
+Section: varnish-4.1/debug
+Priority: extra
+Architecture: any
+Depends: varnish (= ${binary:Version}),
+         ${misc:Depends}
+Description: debugging symbols for varnish
+ This package contains the detached debugging symbols for Varnish Cache.
+ .
+ Varnish Cache is a state of the art web accelerator written with
+ performance and flexibility in mind.

@@ -1,0 +1,1 @@
+varnish: embedded-library usr/lib/varnish/libvgz.so: zlib

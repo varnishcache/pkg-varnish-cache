@@ -1,0 +1,55 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+        upgrade)
+        ;;
+
+        remove|failed-upgrade|abort-install|abort-upgrade|disappear)
+
+        if dpkg-statoverride --list /var/log/varnish >/dev/null; then
+            dpkg-statoverride --remove /var/log/varnish || true
+
+        fi
+
+        if test -e /var/log/varnish ; then
+
+            rm -r /var/log/varnish > /dev/null 2>&1 || exit 78
+
+        fi
+
+        if test -e /var/lib/varnish; then
+
+                rm -r /var/lib/varnish > /dev/null 2>&1 || exit 78
+        fi
+
+        ;;
+
+        purge)
+
+        if test -e /var/log/varnish; then
+
+                rm -r /var/log/varnish > /dev/null 2>&1 || exit 78
+
+        fi
+
+        if test -e /var/lib/varnish; then
+
+                rm -r /var/lib/varnish > /dev/null 2>&1 || exit 78
+        fi
+
+        rm -f /etc/varnish/secret
+        dpkg-statoverride --remove /var/log/varnish || true
+
+        ;;
+
+    *)
+        echo "postrm called with unknown argument \`$1'" >&2
+        exit 64
+
+esac
+
+#DEBHELPER#
+
+exit 0
