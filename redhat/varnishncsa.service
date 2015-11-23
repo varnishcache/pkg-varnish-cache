@@ -6,6 +6,7 @@ After=varnish.service
 Type=forking
 PIDFile=/run/varnishncsa.pid
 ExecStart=/usr/bin/varnishncsa -a -w /var/log/varnish/varnishncsa.log -D -P /run/varnishncsa.pid
+User=varnishlog
 
 [Install]
 WantedBy=multi-user.target
