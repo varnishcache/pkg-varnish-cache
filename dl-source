@@ -1,0 +1,6 @@
+#!/bin/bash
+
+VER=4.1.0
+
+cd sources
+wget https://repo.varnish-cache.org/source/varnish-$VER.tar.gz
