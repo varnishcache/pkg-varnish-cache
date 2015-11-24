@@ -259,7 +259,10 @@ rm -rf %{buildroot}
 %doc doc/changes*.html
 
 %pre
-getent group varnish >/dev/null || groupadd -r varnish
+getent group varnish    >/dev/null || groupadd -r varnish
+getent passwd varnishlog >/dev/null || \
+	useradd -r -g varnish -d /dev/null -s /sbin/nologin \
+		-c "varnishlog user" varnishlog
 getent passwd varnish >/dev/null || \
 	useradd -r -g varnish -d /var/lib/varnish -s /sbin/nologin \
 		-c "Varnish Cache" varnish
@@ -294,6 +297,8 @@ if [ $1 -lt 1 ]; then
   %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
   /bin/systemctl --no-reload disable varnish.service > /dev/null 2>&1 || :
   /bin/systemctl stop varnish.service > /dev/null 2>&1 || :
+  /bin/systemctl stop varnishlog.service  > /dev/null 2>&1 || :
+  /bin/systemctl stop varnishncsa.service > /dev/null 2>&1 || :
   %else
   /sbin/service varnish stop > /dev/null 2>&1
   /sbin/service varnishlog stop > /dev/null 2>&1
