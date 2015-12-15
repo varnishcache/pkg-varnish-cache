@@ -64,7 +64,11 @@ Description: shared libraries for Varnish
 Package: libvarnishapi-dev
 Section: libdevel
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libvarnishapi1 (= ${binary:Version}), python
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ libvarnishapi1 (= ${binary:Version}),
+ python
 Provides: libvarnish-dev
 Conflicts: libvarnish-dev
 Description: development files for Varnish
@@ -74,8 +78,9 @@ Package: varnish-dbg
 Section: debug
 Priority: extra
 Architecture: any
-Depends: varnish (= ${binary:Version}),
-         ${misc:Depends}
+Depends:
+ varnish (= ${binary:Version}),
+ ${misc:Depends}
 Description: debugging symbols for varnish
  This package contains the detached debugging symbols for Varnish Cache.
  .
