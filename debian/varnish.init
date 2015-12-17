@@ -105,7 +105,7 @@ status_varnishd() {
 configtest() {
 	log_daemon_msg "Checking syntax" "$SERVICE"
 
-	$DAEMON ${DAEMON_OPTS} -C -n /tmp 2>/dev/null
+	$DAEMON ${DAEMON_OPTS} -C -n /tmp 1>/dev/null 2>&1
 	local ret=${?:-1}
 	log_end_msg $ret
 	if [ $ret != 0 ]; then
