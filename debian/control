@@ -68,6 +68,7 @@ Depends:
  ${shlibs:Depends},
  ${misc:Depends},
  libvarnishapi1 (= ${binary:Version}),
+ pkg-config,
  python
 Provides: libvarnish-dev
 Conflicts: libvarnish-dev
