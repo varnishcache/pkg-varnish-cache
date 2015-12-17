@@ -13,10 +13,13 @@
 # To ENTER an image snapshot: schroot -c jessie-amd64
 # To BUILD within a snapshot: sbuild -A -d jessie-amd64 PACKAGE*.dsc
 
+BINDISTS=${BINDISTS:-jessie}
+
 if [ -n "$JENKINS_HOME" ]; then
 	set -x
+	# Handle old chroot naming on our jenkins servers. Used in the bottom.
+	chroot_postfix="-sbuild";
 fi
-BINDIST=${BINDIST:-jessie}
 
 set -o errexit
 
@@ -39,7 +42,6 @@ ln ../../$SOURCE ../varnish_$V.$MINOR.orig.tar.gz
 # Modify Section to suit our repository software.
 sed -i -e "s|^Section: \([^/]*\)\$|Section: varnish-$V/\1|" debian/control
 
-
 # Take version override set on Jenkins builds into account.
 if [ -n "$DEBVERSION" ]; then
 	FULL_VERSION="$V.$MINOR-$DEBVERSION"
@@ -54,12 +56,8 @@ cd ..
 
 # By now we are done setting up and building the source package.
 
-# Handle old chroot naming on our jenkins servers.
-chroot_postfix="amd64"
-test -n "$JENKINS_HOME" && chroot_postfix="amd64-sbuild";
-
 # Build binary packages for the requested releases inside chroots.
 for dist in $BINDISTS; do
 	export DEBIAN_OVERRIDE_BINARY_VERSION="$FULL_VERSION~$dist"
-	sbuild -v -A -c "$dist-$chroot_postfix" -d "$dist" varnish_*.dsc
+	sbuild -v -A -c "$dist-amd64$chroot_postfix" -d "$dist" varnish_*.dsc
 done
