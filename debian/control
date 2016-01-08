@@ -24,7 +24,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  adduser,
  gcc,
  libc6-dev | libc6.1-dev | libc-dev,
- libvarnishapi1 (>= ${binary:Version})
+ libvarnishapi1 (= ${binary:Version})
 Suggests: varnish-doc
 Provides: varnish, ${Varnish:ABI}, ${Varnish:strictABI}
 Description: state of the art, high-performance web accelerator
