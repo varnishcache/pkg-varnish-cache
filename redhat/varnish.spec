@@ -84,7 +84,7 @@ Summary: Development files for %{name}-libs
 Group: System Environment/Libraries
 BuildRequires: ncurses-devel
 Requires: varnish-libs = %{version}-%{release}
-Requires: pkg-config
+Requires: pkgconfig
 Requires: python
 
 %description libs-devel
