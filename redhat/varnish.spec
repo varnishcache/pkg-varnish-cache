@@ -1,11 +1,11 @@
-%define XXv_rc beta1
+%define v_rc beta1
 %define vd_rc %{?v_rc:-%{?v_rc}}
 %define    _use_internal_dependency_generator 0
 %define __find_provides %{_builddir}/../SOURCES/find-provides
 
 Summary: High-performance HTTP accelerator
 Name: varnish
-Version: 4.1.0
+Version: 4.1.1
 #Release: 0.20140328%{?v_rc}%{?dist}
 Release: 1%{?v_rc}%{?dist}
 License: BSD
@@ -13,7 +13,6 @@ Group: System Environment/Daemons
 URL: https://www.varnish-cache.org/
 #Source0: http://repo.varnish-cache.org/source/%{name}-%{version}.tar.gz
 Source0: %{name}-%{version}%{?vd_rc}.tar.gz
-#Source0: %{name}-trunk.tar.gz
 Source1: varnish.initrc
 Source2: varnish.sysconfig
 Source3: varnish.logrotate
