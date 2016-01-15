@@ -13,17 +13,22 @@ function findversion() {
 	rm -rf $TMP
 
 	V=$(grep PACKAGE_VERSION= configure | sed "s/.*=//;s/'//g")
+	RELEASE=""
 	if [ "$V" = "trunk" ]; then
 		V="5.0"
 		MINOR="0"
 	else
-		MINOR="${V##*.}"
-		V="${V%.*}"
+		# 4.1.1
+		# 4.1.1-beta1
+		MINOR="${V:4:1}"
+		RELEASE="${V:6}"
+		V="${V:0:3}"
 	fi
 	rm configure
 }
 
-#findversion sources/varnish-4.1.0.tar.gz
-#echo $V
-#echo $MINOR
+#findversion sources/varnish-4.1*gz
+#echo "V is: $V"
+#echo "MINOR is $MINOR"
+#echo "RELEASE is $RELEASE"
 
