@@ -3,10 +3,10 @@ Description=Varnish Cache HTTP accelerator log daemon
 After=varnish.service
 
 [Service]
-Type=forking
-PIDFile=/run/varnishncsa.pid
-ExecStart=/usr/bin/varnishncsa -a -w /var/log/varnish/varnishncsa.log -D -P /run/varnishncsa.pid
 User=varnishlog
+Group=varnish
+ExecStart=/usr/bin/varnishncsa -a -w /var/log/varnish/varnishncsa.log
+ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]
 WantedBy=multi-user.target

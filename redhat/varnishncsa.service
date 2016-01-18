@@ -1,5 +1,5 @@
 [Unit]
-Description=Varnish Cache HTTP accelerator NCSA daemon
+Description=Varnish Cache HTTP accelerator log daemon
 After=varnish.service
 
 [Service]
