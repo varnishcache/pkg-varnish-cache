@@ -47,8 +47,8 @@ if [ -n "$DEBVERSION" ]; then
 	FULL_VERSION="$V.$MINOR-$DEBVERSION"
 	dch -v "$FULL_VERSION" "Release build #$BUILD_NUMBER ID: $BUILD_ID"
 else
-	FULL_VERSION="$V.$MINOR~0${RELEASE}+daily+$(date +%Y%m%d.%H%M%S)"
-	dch -v "$V.$MINOR~0${RELEASE}+daily+$(date +%Y%m%d.%H%M%S)" "Automatic build from git"
+	FULL_VERSION="$V.$MINOR-0${RELEASE}+daily+$(date +%Y%m%d.%H%M%S)"
+	dch -v "$V.$MINOR-0${RELEASE}+daily+$(date +%Y%m%d.%H%M%S)" "Automatic build from git"
 fi
 
 dpkg-buildpackage -us -uc -S -j10
