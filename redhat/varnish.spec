@@ -115,12 +115,11 @@ cp %{SOURCE6} %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} .
 export CFLAGS="$CFLAGS -O2 -g -Wp,-D_FORTIFY_SOURCE=0"
 %endif
 
-# Remove "--disable static" if you want to build static libraries
 # jemalloc is not compatible with Red Hat's ppc64 RHEL kernel :-(
 %ifarch ppc64 ppc
-	%configure --disable-static --localstatedir=/var/lib --without-jemalloc --without-rst2html
+	%configure --localstatedir=/var/lib --without-jemalloc --without-rst2html
 %else
-	%configure --disable-static --localstatedir=/var/lib --without-rst2html
+	%configure --localstatedir=/var/lib --without-rst2html
 %endif
 
 # We have to remove rpath - not allowed in Fedora
