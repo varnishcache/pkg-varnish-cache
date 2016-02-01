@@ -23,8 +23,6 @@ LimitCORE=infinity
 EnvironmentFile=/etc/varnish/varnish.params
 
 Type=forking
-StandardOutput=null
-StandardError=journal
 PIDFile=/var/run/varnish.pid
 PrivateTmp=true
 ExecStartPre=/usr/sbin/varnishd -C -f $VARNISH_VCL_CONF $DAEMON_OPTS
