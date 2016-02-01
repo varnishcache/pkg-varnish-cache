@@ -276,6 +276,7 @@ exit 0
 /sbin/chkconfig --add varnishncsa
 %endif
 test -f /etc/varnish/secret || (uuidgen > /etc/varnish/secret && chmod 0600 /etc/varnish/secret)
+chown varnishlog:varnish /var/log/varnish/
 
 %triggerun -- varnish < 3.0.2-1
 # Save the current service runlevel info
