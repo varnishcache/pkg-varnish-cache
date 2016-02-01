@@ -3,12 +3,14 @@ Description=Varnish Cache HTTP accelerator logging daemon
 After=varnish.service
 
 [Service]
+RuntimeDirectory=varnishlog
 Type=forking
-PIDFile=/run/varnishlog.pid
+PIDFile=/run/varnishlog/varnishlog.pid
 User=varnishlog
 Group=varnish
-ExecStart=/usr/bin/varnishlog -a -w /var/log/varnish/varnish.log -D -P /run/varnishlog.pid
+ExecStart=/usr/bin/varnishlog -a -w /var/log/varnish/varnish.log -D -P /run/varnishlog/varnishlog.pid
 ExecReload=/bin/kill -HUP $MAINPID
+
 
 [Install]
 WantedBy=multi-user.target
