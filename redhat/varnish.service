@@ -17,7 +17,7 @@ LimitNOFILE=131072
 # Default log size is 82MB + header
 LimitMEMLOCK=82000
 
-# Maximum size of the corefile. 
+# Maximum size of the corefile.
 LimitCORE=infinity
 
 EnvironmentFile=/etc/varnish/varnish.params
@@ -25,7 +25,6 @@ EnvironmentFile=/etc/varnish/varnish.params
 Type=forking
 PIDFile=/var/run/varnish.pid
 PrivateTmp=true
-ExecStartPre=/usr/sbin/varnishd -C -f $VARNISH_VCL_CONF $DAEMON_OPTS
 ExecStart=/usr/sbin/varnishd \
 	-P /var/run/varnish.pid \
 	-f $VARNISH_VCL_CONF \
