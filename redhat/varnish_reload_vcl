@@ -10,7 +10,7 @@
 # The following environment variables have to be set:
 # RELOAD_VCL, VARNISH_VCL_CONF, VARNISH_ADMIN_LISTEN_PORT
 # The following are optional:
-# VARNISH_SECRET_FILE, VARNISH_ADMIN_LISTEN_ADDRESS
+# VARNISH_SECRET_FILE, VARNISH_ADMIN_LISTEN_ADDRESS, KEEP_AVAILABLE_VCL
 #
 # Requires GNU bash and GNU date
 #
@@ -26,6 +26,7 @@ print_debug() {
 	echo "
 Parsed configuration:
 RELOAD_VCL=\"$RELOAD_VCL\"
+KEEP_AVAILABLE_VCL=\"$KEEP_AVAILABLE_VCL\"
 VARNISH_VCL_CONF=\"$VARNISH_VCL_CONF\"
 VARNISH_ADMIN_LISTEN_ADDRESS=\"$VARNISH_ADMIN_LISTEN_ADDRESS\"
 VARNISH_ADMIN_LISTEN_PORT=\"$VARNISH_ADMIN_LISTEN_PORT\"
@@ -110,6 +111,25 @@ else
 	echo "$VARNISHADM vcl.use failed"
 	exit 1
 fi
+
+if [ "$KEEP_AVAILABLE_VCL" -ge 0 ] 2> /dev/null; then
+  $debug && echo "Keeping last $KEEP_AVAILABLE_VCL available configs"
+  available=`$VARNISHADM vcl.list | grep "^available"`
+  available_count=`echo "$available" | wc -l`
+  $debug && echo "Found $available_count available configs"
+  discard_count=$((available_count - KEEP_AVAILABLE_VCL))
+  $debug && echo "Discarding $discard_count configs"
+  if [ $discard_count -gt 0 ]; then
+    echo "$available" | head -n $discard_count | awk '{ print $4 }' | while read discard; do
+      if $VARNISHADM vcl.discard $discard > /dev/null; then
+        $debug && echo "$VARNISHADM vcl.discard $discard succeded"
+      else
+        echo "$VARNISHADM vcl.discard $discard failed"
+      fi
+    done
+  fi
+fi
+
 $VARNISHADM vcl.list
 echo Done
 exit 0

@@ -23,6 +23,12 @@ NPROCS="unlimited"
 # VARNISH_ADMIN_LISTEN_PORT, VARNISH_SECRET_FILE.
 RELOAD_VCL=1
 
+# Set this to 0 or more to discard old VCL configurations on reload.
+# If greater than 0, these last configurations will be kept available.
+# Any other value will disable configuration discarding.
+# To make this work, you need to set RELOAD_VCL variable to 1.
+KEEP_AVAILABLE_VCL=
+
 # Main configuration file.
 VARNISH_VCL_CONF=/etc/varnish/default.vcl
 #

@@ -4,6 +4,12 @@
 # Set this to 1 to make systemd reload try to switch VCL without restart.
 RELOAD_VCL=1
 
+# Set this to 0 or more to discard old VCL configurations on reload.
+# If greater than 0, these last configurations will be kept available.
+# Any other value will disable configuration discarding.
+# To make this work, you need to set RELOAD_VCL variable to 1.
+KEEP_AVAILABLE_VCL=
+
 # Main configuration file. You probably want to change it.
 VARNISH_VCL_CONF=/etc/varnish/default.vcl
 
