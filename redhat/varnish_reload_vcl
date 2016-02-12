@@ -86,12 +86,12 @@ else
 	exit 1
 fi
 
-if $VARNISHADM vcl.list | awk ' { print $3 } ' | grep -q $new_config; then
+if $VARNISHADM vcl.list | awk ' { print $4 } ' | grep -q $new_config; then
 	echo Trying to use new config $new_config, but that is already in use
 	exit 2
 fi
 
-current_config=$( $VARNISHADM vcl.list | awk ' /^active/ { print $3 } ' )
+current_config=$( $VARNISHADM vcl.list | awk ' /^active/ { print $4 } ' )
 
 echo "Loading vcl from $VARNISH_VCL_CONF"
 echo "Current running config name is $current_config"
