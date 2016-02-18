@@ -1,7 +1,7 @@
 Source: varnish
 Section: web
 Priority: optional
-Maintainer: Varnish Package Maintainers <varnish-dist@varnish-cache.org>
+Maintainer: Lasse Karstensen <lkarsten@varnish-software.com>
 Build-Depends:
  automake,
  autotools-dev,

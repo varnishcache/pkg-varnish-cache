@@ -313,5 +313,6 @@ fi
 %postun libs -p /sbin/ldconfig
 
 %changelog
-* Fri Sep 22 2006 Ingvar Hagelund <ingvar@linpro.no> - 1.0.1-1
-- Initial build.
+%changelog
+* Thu Jul 24 2014 Lasse Karstensen <lkarsten@varnish-software.com> - 4.1.1-1
+- This changelog is not in use. See doc/changes.rst for release notes.
