@@ -14,8 +14,8 @@ Build-Depends:
  pkg-config,
  python-docutils,
  python-sphinx
-Vcs-Git:  git://git.varnish-cache.org/varnish-cache-debian.git
-Homepage: https://varnish-cache.org/
+Vcs-Git:  git://github.com/varnishcache/pkg-varnish-cache.git
+Homepage: https://www.varnish-cache.org/
 Standards-Version: 3.9.6
 
 Package: varnish
