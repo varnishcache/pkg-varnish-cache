@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VER=4.1.1-beta1
+VER=4.1.2-beta1
 
 cd sources
 wget https://repo.varnish-cache.org/source/varnish-$VER.tar.gz
