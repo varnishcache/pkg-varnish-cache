@@ -6,7 +6,6 @@
   delaycompress
   missingok
   postrotate
-  postrotate
     /bin/kill -HUP `cat /var/run/varnishlog.pid /run/varnishlog/varnishlog.pid 2>/dev/null` 2> /dev/null || true
   endscript
 }
