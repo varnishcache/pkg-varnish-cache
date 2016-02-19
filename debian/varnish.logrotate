@@ -1,7 +1,6 @@
 /var/log/varnish/varnish.log {
   daily
   rotate 7
-  missingok
   compress
   delaycompress
   missingok
@@ -16,7 +15,6 @@
 /var/log/varnish/varnishncsa.log {
   daily
   rotate 7
-  missingok
   compress
   delaycompress
   missingok
