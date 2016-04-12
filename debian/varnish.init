@@ -16,11 +16,11 @@
 # Source function library
 . /lib/lsb/init-functions
 
-SERVICE="$(basename ${0})"
+SERVICE="$(readlink -e ${0} | xargs basename)"
 DESC="HTTP accelerator"
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/varnishd
-PIDFILE=/run/$NAME.pid
+PIDFILE="/run/${SERVICE}.pid"
 
 test -x $DAEMON || { echo "${DAEMON} has no execute bit"; exit 0; }
 
