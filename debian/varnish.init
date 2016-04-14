@@ -20,7 +20,7 @@ SERVICE="$(basename ${0})"
 DESC="HTTP accelerator"
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/varnishd
-PIDFILE=/run/$NAME.pid
+PIDFILE=/run/$SERVICE.pid
 
 test -x $DAEMON || { echo "${DAEMON} has no execute bit"; exit 0; }
 
