@@ -31,10 +31,15 @@ dl https://repo.varnish-cache.org/source/SHA256SUM
 dl https://repo.varnish-cache.org/source/SHA256SUM.gpg
 dl https://repo.varnish-cache.org/source/varnish-${RELEASEVERSION}.tar.gz
 
+if ! gpg --list-key C4DEFFEB 1>/dev/null; then
+	gpg --recv-key C4DEFFEB
+fi
+
 # Do file verification.
 cd $TMPDIR
 gpg --verify SHA256SUM.gpg SHA256SUM
 sha256sum --ignore-missing -c SHA256SUM
+
 
 # Release must be a part of the signed signature file to be valid.
 grep "$RELEASEVERSION.tar.gz" SHA256SUM > tmp.sum
