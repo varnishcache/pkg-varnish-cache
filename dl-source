@@ -1,6 +1,43 @@
 #!/bin/bash
+#
+# Download and verify a public source tarball of Varnish Cache.
+#
+# Author: Lasse Karstensen <lkarsten@varnish-software.com>, April 2016.
+TMPDIR=$(mktemp -d)
+#TMPDIR="`pwd`/w"
 
-VER=4.1.2-beta1
+set -o errexit
 
-cd sources
-wget https://repo.varnish-cache.org/source/varnish-$VER.tar.gz
+dl() {
+	wget --no-verbose --no-clobber -4 --directory-prefix=$TMPDIR $1
+}
+
+RELEASEVERSION=$1
+OUTPUTDIR=$(realpath $2)
+
+if [ $# -ne 2 ]; then
+	echo "Usage: $0 release outputdir"
+	exit 1
+fi
+
+if [ ! -d $OUTPUTDIR ]; then
+	echo "ERROR: No such directory $OUTPUTDIR"
+	exit 2
+fi
+
+echo -e "Downloading and verifying Varnish Cache $RELEASEVERSION.\n"
+
+dl https://repo.varnish-cache.org/source/SHA256SUM
+dl https://repo.varnish-cache.org/source/SHA256SUM.gpg
+dl https://repo.varnish-cache.org/source/varnish-${RELEASEVERSION}.tar.gz
+
+# Do file verification.
+cd $TMPDIR
+gpg --verify SHA256SUM.gpg SHA256SUM
+sha256sum --ignore-missing -c SHA256SUM
+
+# Release must be a part of the signed signature file to be valid.
+grep "$RELEASEVERSION.tar.gz" SHA256SUM > tmp.sum
+sha256sum -c tmp.sum
+
+mv $TMPDIR/*gz $OUTPUTDIR
