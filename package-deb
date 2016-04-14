@@ -29,14 +29,24 @@ rm -rf build
 mkdir -p build
 
 SOURCE=$(ls -1 sources/varnish-*.tar.gz)  # XXX
-
 findversion $SOURCE
+
+# Make sure we use the same tarball each time.
+if [ -n "$DEBVERSION" -a $DEBVERSION -gt 1 ]; then
+	echo "DEBVERSION set, this is a release build. Using published tarball."
+	rm $SOURCE
+	(cd sources; wget https://repo.varnish-cache.org/source/varnish-$V.$MINOR.tar.gz)
+	SOURCE=$(ls -1 sources/varnish-*.tar.gz)
+	findversion $SOURCE
+fi
+
 tar xf ${SOURCE} -C build
 
 cd build/varnish-*
 
 cp -r ../../debian .
 rm -f debian/.*.sw?    # Delete any vim temporary files.
+
 ln ../../$SOURCE ../varnish_$V.$MINOR.orig.tar.gz
 
 # Modify Section to suit our repository software.
