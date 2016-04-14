@@ -38,11 +38,8 @@ fi
 # Do file verification.
 cd $TMPDIR
 gpg --verify SHA256SUM.gpg SHA256SUM
-sha256sum --ignore-missing -c SHA256SUM
-
 
 # Release must be a part of the signed signature file to be valid.
-grep "$RELEASEVERSION.tar.gz" SHA256SUM > tmp.sum
-sha256sum -c tmp.sum
+grep "varnish-$RELEASEVERSION.tar.gz" SHA256SUM | sha256sum -c -
 
 mv $TMPDIR/*gz $OUTPUTDIR
