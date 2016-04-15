@@ -13,7 +13,7 @@ dl() {
 }
 
 RELEASEVERSION=$1
-OUTPUTDIR=$(realpath $2)
+OUTPUTDIR=$2
 
 if [ $# -ne 2 ]; then
 	echo "Usage: $0 release outputdir"
@@ -36,13 +36,9 @@ if ! gpg --list-key C4DEFFEB 1>/dev/null; then
 fi
 
 # Do file verification.
-cd $TMPDIR
-gpg --verify SHA256SUM.gpg SHA256SUM
-sha256sum --ignore-missing -c SHA256SUM
-
+(cd $TMPDIR && gpg --verify SHA256SUM.gpg SHA256SUM)
 
 # Release must be a part of the signed signature file to be valid.
-grep "$RELEASEVERSION.tar.gz" SHA256SUM > tmp.sum
-sha256sum -c tmp.sum
+(cd $TMPDIR && grep "varnish-$RELEASEVERSION.tar.gz" SHA256SUM | sha256sum -c - )
 
 mv $TMPDIR/*gz $OUTPUTDIR
