@@ -314,5 +314,5 @@ fi
 
 %changelog
 %changelog
-* Thu Jul 24 2014 Lasse Karstensen <lkarsten@varnish-software.com> - 4.1.1-1
+* Thu Jul 24 2014 Varnish Software <opensource@varnish-software.com> - 4.1.1-1
 - This changelog is not in use. See doc/changes.rst for release notes.
