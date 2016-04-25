@@ -16,7 +16,7 @@
 # Source function library
 . /lib/lsb/init-functions
 
-SERVICE="$(basename ${0})"
+SERVICE=varnishd
 DESC="HTTP accelerator"
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/varnishd
