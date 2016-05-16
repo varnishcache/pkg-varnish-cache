@@ -20,7 +20,7 @@
   missingok
   postrotate
     if [ -d /run/systemd/system ]; then
-       systemctl -q is-active varnishlog.service || exit 0
+       systemctl -q is-active varnishncsa.service || exit 0
     fi
     /usr/sbin/invoke-rc.d varnishncsa reload > /dev/null
   endscript
