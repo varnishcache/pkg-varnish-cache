@@ -1,13 +1,11 @@
 # Configuration file for Varnish Cache.
 #
-# /etc/init.d/varnish expects the variables $DAEMON_OPTS, $NFILES and $MEMLOCK
-# to be set from this shell script fragment.
+# /etc/init.d/varnish and systemd service expect the variables $DAEMON_OPTS,
+# $NFILES and $MEMLOCK to be set from this shell script fragment.
 #
-# Note: If systemd is installed, this file is obsolete and ignored.  You will
-# need to copy /lib/systemd/system/varnish.service to /etc/systemd/system/ and
-# edit that file.
 
 # Should we start varnishd at boot?  Set to "no" to disable.
+# Note: If systemd is installed, this variable is obsolete and ignored.
 START=yes
 
 # Maximum number of open files (for ulimit -n)
