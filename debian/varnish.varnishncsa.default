@@ -17,3 +17,7 @@
 # a different log format, you can override the DAEMON_OPTS variable
 # from /etc/init.d/varnishncsa here.
 # DAEMON_OPTS="-a -w ${LOGFILE} -D -P ${PIDFILE}"
+#
+# If you want to set a custom log format, you can set the LOG_FORMAT
+# # variable here.
+# LOG_FORMAT=""

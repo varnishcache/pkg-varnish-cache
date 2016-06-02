@@ -40,8 +40,10 @@ start_varnishncsa() {
     output=$(/bin/tempfile -s.varnish)
     log_daemon_msg "Starting $DESC" "$SERVICE"
     create_pid_directory
+    test -n "${LOG_FORMAT}" && LOG_FORMAT="-F${LOG_FORMAT}"
     if start-stop-daemon --start --pidfile ${PIDFILE} \
-        --chuid $USER --exec ${DAEMON} -- ${DAEMON_OPTS} \
+        --chuid $USER --exec ${DAEMON} -- \
+        ${DAEMON_OPTS} "${LOG_FORMAT}" \
         > ${output} 2>&1; then
 	log_end_msg 0
     else
