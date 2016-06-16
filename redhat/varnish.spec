@@ -212,7 +212,6 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*.1*
 %{_mandir}/man3/*.3*
 %{_mandir}/man7/*.7*
-%doc LICENSE README 
 %{_docdir}/varnish/
 %dir %{_sysconfdir}/varnish/
 %config(noreplace) %{_sysconfdir}/varnish/default.vcl
