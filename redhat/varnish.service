@@ -1,9 +1,9 @@
 [Unit]
 Description=Varnish Cache, a high-performance HTTP accelerator
-After=syslog.target network.target
+After=network.target
 
 [Service]
-# If you want to make changes to this file, please copy it to 
+# If you want to make changes to this file, please copy it to
 # /etc/systemd/system/varnish.service and make your changes there.
 # This will override the file kept at /lib/systemd/system/varnish.service
 #
