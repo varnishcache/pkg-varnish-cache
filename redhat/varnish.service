@@ -17,6 +17,9 @@ LimitNOFILE=131072
 # Default log size is 82MB + header
 LimitMEMLOCK=82000
 
+# On systemd >= 228 enable this to avoid "fork failed" on reload.
+#TasksMax=infinity
+
 # Maximum size of the corefile.
 LimitCORE=infinity
 
