@@ -32,7 +32,7 @@ SOURCE=$(ls -1 sources/varnish-*.tar.gz)  # XXX
 findversion $SOURCE
 
 # Make sure we use the same tarball each time.
-if [ -n "$DEBVERSION" -a $DEBVERSION -gt 1 ]; then
+if [[ -n "${DEBVERSION}" ]] && [[ ${DEBVERSION} -gt 1 ]]; then
 	echo "DEBVERSION set, this is a release build. Using published tarball."
 	rm $SOURCE
 	(cd sources; wget https://repo.varnish-cache.org/source/varnish-$V.$MINOR.tar.gz)
