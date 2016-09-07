@@ -19,8 +19,6 @@ Source3: varnish.logrotate
 Source4: varnish_reload_vcl
 Source5: varnish.params
 Source6: varnish.service
-Source7: varnishlog.initrc
-Source8: varnishlog.service
 Source9: varnishncsa.initrc
 Source10: varnishncsa.service
 Source11: find-provides
@@ -127,7 +125,7 @@ make %{?_smp_mflags} V=1
 	sed -i 's,--pidfile \$pidfile,,g;
 		s,status -p \$pidfile,status,g;
 		s,killproc -p \$pidfile,killproc,g' \
-	varnish.initrc varnishlog.initrc varnishncsa.initrc
+	varnish.initrc varnishncsa.initrc
 %endif
 
 # In 4.0 the built docs need to be copied to the current/4.1 location.
@@ -180,13 +178,11 @@ mkdir -p %{buildroot}%{_unitdir}
 install -D -m 0644 varnish.service %{buildroot}%{_unitdir}/varnish.service
 install -D -m 0644 varnish.params %{buildroot}%{_sysconfdir}/varnish/varnish.params
 install -D -m 0644 varnishncsa.service %{buildroot}%{_unitdir}/varnishncsa.service
-install -D -m 0644 varnishlog.service %{buildroot}%{_unitdir}/varnishlog.service
 sed -i 's,sysconfig/varnish,varnish/varnish.params,' varnish_reload_vcl
 # default is standard sysvinit
 %else
 install -D -m 0644 varnish.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/varnish
 install -D -m 0755 varnish.initrc %{buildroot}%{_initrddir}/varnish
-install -D -m 0755 varnishlog.initrc %{buildroot}%{_initrddir}/varnishlog
 install -D -m 0755 varnishncsa.initrc %{buildroot}%{_initrddir}/varnishncsa
 %endif
 install -D -m 0755 varnish_reload_vcl %{buildroot}%{_sbindir}/varnish_reload_vcl
@@ -216,14 +212,12 @@ rm -rf %{buildroot}
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 %{_unitdir}/varnish.service
 %{_unitdir}/varnishncsa.service
-%{_unitdir}/varnishlog.service
 %config(noreplace)%{_sysconfdir}/varnish/varnish.params
 
 # default is standard sysvinit
 %else
 %config(noreplace) %{_sysconfdir}/sysconfig/varnish
 %{_initrddir}/varnish
-%{_initrddir}/varnishlog
 %{_initrddir}/varnishncsa
 %endif
 
@@ -259,7 +253,6 @@ exit 0
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 %else
 /sbin/chkconfig --add varnish
-/sbin/chkconfig --add varnishlog
 /sbin/chkconfig --add varnishncsa
 %endif
 test -f /etc/varnish/secret || (uuidgen > /etc/varnish/secret && chmod 0600 /etc/varnish/secret)
@@ -291,7 +284,6 @@ if [ $1 -lt 1 ]; then
   /sbin/service varnishlog stop > /dev/null 2>&1
   /sbin/service varnishncsa stop > /dev/null 2>%1
   /sbin/chkconfig --del varnish
-  /sbin/chkconfig --del varnishlog
   /sbin/chkconfig --del varnishncsa
   %endif
 fi
