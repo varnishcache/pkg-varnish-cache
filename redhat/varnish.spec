@@ -93,7 +93,7 @@ Varnish Cache is a high-performance HTTP accelerator
 %setup -n varnish-%{version}%{?vd_rc}
 #%setup -q -n varnish-trunk
 cp %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} .
-cp %{SOURCE6} %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} .
+cp %{SOURCE6} %{SOURCE9} %{SOURCE10} %{SOURCE11} .
 
 %build
 # No pkgconfig/libpcre.pc in rhel4
@@ -277,11 +277,9 @@ if [ $1 -lt 1 ]; then
   %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
   /bin/systemctl --no-reload disable varnish.service > /dev/null 2>&1 || :
   /bin/systemctl stop varnish.service > /dev/null 2>&1 || :
-  /bin/systemctl stop varnishlog.service  > /dev/null 2>&1 || :
   /bin/systemctl stop varnishncsa.service > /dev/null 2>&1 || :
   %else
   /sbin/service varnish stop > /dev/null 2>&1
-  /sbin/service varnishlog stop > /dev/null 2>&1
   /sbin/service varnishncsa stop > /dev/null 2>%1
   /sbin/chkconfig --del varnish
   /sbin/chkconfig --del varnishncsa
@@ -291,7 +289,6 @@ fi
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
 
-%changelog
 %changelog
 * Thu Jul 24 2014 Varnish Software <opensource@varnish-software.com> - 3.0.0-1
 - This changelog is not in use. See doc/changes.rst for release notes.
