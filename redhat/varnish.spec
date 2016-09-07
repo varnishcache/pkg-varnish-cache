@@ -2,6 +2,9 @@
 %define vd_rc %{?v_rc:-%{?v_rc}}
 %define    _use_internal_dependency_generator 0
 %define __find_provides %{_builddir}/../SOURCES/find-provides
+%define debug_package %{nil}
+%define _enable_debug_package 0
+%define __os_install_post /usr/lib/rpm/brp-compress %{nil}
 
 Summary: High-performance HTTP accelerator
 Name: varnish
@@ -39,7 +42,6 @@ Requires: libedit
 Requires: logrotate
 Requires: ncurses
 Requires: pcre
-Requires: varnish-libs = %{version}-%{release}
 Requires(pre): shadow-utils
 Requires(post): /sbin/chkconfig, /usr/bin/uuidgen
 Requires(preun): /sbin/chkconfig
@@ -55,6 +57,9 @@ Requires(postun): systemd-units
 BuildRequires: systemd-units
 %endif
 Requires: gcc
+Provides: varnish-libs
+Obsoletes: varnish-libs
+Conflicts: varnish-libs
 
 %description
 This is Varnish Cache, a high-performance HTTP accelerator.
@@ -67,27 +72,20 @@ significant speed up.
 Documentation wiki and additional information about Varnish Cache is
 available on the following web site: https://www.varnish-cache.org/
 
-%package libs
-Summary: Libraries for %{name}
+%package devel
+Summary: Development files for %{name}
 Group: System Environment/Libraries
 BuildRequires: ncurses-devel
-
-%description libs
-Libraries for %{name}.
-Varnish Cache is a high-performance HTTP accelerator
-
-%package libs-devel
-Summary: Development files for %{name}-libs
-Group: System Environment/Libraries
-BuildRequires: ncurses-devel
-Requires: varnish-libs = %{version}-%{release}
+Provides: varnish-libs-devel
+Obsoletes: varnish-libs-devel
+Conflicts: varnish-libs-devel
+Requires: varnish = %{version}-%{release}
 Requires: pkgconfig
 Requires: python
 
-%description libs-devel
+%description devel
 Development files for %{name}-libs
 Varnish Cache is a high-performance HTTP accelerator
-
 
 %prep
 %setup -n varnish-%{version}%{?vd_rc}
@@ -221,14 +219,13 @@ rm -rf %{buildroot}
 %{_initrddir}/varnishncsa
 %endif
 
-%files libs
 %defattr(-,root,root,-)
 %{_libdir}/*.so.*
 %{_libdir}/varnish
 %doc LICENSE
 %config %{_sysconfdir}/ld.so.conf.d/varnish-%{_arch}.conf
 
-%files libs-devel
+%files devel
 %defattr(-,root,root,-)
 %{_libdir}/lib*.so
 %dir %{_includedir}/varnish
@@ -237,6 +234,7 @@ rm -rf %{buildroot}
 /usr/share/varnish
 /usr/share/aclocal
 %doc LICENSE
+
 
 %pre
 getent group varnish    >/dev/null || groupadd -r varnish
@@ -255,8 +253,10 @@ exit 0
 /sbin/chkconfig --add varnish
 /sbin/chkconfig --add varnishncsa
 %endif
+
 test -f /etc/varnish/secret || (uuidgen > /etc/varnish/secret && chmod 0600 /etc/varnish/secret)
 chown varnishlog:varnish /var/log/varnish/
+/sbin/ldconfig
 
 %triggerun -- varnish < 3.0.2-1
 # Save the current service runlevel info
@@ -286,8 +286,7 @@ if [ $1 -lt 1 ]; then
   %endif
 fi
 
-%post libs -p /sbin/ldconfig
-%postun libs -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 %changelog
 * Thu Jul 24 2014 Varnish Software <opensource@varnish-software.com> - 3.0.0-1
