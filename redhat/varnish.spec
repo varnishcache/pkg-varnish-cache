@@ -5,7 +5,7 @@
 
 Summary: High-performance HTTP accelerator
 Name: varnish
-Version: 4.1.1
+Version: 3.0.0
 #Release: 0.20140328%{?v_rc}%{?dist}
 Release: 1%{?v_rc}%{?dist}
 License: BSD
@@ -313,5 +313,5 @@ fi
 
 %changelog
 %changelog
-* Thu Jul 24 2014 Varnish Software <opensource@varnish-software.com> - 4.1.1-1
+* Thu Jul 24 2014 Varnish Software <opensource@varnish-software.com> - 3.0.0-1
 - This changelog is not in use. See doc/changes.rst for release notes.
