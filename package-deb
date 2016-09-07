@@ -4,13 +4,16 @@
 #
 # This is the script that our Jenkins/CI system runs. Yes, it is a bit messy.
 #
-# For running this on your own computer (trusty), see https://wiki.debian.org/mk-sbuild
-# for information on setting up sbuild.
-# Short version: 1) apt-get install ubuntu-dev-tools 2) mk-sbuild trusty
 #
-# To CHANGE the golden image: sudo schroot -c source:trusty-amd64 -u root
-# To ENTER an image snapshot: schroot -c trusty-amd64
-# To BUILD within a snapshot: sbuild -A -d trusty-amd64 PACKAGE*.dsc
+# For running this on your own computer (jessie), see https://wiki.debian.org/mk-sbuild
+# for information on setting up sbuild.
+# Short version: 1) apt-get install ubuntu-dev-tools 2) mk-sbuild jessie
+#
+# To CHANGE the golden image: sudo schroot -c source:jessie-amd64 -u root
+# To ENTER an image snapshot: schroot -c jessie-amd64
+# To BUILD within a snapshot: sbuild -A -d jessie-amd64 PACKAGE*.dsc
+
+BINDISTS=${BINDISTS:-jessie}
 
 if [[ -n "${JENKINS_HOME}" ]]; then
 	set -x
@@ -32,7 +35,7 @@ findversion $SOURCE
 if [[ -n "${DEBVERSION}" ]] && [[ ${DEBVERSION} -gt 1 ]]; then
 	echo "DEBVERSION set, this is a release build. Using published tarball."
 	rm $SOURCE
-	./dl-source $V.$MINOR sources
+	(cd sources; wget https://repo.varnish-cache.org/source/varnish-$V.$MINOR.tar.gz)
 	SOURCE=$(ls -1 sources/varnish-*.tar.gz)
 	findversion $SOURCE
 fi
@@ -63,5 +66,8 @@ cd ..
 
 # By now we are done setting up and building the source package.
 
-export DEBIAN_OVERRIDE_BINARY_VERSION="$FULL_VERSION"
-sbuild -v -A -c "trusty-amd64$chroot_postfix" -d "trusty" varnish_*.dsc
+# Build binary packages for the requested releases inside chroots.
+for dist in $BINDISTS; do
+	export DEBIAN_OVERRIDE_BINARY_VERSION="$FULL_VERSION~$dist"
+	sbuild -v -A -c "$dist-amd64$chroot_postfix" -d "$dist" varnish_*.dsc
+done
