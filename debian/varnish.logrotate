@@ -1,17 +1,3 @@
-/var/log/varnish/varnish.log {
-  daily
-  rotate 7
-  compress
-  delaycompress
-  missingok
-  postrotate
-    if [ -d /run/systemd/system ]; then
-       systemctl -q is-active varnishlog.service || exit 0
-    fi
-    /usr/sbin/invoke-rc.d varnishlog reload > /dev/null
-  endscript
-}
-
 /var/log/varnish/varnishncsa.log {
   daily
   rotate 7

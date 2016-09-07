@@ -73,7 +73,6 @@ override_dh_gencontrol:
 # Override to add several init scripts
 override_dh_installinit:
 	dh_installinit -a
-	dh_installinit --name=varnishlog
 	dh_installinit --name=varnishncsa
 
 override_dh_compress:
