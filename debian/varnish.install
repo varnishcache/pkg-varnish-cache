@@ -1,7 +1,10 @@
 etc/varnish/default.vcl
 usr/bin/*
 usr/sbin/*
-/usr/lib/varnish
+usr/lib/varnish
 usr/share/man
 debian/*.service lib/systemd/system/
 usr/share/doc/varnish/*.vcl
+# from libvarnishapi1
+usr/lib/lib*.so.*
+usr/lib/libvarnishapi.so

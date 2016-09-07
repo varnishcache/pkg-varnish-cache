@@ -24,8 +24,12 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  adduser,
  gcc,
  libc6-dev | libc6.1-dev | libc-dev,
- libvarnishapi1 (= ${binary:Version})
-Provides: varnish, varnish-doc, ${Varnish:ABI}, ${Varnish:strictABI}
+Provides: varnish,
+ libvarnishapi1,
+ ${Varnish:ABI},
+ ${Varnish:strictABI}
+Suggests: varnish-dev
+Replaces: libvarnishapi1, varnish-doc
 Description: state of the art, high-performance web accelerator
  Varnish Cache is a state of the art web accelerator written with
  performance and flexibility in mind.
@@ -43,26 +47,15 @@ Description: state of the art, high-performance web accelerator
   * URL rewriting
   * Graceful handling of "dead" backends
 
-Package: libvarnishapi1
-Section: libs
-Architecture: any
-Provides: libvarnish1
-Conflicts: libvarnish1
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: shared libraries for Varnish
- Shared libraries for Varnish Cache HTTP accelerator.
-
-Package: libvarnishapi-dev
+Package: varnish-dev
 Section: libdevel
 Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
- libvarnishapi1 (= ${binary:Version}),
+ varnish (= ${binary:Version}),
  pkg-config,
  python
-Provides: libvarnish-dev
-Conflicts: libvarnish-dev
-Description: development files for Varnish
+Provides: libvarnish-dev, libvarnishapi-dev
+Description: development files for Varnish Cache
  Development files for Varnish Cache HTTP accelerator.
