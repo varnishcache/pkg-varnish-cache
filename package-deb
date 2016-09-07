@@ -66,8 +66,15 @@ cd ..
 
 # By now we are done setting up and building the source package.
 
-# Build binary packages for the requested releases inside chroots.
-for dist in $BINDISTS; do
-	export DEBIAN_OVERRIDE_BINARY_VERSION="$FULL_VERSION~$dist"
-	sbuild -v -A -c "$dist-amd64$chroot_postfix" -d "$dist" varnish_*.dsc
-done
+if [ "$V" = "3.0" -o "$V" = "4.0" -o "$V" = "4.1" ]; then
+	# Build binary packages for the requested releases inside chroots.
+	for dist in $BINDISTS; do
+		# Legacy packages embedded the release into the package version.
+		export DEBIAN_OVERRIDE_BINARY_VERSION="$FULL_VERSION~$dist"
+		sbuild -v -A -c "$dist-amd64$chroot_postfix" -d "$dist" varnish_*.dsc
+	done
+else
+	# For 5.0 and onwards there is a single .deb.
+	export DEBIAN_OVERRIDE_BINARY_VERSION="$FULL_VERSION"
+	sbuild -v -A -c "trusty-amd64$chroot_postfix" -d "trusty" varnish_*.dsc
+fi
