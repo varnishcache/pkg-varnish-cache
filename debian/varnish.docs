@@ -1,1 +1,4 @@
 doc/changes.rst
+# previously in varnish-doc
+doc/html
+doc/*.html

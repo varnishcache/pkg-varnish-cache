@@ -25,8 +25,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  gcc,
  libc6-dev | libc6.1-dev | libc-dev,
  libvarnishapi1 (= ${binary:Version})
-Suggests: varnish-doc
-Provides: varnish, ${Varnish:ABI}, ${Varnish:strictABI}
+Provides: varnish, varnish-doc, ${Varnish:ABI}, ${Varnish:strictABI}
 Description: state of the art, high-performance web accelerator
  Varnish Cache is a state of the art web accelerator written with
  performance and flexibility in mind.
@@ -43,13 +42,6 @@ Description: state of the art, high-performance web accelerator
   * Partial support for ESI - Edge Side Includes
   * URL rewriting
   * Graceful handling of "dead" backends
-
-Package: varnish-doc
-Architecture: all
-Section: doc
-Depends: ${misc:Depends}, libjs-jquery, libjs-underscore
-Description: documentation for Varnish Cache
- This package contains HTML documentation for Varnish Cache.
 
 Package: libvarnishapi1
 Section: libs

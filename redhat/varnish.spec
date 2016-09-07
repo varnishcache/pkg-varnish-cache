@@ -90,13 +90,6 @@ Requires: python
 Development files for %{name}-libs
 Varnish Cache is a high-performance HTTP accelerator
 
-%package docs
-Summary: Documentation files for %name
-Group: System Environment/Libraries
-
-%description docs
-Documentation files for %name
-
 
 %prep
 %setup -n varnish-%{version}%{?vd_rc}
@@ -213,6 +206,8 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 %{_mandir}/man7/*.7*
 %{_docdir}/varnish/
+%doc doc/html
+%doc doc/changes*.html
 %dir %{_sysconfdir}/varnish/
 %config(noreplace) %{_sysconfdir}/varnish/default.vcl
 %config(noreplace) %{_sysconfdir}/logrotate.d/varnish
@@ -247,14 +242,7 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/varnishapi.pc
 /usr/share/varnish
 /usr/share/aclocal
-
 %doc LICENSE
-
-%files docs
-%defattr(-,root,root,-)
-%doc LICENSE
-%doc doc/html
-%doc doc/changes*.html
 
 %pre
 getent group varnish    >/dev/null || groupadd -r varnish
