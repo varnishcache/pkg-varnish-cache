@@ -35,11 +35,11 @@ mock -v -r $CHROOT $MOPT --buildsrpm \
   -D "dist .${ELVER}" \
   --spec *.spec \
   --source . \
-  --resultdir ../build/varnish-4.1/${ELVER}
+  --resultdir ../build/varnish-${V}/${ELVER}
 
 mock -r $CHROOT $MOPT --clean
 mock -v -r $CHROOT $MOPT \
   -D "_smp_mflags -j10" \
   -D "dist .${ELVER}" \
-  --resultdir ../build/varnish-4.1/${ELVER} \
-  --rebuild ../build/varnish-4.1/${ELVER}/varnish*.src.rpm
+  --resultdir ../build/varnish-${V}/${ELVER} \
+  --rebuild ../build/varnish-${V}/${ELVER}/varnish*.src.rpm
