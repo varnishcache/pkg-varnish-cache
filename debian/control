@@ -66,16 +66,3 @@ Provides: libvarnish-dev
 Conflicts: libvarnish-dev
 Description: development files for Varnish
  Development files for Varnish Cache HTTP accelerator.
-
-Package: varnish-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends:
- varnish (= ${binary:Version}),
- ${misc:Depends}
-Description: debugging symbols for varnish
- This package contains the detached debugging symbols for Varnish Cache.
- .
- Varnish Cache is a state of the art web accelerator written with
- performance and flexibility in mind.
