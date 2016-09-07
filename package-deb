@@ -29,25 +29,25 @@ rm -rf build
 mkdir -p build
 
 SOURCE=$(ls -1 sources/varnish-*.tar.gz)  # XXX
-findversion $SOURCE
+findversion "$SOURCE"
 
 # Make sure we use the same tarball each time.
 if [[ -n "${DEBVERSION}" ]] && [[ ${DEBVERSION} -gt 1 ]]; then
 	echo "DEBVERSION set, this is a release build. Using published tarball."
-	rm $SOURCE
-	(cd sources; wget https://repo.varnish-cache.org/source/varnish-$V.$MINOR.tar.gz)
+	rm "$SOURCE"
+	(cd sources; wget "https://repo.varnish-cache.org/source/varnish-$V.$MINOR.tar.gz")
 	SOURCE=$(ls -1 sources/varnish-*.tar.gz)
-	findversion $SOURCE
+	findversion "$SOURCE"
 fi
 
-tar xf ${SOURCE} -C build
+tar xf "${SOURCE}" -C build
 
 cd build/varnish-*
 
 cp -r ../../debian .
 rm -f debian/.*.sw?    # Delete any vim temporary files.
 
-ln ../../$SOURCE ../varnish_$V.$MINOR.orig.tar.gz
+ln "../../$SOURCE" "../varnish_$V.$MINOR.orig.tar.gz"
 
 # Modify Section to suit our repository software.
 sed -i -e "s|^Section: \([^/]*\)\$|Section: varnish-$V/\1|" debian/control
@@ -66,7 +66,7 @@ cd ..
 
 # By now we are done setting up and building the source package.
 
-if [ "$V" = "3.0" -o "$V" = "4.0" -o "$V" = "4.1" ]; then
+if [ "$V" = "3.0" ] || [ "$V" = "4.0" ] || [ "$V" = "4.1" ]; then
 	# Build binary packages for the requested releases inside chroots.
 	for dist in $BINDISTS; do
 		# Legacy packages embedded the release into the package version.
