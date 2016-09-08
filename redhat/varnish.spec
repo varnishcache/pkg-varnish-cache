@@ -94,37 +94,13 @@ cp %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} .
 cp %{SOURCE6} %{SOURCE9} %{SOURCE10} %{SOURCE11} .
 
 %build
-# No pkgconfig/libpcre.pc in rhel4
-%if 0%{?rhel} == 4
-	export PCRE_CFLAGS="`pcre-config --cflags`"
-	export PCRE_LIBS="`pcre-config --libs`"
-%endif
-
 %if 0%{?rhel} == 6
 export CFLAGS="$CFLAGS -O2 -g -Wp,-D_FORTIFY_SOURCE=0"
 %endif
 
-# jemalloc is not compatible with Red Hat's ppc64 RHEL kernel :-(
-%ifarch ppc64 ppc
-	%configure --localstatedir=/var/lib --without-jemalloc --without-rst2html
-%else
-	%configure --localstatedir=/var/lib --without-rst2html
-%endif
-
-# We have to remove rpath - not allowed in Fedora
-# (This problem only visible on 64 bit arches)
-#sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g;
-#	s|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+%configure --localstatedir=/var/lib --without-rst2html
 
 make %{?_smp_mflags} V=1
-
-%if 0%{?fedora}%{?rhel} != 0 && 0%{?rhel} <= 4 && 0%{?fedora} <= 8
-	# Old style daemon function
-	sed -i 's,--pidfile \$pidfile,,g;
-		s,status -p \$pidfile,status,g;
-		s,killproc -p \$pidfile,killproc,g' \
-	varnish.initrc varnishncsa.initrc
-%endif
 
 # In 4.0 the built docs need to be copied to the current/4.1 location.
 test -d doc/html || cp -pr doc/sphinx/build/html doc/html
@@ -135,22 +111,6 @@ rm -rf doc/html/_sources
 rm -rf doc/sphinx/build
 
 %check
-# rhel5 on ppc64 is just too strange
-%ifarch ppc64
-	%if 0%{?rhel} > 4
-		cp bin/varnishd/.libs/varnishd bin/varnishd/lt-varnishd
-	%endif
-%endif
-
-# The redhat ppc builders seem to have some ulimit problems?
-# These tests work on a rhel4 ppc/ppc64 instance outside the builders
-%ifarch ppc64 ppc
-	%if 0%{?rhel} == 4
-		rm bin/varnishtest/tests/c00031.vtc
-		rm bin/varnishtest/tests/r00387.vtc
-	%endif
-%endif
-
 make check %{?_smp_mflags} LD_LIBRARY_PATH="../../lib/libvarnish/.libs:../../lib/libvarnishcompat/.libs:../../lib/libvarnishapi/.libs:../../lib/libvcc/.libs:../../lib/libvgz/.libs" VERBOSE=1
 
 %install
@@ -159,9 +119,6 @@ make install DESTDIR=%{buildroot} INSTALL="install -p"
 
 # None of these for fedora
 find %{buildroot}/%{_libdir}/ -name '*.la' -exec rm -f {} ';'
-
-# Remove this line to build a devel package with symlinks
-#find %{buildroot}/%{_libdir}/ -name '*.so' -type l -exec rm -f {} ';'
 
 mkdir -p %{buildroot}/var/lib/varnish
 mkdir -p %{buildroot}/var/log/varnish
