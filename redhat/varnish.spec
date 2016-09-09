@@ -57,9 +57,10 @@ Requires(postun): systemd-units
 BuildRequires: systemd-units
 %endif
 Requires: gcc
-Provides: varnish-libs
-Obsoletes: varnish-libs
-Conflicts: varnish-libs
+
+Provides: varnish-libs, varnish-docs, varnish-debuginfo
+Obsoletes: varnish-libs, varnish-docs, varnish-debuginfo
+Conflicts: varnish-libs, varnish-docs, varnish-debuginfo
 
 %description
 This is Varnish Cache, a high-performance HTTP accelerator.
@@ -70,7 +71,7 @@ pages much faster than any application server; giving the website a
 significant speed up.
 
 Documentation wiki and additional information about Varnish Cache is
-available on the following web site: https://www.varnish-cache.org/
+available on: https://www.varnish-cache.org/
 
 %package devel
 Summary: Development files for %{name}
