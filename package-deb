@@ -33,15 +33,6 @@ mkdir -p build
 SOURCE=$(ls -1 sources/varnish-*.tar.gz)  # XXX
 findversion "$SOURCE"
 
-# Make sure we use the same tarball each time.
-if [[ -n "${DEBVERSION}" ]] && [[ ${DEBVERSION} -gt 1 ]]; then
-	echo "DEBVERSION set, this is a release build. Using published tarball."
-	rm "$SOURCE"
-	(cd sources; wget "https://repo.varnish-cache.org/source/varnish-$V.$MINOR.tar.gz")
-	SOURCE=$(ls -1 sources/varnish-*.tar.gz)
-	findversion "$SOURCE"
-fi
-
 tar xf "${SOURCE}" -C build
 
 cd build/varnish-*
@@ -56,7 +47,7 @@ sed -i -e "s|^Section: \([^/]*\)\$|Section: varnish-$V/\1|" debian/control
 
 # Take version override set on Jenkins builds into account.
 if [[ -n "${DEBVERSION}" ]]; then
-	FULL_VERSION="$V.$MINOR-$DEBVERSION"
+	FULL_VERSION="$V.$MINOR$RELEASE-$DEBVERSION"
 	dch -v "$FULL_VERSION" "Release build #$BUILD_NUMBER ID: $BUILD_ID"
 else
 	FULL_VERSION="$V.$MINOR-0${RELEASE}+daily+$(date +%Y%m%d.%H%M%S)"
