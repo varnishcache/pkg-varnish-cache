@@ -29,7 +29,12 @@ Provides: varnish,
  ${Varnish:ABI},
  ${Varnish:strictABI}
 Suggests: varnish-dev
-Replaces: libvarnishapi1, varnish-doc
+Replaces:
+ libvarnishapi1,
+ varnish-dbg,
+ varnish-doc
+Conflicts:
+ varnish-dbg
 Description: state of the art, high-performance web accelerator
  Varnish Cache is a state of the art web accelerator written with
  performance and flexibility in mind.
@@ -57,5 +62,6 @@ Depends:
  pkg-config,
  python
 Provides: libvarnish-dev, libvarnishapi-dev
+Replaces: libvarnishapi-dev
 Description: development files for Varnish Cache
  Development files for Varnish Cache HTTP accelerator.
