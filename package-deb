@@ -17,8 +17,10 @@ BINDISTS=${BINDISTS:-jessie}
 
 if [[ -n "${JENKINS_HOME}" ]]; then
 	set -x
-	# Handle old chroot naming on our jenkins servers. Used in the bottom.
-	chroot_postfix="-sbuild";
+	if [ "$HOSTNAME" != "cbuild" ]; then
+		# Handle old chroot naming on our jenkins servers. Used in the bottom.
+		chroot_postfix="-sbuild";
+	fi
 fi
 
 set -o errexit
