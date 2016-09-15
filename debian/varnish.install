@@ -3,6 +3,7 @@ usr/bin/*
 usr/sbin/*
 usr/lib/varnish
 usr/share/man
+usr/share/varnish/vcl
 debian/*.service lib/systemd/system/
 usr/share/doc/varnish/*.vcl
 # from libvarnishapi1
