@@ -41,6 +41,11 @@ fi
 $debug && print_debug
 
 # Check configuration
+if [ -z "$VARNISH_ADMIN_LISTEN_ADDRESS" ]; then
+	echo "Warning: VARNISH_ADMIN_LISTEN_ADDRESS is not set, using 127.0.0.1"
+	VARNISH_ADMIN_LISTEN_ADDRESS="127.0.0.1"
+fi
+# Failures
 if [ ! "$RELOAD_VCL" = "1" ]; then
 	echo "Error: RELOAD_VCL is not set to 1"
 	exit 2
@@ -53,15 +58,12 @@ elif [ ! -s "$VARNISH_VCL_CONF" ]; then
 	echo "Eror: VCL config $VARNISH_VCL_CONF is unreadable or empty"
 	exit 2
 
-elif [ -z "$VARNISH_ADMIN_LISTEN_ADDRESS" ]; then
-	echo "Warning: VARNISH_ADMIN_LISTEN_ADDRESS is not set, using 127.0.0.1"
-	VARNISH_ADMIN_LISTEN_ADDRESS="127.0.0.1"
-
 elif [ -z "$VARNISH_ADMIN_LISTEN_PORT" ]; then
 	echo "Error: VARNISH_ADMIN_LISTEN_PORT is not set"
 	exit 2
-
-elif [ -z "$VARNISH_SECRET_FILE" ]; then
+fi
+# Secret File
+if [ -z "$VARNISH_SECRET_FILE" ]; then
 	echo "Warning: VARNISH_SECRET_FILE is not set"
 	secret=""
 
