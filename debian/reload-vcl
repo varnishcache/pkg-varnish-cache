@@ -87,7 +87,7 @@ done
 # Extract the -f and the -T option, and (try to) ensure that the
 # management interface is on the form hostname:address.
 OPTIND=1
-while getopts a:b:CdFf:g:h:i:l:M:n:P:p:S:s:T:t:u:Vw: flag $DAEMON_OPTS
+while getopts j:a:b:CdFf:g:h:i:l:M:n:P:p:S:s:T:t:u:Vw: flag $DAEMON_OPTS
 do
     case $flag in
 		f)
