@@ -7,7 +7,6 @@ set -o errexit
 
 ELVER=${ELVER:-el7}
 CHROOT="epel-${ELVER:2:1}-x86_64"
-MOPT="--uniqueext=worker${EXECUTOR_NUMBER}"
 
 . common.sh
 
@@ -29,17 +28,17 @@ sed -i -e "s/.*define v_rc.*/\%define v_rc $RELEASE/" ./*.spec
 # while debugging, disable make check since it takes 15-20 minutes to run.
 sed -i -e 's/^make check/# make check/' *.spec
 
-mock -r "$CHROOT" "$MOPT" --init
-mock -v -r "$CHROOT" "$MOPT" --buildsrpm \
-  -D "_smp_mflags -j10" \
-  -D "dist .${ELVER}" \
-  --spec ./*.spec \
-  --source . \
-  --resultdir "../build/varnish-${V}/${ELVER}"
+MOPT="--uniqueext=worker${EXECUTOR_NUMBER} --resultdir=varnish-${V}/${ELVER}"
 
-mock -r "$CHROOT" "$MOPT" --clean
-mock -v -r "$CHROOT" "$MOPT" \
+mock -r "$CHROOT" $MOPT --init
+mock -v -r "$CHROOT" $MOPT --buildsrpm \
   -D "_smp_mflags -j10" \
   -D "dist .${ELVER}" \
-  --resultdir "../build/varnish-${V}/${ELVER}" \
-  --rebuild ../build/varnish-${V}/${ELVER}/varnish*.src.rpm
+  --source .\
+  --spec ./*.spec
+
+mock -r "$CHROOT" $MOPT --clean
+mock -v -r "$CHROOT" $MOPT \
+  -D "_smp_mflags -j10" \
+  -D "dist .${ELVER}" \
+  --rebuild varnish-${V}/${ELVER}/varnish*.src.rpm
