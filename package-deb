@@ -35,6 +35,15 @@ findversion "$SOURCE"
 
 tar xf "${SOURCE}" -C build
 
+# Modify varnish.install to match version
+if [ "$V" = "3.0" ] || [ "$V" = "4.0" ] || [ "$V" = "4.1" ]; then
+	# Legacy packages don't have separate directory with VCL files
+	sed -i "s|^usr/share/varnish/vcl|#usr/share/varnish/vcl|" debian/varnish.install
+else
+	# Make sure to revert if mangled by older build-job
+	sed -i "s|^#usr/share/varnish/vcl|usr/share/varnish/vcl|" debian/varnish.install
+fi
+
 cd build/varnish-*
 
 cp -r ../../debian .
