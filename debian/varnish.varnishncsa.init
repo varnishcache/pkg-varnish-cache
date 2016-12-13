@@ -89,7 +89,7 @@ create_pid_directory() {
 
 case "$1" in
     start)
-        case "${START:-}" in
+        case "${VARNISHNCSA_ENABLED:-}" in
             [Yy]es|[Yy]|1|[Tt]|[Tt]rue)
                 start_varnishncsa
                 ;;
