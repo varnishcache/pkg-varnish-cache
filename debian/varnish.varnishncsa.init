@@ -52,6 +52,12 @@ start_varnishncsa() {
     rm $output
 }
 
+disabled_varnishncsa() {
+    log_daemon_msg "Not starting $DESC" "$SERVICE"
+    log_progress_msg "disabled in /etc/default/varnishncsa"
+    log_end_msg 0
+}
+
 stop_varnishncsa(){
     log_daemon_msg "Stopping $DESC" "$SERVICE"
     if start-stop-daemon --stop --pidfile $PIDFILE \
@@ -83,7 +89,14 @@ create_pid_directory() {
 
 case "$1" in
     start)
-        start_varnishncsa
+        case "${START:-}" in
+            [Yy]es|[Yy]|1|[Tt]|[Tt]rue)
+                start_varnishncsa
+                ;;
+            *)
+                disabled_varnishncsa
+                ;;
+        esac
 	;;
     stop)
         stop_varnishncsa
