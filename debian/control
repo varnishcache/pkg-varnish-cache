@@ -62,6 +62,6 @@ Depends:
  pkg-config,
  python
 Provides: libvarnish-dev, libvarnishapi-dev
-Replaces: libvarnishapi-dev
+Replaces: libvarnish-dev, libvarnishapi-dev
 Description: development files for Varnish Cache
  Development files for Varnish Cache HTTP accelerator.
