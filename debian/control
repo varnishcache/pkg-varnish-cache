@@ -34,7 +34,9 @@ Replaces:
  varnish-dbg,
  varnish-doc
 Conflicts:
- varnish-dbg
+ libvarnishapi1,
+ varnish-dbg,
+ varnish-doc
 Description: state of the art, high-performance web accelerator
  Varnish Cache is a state of the art web accelerator written with
  performance and flexibility in mind.
@@ -61,7 +63,14 @@ Depends:
  varnish (= ${binary:Version}),
  pkg-config,
  python
-Provides: libvarnish-dev, libvarnishapi-dev
-Replaces: libvarnish-dev, libvarnishapi-dev
+Provides:
+ libvarnish-dev, 
+ libvarnishapi-dev
+Replaces:
+ libvarnish-dev, 
+ libvarnishapi-dev
+Conflicts:
+ libvarnish-dev, 
+ libvarnishapi-dev
 Description: development files for Varnish Cache
  Development files for Varnish Cache HTTP accelerator.
