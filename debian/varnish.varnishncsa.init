@@ -20,6 +20,7 @@ DAEMON=/usr/bin/$NAME
 PIDFILE=/run/$NAME/$NAME.pid
 LOGFILE=/var/log/varnish/varnishncsa.log
 USER=varnishlog
+GROUP=varnish
 DAEMON_OPTS="-a -w ${LOGFILE} -D -P ${PIDFILE}"
 
 # Include defaults if available
@@ -84,7 +85,7 @@ status_varnishncsa(){
 }
 
 create_pid_directory() {
-    install -o $USER -g $USER -d $(dirname $PIDFILE)
+    install -o $USER -g $GROUP -d $(dirname $PIDFILE)
 }
 
 case "$1" in
