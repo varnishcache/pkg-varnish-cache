@@ -38,6 +38,9 @@ if [ -z "$VARNISH_VCL_CONF" ]; then
 	. /etc/sysconfig/varnish
 fi
 
+# Get warmup time from defaults or use 0 warmup
+WARMUP=${WARMUP_TIME:-0}
+
 $debug && print_debug
 
 # Check configuration
@@ -103,6 +106,10 @@ else
 	echo "$VARNISHADM vcl.load failed"
 	exit 1
 fi
+
+# Wait before vcl.use if WARMUP > 0
+# Used if backend probes require some time to set backends healthy
+sleep $WARMUP
 
 if $VARNISHADM vcl.use $new_config; then
 	$debug && echo "$VARNISHADM vcl.use succeded"
