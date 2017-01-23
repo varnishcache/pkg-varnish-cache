@@ -23,7 +23,7 @@ NPROCS="unlimited"
 # VARNISH_ADMIN_LISTEN_PORT, VARNISH_SECRET_FILE.
 RELOAD_VCL=1
 
-# Set WARMUP_TIME to force a delay in reload-vcl between vcl.load and vcl.us
+# Set WARMUP_TIME to force a delay in reload-vcl between vcl.load and vcl.use
 # This is useful when backend probe definitions need some time before declaring
 # configured backends healthy, to avoid routing traffic to a non-healthy backend.
 #WARMUP_TIME=0
