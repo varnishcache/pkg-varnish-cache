@@ -76,7 +76,7 @@ fi
 VARNISHADM="varnishadm $secret -T $VARNISH_ADMIN_LISTEN_ADDRESS:$VARNISH_ADMIN_LISTEN_PORT"
 
 # Now do the real work
-new_config="reload_$(date +%FT%H:%M:%S)"
+new_config="reload_$(date +%FT%H%M%S)"
 
 # Check if we are able to connect at all
 if $VARNISHADM vcl.list > /dev/null; then
