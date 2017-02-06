@@ -52,10 +52,10 @@ if [ -f "$defaults" ]
 then
     if [ -r "$defaults" ]
     then
-	. "$defaults"
+        . "$defaults"
     else
-	printf >&2 "$msg_defaults_not_readable" $defaults
-	exit 1
+        printf >&2 "$msg_defaults_not_readable" $defaults
+    exit 1
     fi
 else
     printf >&2 "$msg_defaults_not_there" $defaults
@@ -66,20 +66,20 @@ fi
 while getopts hcq flag
 do
     case $flag in
-	h)
-	    printf >&2 "$msg_usage"
-	    exit 0
-	    ;;
-	c)
-	    compile_only=1
-	    ;;
-	q)
-	    quiet=1
-	    ;;
-	*)
-	    printf >&2 "$msg_usage\n"
-	    exit 1
-	    ;;
+    h)
+        printf >&2 "$msg_usage"
+        exit 0
+        ;;
+    c)
+        compile_only=1
+        ;;
+    q)
+        quiet=1
+        ;;
+    *)
+        printf >&2 "$msg_usage\n"
+        exit 1
+        ;;
     esac
 done
 
@@ -90,23 +90,25 @@ OPTIND=1
 while getopts a:b:CdFf:g:h:i:j:l:M:n:P:p:S:s:T:t:u:Vw: flag $DAEMON_OPTS
 do
     case $flag in
-		f)
-			if [ -f "$OPTARG" ]; then
-				vcl_file="$OPTARG"
-			fi
-			;;
-		T)
-			if [ -n "$OPTARG" -a "$OPTARG" != "${OPTARG%%:*}" ]
-			then
-				mgmt_interface="$OPTARG"
-			fi
-			;;
-		S)
-			secret="$OPTARG"
-			;;
+        f)
+            if [ -f "$OPTARG" ]; then
+                vcl_file="$OPTARG"
+            fi
+            ;;
+        T)
+            if [ -n "$OPTARG" -a "$OPTARG" != "${OPTARG%%:*}" ]
+            then
+                mgmt_interface="$OPTARG"
+            fi
+            ;;
+        S)
+            secret="$OPTARG"
+            ;;
     esac
 done
 
+# Get warmup time from defaults or use 0 warmup
+warmup_time=${WARMUP_TIME:-0}
 
 # Sanity checks
 if [ ! -x "$varnishadm" ]
@@ -129,15 +131,15 @@ fi
 
 # Check secret file
 if [ -f "$secret" ]
-	then
-	if [ ! -r "$secret" ]
-	then
-		printf >&2 "$msg_secret_not_readable" $secret
-		exit 1
-	fi
+    then
+    if [ ! -r "$secret" ]
+    then
+        printf >&2 "$msg_secret_not_readable" $secret
+        exit 1
+    fi
 else
-	printf >&2 "$msg_secret_not_there" $secret
-	exit 1
+    printf >&2 "$msg_secret_not_there" $secret
+    exit 1
 fi
 
 logfile=$($tempfile -n /tmp/$vcl_label)
@@ -147,15 +149,16 @@ if $varnishadm -T $mgmt_interface -S ${secret} vcl.load $vcl_label $vcl_file
 then
     if [ -n "$compile_only" ]
     then
-	printf "$msg_compile_only" $varnishadm $mgmt_interface $vcl_label
+        printf "$msg_compile_only" $varnishadm $mgmt_interface $vcl_label
     else
-	if $varnishadm -T $mgmt_interface -S ${secret} vcl.use $vcl_label
-	then
-	    printf "$msg_use_ok" $vcl_label
-	else
-	    printf "$msg_use_failed" $vcl_label
-	    exitstatus=1
-	fi
+        sleep $warmup_time
+        if $varnishadm -T $mgmt_interface -S ${secret} vcl.use $vcl_label
+        then
+            printf "$msg_use_ok" $vcl_label
+        else
+            printf "$msg_use_failed" $vcl_label
+            exitstatus=1
+        fi
     fi
 else
     printf "$msg_compile_failed" $vcl_label $vcl_file

@@ -17,6 +17,11 @@ LimitMEMLOCK=82000
 # Maximum size of the corefile.
 LimitCORE=infinity
 
+# Set WARMUP_TIME to force a delay in reload-vcl between vcl.load and vcl.use
+# This is useful when backend probe definitions need some time before declaring
+# configured backends healthy, to avoid routing traffic to a non-healthy backend.
+#WARMUP_TIME=0
+
 ExecStart=/usr/sbin/varnishd -a :6081 -T localhost:6082 -f /etc/varnish/default.vcl -S /etc/varnish/secret -s malloc,256m
 ExecReload=/usr/share/varnish/reload-vcl
 
