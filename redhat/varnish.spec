@@ -60,7 +60,6 @@ Requires: gcc
 
 Provides: varnish-libs, varnish-docs, varnish-debuginfo
 Obsoletes: varnish-libs, varnish-docs, varnish-debuginfo
-Conflicts: varnish-libs, varnish-docs, varnish-debuginfo
 
 %description
 This is Varnish Cache, a high-performance HTTP accelerator.
@@ -79,7 +78,6 @@ Group: System Environment/Libraries
 BuildRequires: ncurses-devel
 Provides: varnish-libs-devel
 Obsoletes: varnish-libs-devel
-Conflicts: varnish-libs-devel
 Requires: varnish = %{version}-%{release}
 Requires: pkgconfig
 Requires: python
