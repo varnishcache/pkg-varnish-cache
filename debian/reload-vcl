@@ -107,6 +107,8 @@ do
     esac
 done
 
+# Get warmup time from defaults or use 0 warmup
+warmup_time=${WARMUP_TIME:-0}
 
 # Sanity checks
 if [ ! -x "$varnishadm" ]
@@ -149,6 +151,7 @@ then
     then
 	printf "$msg_compile_only" $varnishadm $mgmt_interface $vcl_label
     else
+    sleep $warmup_time
 	if $varnishadm -T $mgmt_interface -S ${secret} vcl.use $vcl_label
 	then
 	    printf "$msg_use_ok" $vcl_label
