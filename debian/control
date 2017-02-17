@@ -1,7 +1,7 @@
 Source: varnish
 Section: web
 Priority: optional
-Maintainer: Varnish Package Maintainers <varnish-dist@varnish-cache.org>
+Maintainer: Varnish Software <opensource@varnish-software.com>
 Build-Depends:
  automake,
  autotools-dev,
@@ -14,8 +14,8 @@ Build-Depends:
  pkg-config,
  python-docutils,
  python-sphinx
-Vcs-Git:  git://git.varnish-cache.org/varnish-cache-debian.git
-Homepage: https://varnish-cache.org/
+Vcs-Git:  git://github.com/varnishcache/pkg-varnish-cache.git
+Homepage: https://www.varnish-cache.org/
 Standards-Version: 3.9.6
 
 Package: varnish
@@ -24,9 +24,19 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  adduser,
  gcc,
  libc6-dev | libc6.1-dev | libc-dev,
- libvarnishapi1 (>= ${binary:Version})
-Suggests: varnish-doc
-Provides: varnish, ${Varnish:ABI}, ${Varnish:strictABI}
+Provides: varnish,
+ libvarnishapi1,
+ ${Varnish:ABI},
+ ${Varnish:strictABI}
+Suggests: varnish-dev
+Replaces:
+ libvarnishapi1,
+ varnish-dbg,
+ varnish-doc
+Conflicts:
+ libvarnishapi1,
+ varnish-dbg,
+ varnish-doc
 Description: state of the art, high-performance web accelerator
  Varnish Cache is a state of the art web accelerator written with
  performance and flexibility in mind.
@@ -44,46 +54,23 @@ Description: state of the art, high-performance web accelerator
   * URL rewriting
   * Graceful handling of "dead" backends
 
-Package: varnish-doc
-Architecture: all
-Section: doc
-Depends: ${misc:Depends}, libjs-jquery, libjs-underscore
-Description: documentation for Varnish Cache
- This package contains HTML documentation for Varnish Cache.
-
-Package: libvarnishapi1
-Section: libs
-Architecture: any
-Provides: libvarnish1
-Conflicts: libvarnish1
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: shared libraries for Varnish
- Shared libraries for Varnish Cache HTTP accelerator.
-
-Package: libvarnishapi-dev
+Package: varnish-dev
 Section: libdevel
 Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
- libvarnishapi1 (= ${binary:Version}),
+ varnish (= ${binary:Version}),
  pkg-config,
  python
-Provides: libvarnish-dev
-Conflicts: libvarnish-dev
-Description: development files for Varnish
+Provides:
+ libvarnish-dev, 
+ libvarnishapi-dev
+Replaces:
+ libvarnish-dev, 
+ libvarnishapi-dev
+Conflicts:
+ libvarnish-dev, 
+ libvarnishapi-dev
+Description: development files for Varnish Cache
  Development files for Varnish Cache HTTP accelerator.
-
-Package: varnish-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends:
- varnish (= ${binary:Version}),
- ${misc:Depends}
-Description: debugging symbols for varnish
- This package contains the detached debugging symbols for Varnish Cache.
- .
- Varnish Cache is a state of the art web accelerator written with
- performance and flexibility in mind.

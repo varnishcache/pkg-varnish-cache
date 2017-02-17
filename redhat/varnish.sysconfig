@@ -29,6 +29,11 @@ RELOAD_VCL=1
 # To make this work, you need to set RELOAD_VCL variable to 1.
 KEEP_AVAILABLE_VCL=
 
+# Set WARMUP_TIME to force a delay in reload-vcl between vcl.load and vcl.use
+# This is useful when backend probe definitions need some time before declaring
+# configured backends healthy, to avoid routing traffic to a non-healthy backend.
+#WARMUP_TIME=0
+
 # Main configuration file.
 VARNISH_VCL_CONF=/etc/varnish/default.vcl
 #

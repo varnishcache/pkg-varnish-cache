@@ -16,11 +16,11 @@
 # Source function library
 . /lib/lsb/init-functions
 
-SERVICE="$(basename ${0})"
+SERVICE=varnishd
 DESC="HTTP accelerator"
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/varnishd
-PIDFILE=/run/$NAME.pid
+PIDFILE=/run/$SERVICE.pid
 
 test -x $DAEMON || { echo "${DAEMON} has no execute bit"; exit 0; }
 
@@ -48,7 +48,7 @@ start_varnishd() {
     output=$(/bin/tempfile -s.varnish)
     if start-stop-daemon \
         --start --pidfile ${PIDFILE} --exec ${DAEMON} -- \
-        -P ${PIDFILE} ${DAEMON_OPTS} > ${output} 2>&1; then
+        ${DAEMON_OPTS} -P ${PIDFILE} > ${output} 2>&1; then
         log_end_msg 0
     else
         log_end_msg 1

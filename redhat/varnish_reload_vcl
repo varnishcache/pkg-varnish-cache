@@ -39,6 +39,9 @@ if [ -z "$VARNISH_VCL_CONF" ]; then
 	. /etc/sysconfig/varnish
 fi
 
+# Get warmup time from defaults or use 0 warmup
+WARMUP=${WARMUP_TIME:-0}
+
 $debug && print_debug
 
 # Check configuration
@@ -77,7 +80,7 @@ fi
 VARNISHADM="varnishadm $secret -T $VARNISH_ADMIN_LISTEN_ADDRESS:$VARNISH_ADMIN_LISTEN_PORT"
 
 # Now do the real work
-new_config="reload_$(date +%FT%H:%M:%S)"
+new_config="reload_$(date +%FT%H%M%S)"
 
 # Check if we are able to connect at all
 if $VARNISHADM vcl.list > /dev/null; then
@@ -87,12 +90,12 @@ else
 	exit 1
 fi
 
-if $VARNISHADM vcl.list | awk ' { print $3 } ' | grep -q $new_config; then
+if $VARNISHADM vcl.list | awk ' { print $4 } ' | grep -q $new_config; then
 	echo Trying to use new config $new_config, but that is already in use
 	exit 2
 fi
 
-current_config=$( $VARNISHADM vcl.list | awk ' /^active/ { print $3 } ' )
+current_config=$( $VARNISHADM vcl.list | awk ' /^active/ { print $4 } ' )
 
 echo "Loading vcl from $VARNISH_VCL_CONF"
 echo "Current running config name is $current_config"
@@ -104,6 +107,10 @@ else
 	echo "$VARNISHADM vcl.load failed"
 	exit 1
 fi
+
+# Wait before vcl.use if WARMUP > 0
+# Used if backend probes require some time to set backends healthy
+sleep $WARMUP
 
 if $VARNISHADM vcl.use $new_config; then
 	$debug && echo "$VARNISHADM vcl.use succeded"

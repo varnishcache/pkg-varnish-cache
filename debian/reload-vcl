@@ -42,9 +42,9 @@ msg_secret_not_there="Error: Secret file %s does not exist\n"
 if [ -f /proc/sys/kernel/random/uuid ]
 then
     uuid=$(cat /proc/sys/kernel/random/uuid)
-    vcl_label="${LOGNAME}${LOGNAME:+:}${uuid}"
+    vcl_label="vcl_${LOGNAME}${LOGNAME:+_}${uuid}"
 else
-    vcl_label="$($date +${LOGNAME}${LOGNAME:+:}%s.%N)"
+    vcl_label="vcl_$($date +${LOGNAME}${LOGNAME:+_}%s-%N)"
 fi
 
 # Load defaults file
@@ -87,7 +87,7 @@ done
 # Extract the -f and the -T option, and (try to) ensure that the
 # management interface is on the form hostname:address.
 OPTIND=1
-while getopts a:b:CdFf:g:h:i:l:M:n:P:p:S:s:T:t:u:Vw: flag $DAEMON_OPTS
+while getopts a:b:CdFf:g:h:i:j:l:M:n:P:p:S:s:T:t:u:Vw: flag $DAEMON_OPTS
 do
     case $flag in
 		f)
@@ -107,6 +107,8 @@ do
     esac
 done
 
+# Get warmup time from defaults or use 0 warmup
+warmup_time=${WARMUP_TIME:-0}
 
 # Sanity checks
 if [ ! -x "$varnishadm" ]
@@ -149,6 +151,7 @@ then
     then
 	printf "$msg_compile_only" $varnishadm $mgmt_interface $vcl_label
     else
+    sleep $warmup_time
 	if $varnishadm -T $mgmt_interface -S ${secret} vcl.use $vcl_label
 	then
 	    printf "$msg_use_ok" $vcl_label

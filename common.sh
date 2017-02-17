@@ -15,7 +15,7 @@ function findversion() {
 	V=$(grep PACKAGE_VERSION= configure | sed "s/.*=//;s/'//g")
 	RELEASE=""
 	if [ "$V" = "trunk" ]; then
-		V="5.0"
+		V="5.1"
 		MINOR="0"
 	else
 		# 4.1.1

@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Upload packages to packagecloud.io.
+
+REPO="lkarsten/varnish41"   # For now.
+
+if [ -z "$*" ]; then
+	echo "Usage: $0 deb|el6|el7 package1 [packageN..]"
+	exit 1
+fi
+
+if [ $1 == "deb" ]; then
+	package_cloud push $REPO/debian/jessie  $*
+	package_cloud push $REPO/debian/stretch $*
+
+	package_cloud push $REPO/ubuntu/trusty $*
+	package_cloud push $REPO/ubuntu/xenial $*
+elif [ $1 == "el6" ]; then
+	package_cloud push $REPO/el/6 $*
+elif [ $1 == "el7" ]; then
+	package_cloud push $REPO/el/7 $*
+else
+	echo "ERROR: Unknown mode $1"
+	exit 2
+fi

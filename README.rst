@@ -10,7 +10,7 @@ The flow is roughly:
 
 1) Set up the build environment. On Redhat that is mock, on Debian/Ubuntu you
    need sbuild.
-2) Put the Varnish Cache .tar.gz archive into source/.
+2) Put the Varnish Cache .tar.gz archive into sources/.
 3) Run ./package-deb or ./package-rpm.
 
 
