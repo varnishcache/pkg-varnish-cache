@@ -80,3 +80,6 @@ override_dh_compress:
 
 override_dh_strip:
 	dh_strip --keep-debug
+
+override_dh_auto_build:
+	$(MAKE) dist html
