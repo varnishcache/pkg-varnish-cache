@@ -191,7 +191,6 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/varnishapi.pc
 %{_datadir}/varnish/vmodtool*
 %{_datadir}/aclocal/*
-%doc LICENSE
 
 
 %pre
