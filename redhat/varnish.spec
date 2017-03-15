@@ -156,6 +156,8 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 %{_mandir}/man7/*.7*
 %{_docdir}/varnish/
+%{_datadir}/varnish
+%exclude %{_datadir}/varnish/vmodtool*
 %doc doc/html
 %doc doc/changes*.html
 %dir %{_sysconfdir}/varnish/
@@ -187,8 +189,8 @@ rm -rf %{buildroot}
 %dir %{_includedir}/varnish
 %{_includedir}/varnish/*
 %{_libdir}/pkgconfig/varnishapi.pc
-/usr/share/varnish
-/usr/share/aclocal
+%{_datadir}/varnish/vmodtool*
+%{_datadir}/aclocal/*
 %doc LICENSE
 
 
