@@ -6,6 +6,25 @@ set -u
 WORK_DIR=
 VCL_FILE=
 WARMUP=
+SCRIPT="$0"
+
+usage() {
+	cat <<-EOF
+	Error: $1.
+
+	Usage: $SCRIPT [-n <workdir>] [-w <warmup>] [<file>]
+
+	Reload and use a VCL on a running Varnish instance. Options must be
+	specified in that order when used:
+
+	-n <workdir> : for a different working directory for varnishd
+	-w <warmup>  : the waiting period between load and use operations
+
+	When <file> is empty or missing, the active VCL's file is used but
+	will fail if the active VCL wasn't loaded from a file.
+	EOF
+	exit 1
+}
 
 varnishadm() {
 	if ! OUTPUT=$(command varnishadm -n "$WORK_DIR" -- "$@" 2>&1)
