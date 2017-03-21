@@ -84,8 +84,22 @@ vcl_reload_name() {
 	printf "reload_%s" "$(date +%Y%m%dT%H%M%S)"
 }
 
-# TODO: getopts for -n only, if any (probably without heavy-handed getopts)
-# TODO: get VCL_FILE from first (and only) non-opt argument, if any
+if [ $# -gt 0 ] && [ "$1" = -n ]
+then
+	test $# -gt 1 || usage "missing argument to -n"
+	WORK_DIR="$2"
+	shift 2
+fi
+
+if [ $# -gt 0 ] && [ "$1" = -w ]
+then
+	test $# -gt 1 || usage "missing argument to -w"
+	WARMUP="$2"
+	shift 2
+fi
+
+test $# -gt 1 && usage "too many arguments"
+test $# -eq 1 && VCL_FILE="$1"
 
 if [ -z "$VCL_FILE" ]
 then
