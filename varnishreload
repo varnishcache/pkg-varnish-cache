@@ -114,5 +114,7 @@ fi
 RELOAD_NAME=$(vcl_reload_name)
 
 varnishadm vcl.load "$RELOAD_NAME" "$VCL_FILE"
-# TODO: warmup pause
+
+test -n "$WARMUP" && sleep "$WARMUP"
+
 varnishadm vcl.use  "$RELOAD_NAME"
