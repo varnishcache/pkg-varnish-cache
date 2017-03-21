@@ -22,6 +22,11 @@ usage() {
 
 	When <file> is empty or missing, the active VCL's file is used but
 	will fail if the active VCL wasn't loaded from a file.
+
+	Upon success, the name of the loaded VCL is constructed from the
+	current date and time, for example:
+
+	    $(vcl_reload_name)
 	EOF
 	exit 1
 }
@@ -81,7 +86,7 @@ vcl_active_file() {
 }
 
 vcl_reload_name() {
-	printf "reload_%s" "$(date +%Y%m%dT%H%M%S)"
+	printf "reload_%s" "$(date +%Y%m%d_%H%M%S)"
 }
 
 if [ $# -gt 0 ] && [ "$1" = -n ]
