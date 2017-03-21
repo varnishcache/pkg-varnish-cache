@@ -39,7 +39,7 @@ vcl_file() {
 }
 
 vcl_active_name() {
-	if ! VCL_LIST="$(varnishadm vcl.lists)"
+	if ! VCL_LIST="$(varnishadm vcl.list)"
 	then
 		fail "failed to get the active VCL name"
 	fi
