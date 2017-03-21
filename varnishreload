@@ -8,7 +8,7 @@ VCL_FILE=
 WARMUP=
 
 varnishadm() {
-	if ! OUTPUT="$(command varnishadm -n "$WORK_DIR" -- "$@" 2>&1)"
+	if ! OUTPUT=$(command varnishadm -n "$WORK_DIR" -- "$@" 2>&1)
 	then
 		echo "Command: varnishadm -n '$WORK_DIR' -- $*"
 		echo
