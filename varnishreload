@@ -1,0 +1,85 @@
+#!/bin/sh
+
+set -e
+set -u
+
+WORK_DIR=
+VCL_FILE=
+WARMUP=
+
+varnishadm() {
+	if ! OUTPUT="$(command varnishadm -n "$WORK_DIR" -- "$@" 2>&1)"
+	then
+		echo "Command: varnishadm -n '$WORK_DIR' -- $*"
+		echo
+		echo "$OUTPUT"
+		echo
+		exit 1
+	fi >&2
+	echo "$OUTPUT"
+}
+
+fail() {
+	echo "Error: $*" >&2
+	exit 1
+}
+
+vcl_count() {
+	varnishadm vcl.list |
+	awk "BEGIN {n=0} \$NF == \"$1\" {n=n+1} END {print n}"
+}
+
+vcl_file() {
+	if ! VCL_SHOW="$(varnishadm vcl.show -v "$1")"
+	then
+		fail "failed to get the VCL file name"
+	fi
+	echo "$VCL_SHOW" |
+	awk 'NR == 1 {print $NF}'
+}
+
+vcl_active_name() {
+	if ! VCL_LIST="$(varnishadm vcl.lists)"
+	then
+		fail "failed to get the active VCL name"
+	fi
+	echo "$VCL_LIST" |
+	awk '/^active/ {print $NF}'
+}
+
+vcl_active_file() {
+	set -e
+
+	VCL_NAME=$(vcl_active_name)
+	VCL_COUNT=$(vcl_count "$VCL_NAME")
+
+	# XXX: it can happen with a discard but I haven't checked whether it
+	#      actually messes with vcl.show (I suspect we don't need this).
+	test "$VCL_COUNT" -gt 1 &&
+	fail "more than one VCL named $VCL_NAME ($VCL_COUNT)"
+
+	vcl_file "$VCL_NAME"
+}
+
+vcl_reload_name() {
+	printf "reload_%s" "$(date +%Y%m%dT%H%M%S)"
+}
+
+# TODO: getopts for -n only, if any (probably without heavy-handed getopts)
+# TODO: get VCL_FILE from first (and only) non-opt argument, if any
+
+if [ -z "$VCL_FILE" ]
+then
+	VCL_FILE=$(vcl_active_file)
+
+	case $VCL_FILE in
+	/*) ;;
+	*) fail "active VCL file not found (got $VCL_FILE)" ;;
+	esac
+fi
+
+RELOAD_NAME=$(vcl_reload_name)
+
+varnishadm vcl.load "$RELOAD_NAME" "$VCL_FILE"
+# TODO: warmup pause
+varnishadm vcl.use  "$RELOAD_NAME"
