@@ -75,6 +75,28 @@ vcl_active_file() {
 	vcl_file "$VCL_NAME"
 }
 
+vcl_reload_match() {
+	awk '$1 == "available" && $NF ~ /^reload_[0-9]{8}_[0-9]{6}$/'" {$1}"
+}
+
+vcl_reload_count() {
+	VCL_LIST="$(varnishadm vcl.list)" ||
+	fail "failed to count available reload VCLs"
+
+	echo "$VCL_LIST" |
+	vcl_reload_match print |
+	sed '=;d' |
+	tail -1
+}
+
+vcl_reload_oldest() {
+	VCL_LIST="$(varnishadm vcl.list)" ||
+	fail "failed to get the oldest reload VCLs"
+
+	echo "$VCL_LIST" |
+	vcl_reload_match 'print $NF; exit'
+}
+
 vcl_reload_name() {
 	printf "reload_%s" "$(date +%Y%m%d_%H%M%S)"
 }
@@ -120,3 +142,19 @@ varnishadm vcl.load "$RELOAD_NAME" "$VCL_FILE"
 test -n "$WARMUP" && sleep "$WARMUP"
 
 varnishadm vcl.use  "$RELOAD_NAME"
+
+safe_test() {
+	test -z "$1" && return 1
+	test "$@"
+}
+
+safe_test "$MAXIMUM" -ge 0 || exit 0
+
+while true
+do
+	COUNT=$(vcl_reload_count)
+	safe_test "$COUNT" -gt "$MAXIMUM" || exit 0
+	OLDEST=$(vcl_reload_oldest)
+	varnishadm vcl.discard "$OLDEST" >/dev/null
+	echo "VCL '$OLDEST' was discarded"
+done
