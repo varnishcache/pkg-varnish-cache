@@ -48,11 +48,6 @@ fail() {
 	exit 1
 }
 
-vcl_count() {
-	varnishadm vcl.list |
-	awk "BEGIN {n=0} \$NF == \"$1\" {n=n+1} END {print n}"
-}
-
 vcl_file() {
 	if ! VCL_SHOW="$(varnishadm vcl.show -v "$1")"
 	then
@@ -73,15 +68,7 @@ vcl_active_name() {
 
 vcl_active_file() {
 	set -e
-
 	VCL_NAME=$(vcl_active_name)
-	VCL_COUNT=$(vcl_count "$VCL_NAME")
-
-	# XXX: it can happen with a discard but I haven't checked whether it
-	#      actually messes with vcl.show (I suspect we don't need this).
-	test "$VCL_COUNT" -gt 1 &&
-	fail "more than one VCL named $VCL_NAME ($VCL_COUNT)"
-
 	vcl_file "$VCL_NAME"
 }
 
