@@ -53,7 +53,7 @@ vcl_file() {
 	fail "failed to get the VCL file name"
 
 	echo "$VCL_SHOW" |
-	awk 'NR == 1 {print $NF}'
+	awk '$1 == "//" && $2 == "VCL.SHOW" {print $NF; exit}'
 }
 
 vcl_active_name() {
