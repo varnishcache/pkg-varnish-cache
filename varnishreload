@@ -63,7 +63,7 @@ vcl_active_name() {
 		fail "failed to get the active VCL name"
 	fi
 	echo "$VCL_LIST" |
-	awk '/^active/ {print $NF}'
+	awk '$1 == "active" {print $NF}'
 }
 
 vcl_active_file() {
