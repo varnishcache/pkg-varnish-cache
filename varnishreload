@@ -49,19 +49,17 @@ fail() {
 }
 
 vcl_file() {
-	if ! VCL_SHOW="$(varnishadm vcl.show -v "$1")"
-	then
-		fail "failed to get the VCL file name"
-	fi
+	VCL_SHOW="$(varnishadm vcl.show -v "$1")" ||
+	fail "failed to get the VCL file name"
+
 	echo "$VCL_SHOW" |
 	awk 'NR == 1 {print $NF}'
 }
 
 vcl_active_name() {
-	if ! VCL_LIST="$(varnishadm vcl.list)"
-	then
-		fail "failed to get the active VCL name"
-	fi
+	VCL_LIST="$(varnishadm vcl.list)" ||
+	fail "failed to get the active VCL name"
+
 	echo "$VCL_LIST" |
 	awk '$1 == "active" {print $NF}'
 }
