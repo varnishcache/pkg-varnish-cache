@@ -3,6 +3,7 @@
 set -e
 set -u
 
+MAXIMUM=
 WORK_DIR=
 VCL_FILE=
 WARMUP=
@@ -12,11 +13,12 @@ usage() {
 	cat <<-EOF
 	Error: $1.
 
-	Usage: $SCRIPT [-n <workdir>] [-w <warmup>] [<file>]
+	Usage: $SCRIPT [-m <maximum>] [-n <workdir>] [-w <warmup>] [<file>]
 
 	Reload and use a VCL on a running Varnish instance. Options must be
 	specified in that order when used:
 
+	-m <maximum> : maximum number of available reloads to leave behind
 	-n <workdir> : for a different working directory for varnishd
 	-w <warmup>  : the waiting period between load and use operations
 
@@ -27,6 +29,9 @@ usage() {
 	current date and time, for example:
 
 	    $(vcl_reload_name)
+
+	Afterwards available VCLs created by this script are discarded until
+	<maximum> are left, unless it was empty or undefined.
 	EOF
 	exit 1
 }
@@ -73,6 +78,13 @@ vcl_active_file() {
 vcl_reload_name() {
 	printf "reload_%s" "$(date +%Y%m%d_%H%M%S)"
 }
+
+if [ $# -gt 0 ] && [ "$1" = -m ]
+then
+	test $# -gt 1 || usage "missing argument to -m"
+	MAXIMUM="$2"
+	shift 2
+fi
 
 if [ $# -gt 0 ] && [ "$1" = -n ]
 then
