@@ -79,4 +79,4 @@ override_dh_compress:
 	dh_compress -X/usr/share/doc/varnish-doc/html
 
 override_dh_strip:
-	dh_strip --keep-debug
+	dh_strip --keep-debug -Xvarnishd

@@ -100,6 +100,7 @@ export CFLAGS="$CFLAGS -O2 -g -Wp,-D_FORTIFY_SOURCE=0"
 %configure --localstatedir=/var/lib --without-rst2html
 
 make %{?_smp_mflags} V=1
+strip --strip-unneeded varnishd
 
 # In 4.0 the built docs need to be copied to the current/4.1 location.
 test -d doc/html || cp -pr doc/sphinx/build/html doc/html
