@@ -100,7 +100,6 @@ export CFLAGS="$CFLAGS -O2 -g -Wp,-D_FORTIFY_SOURCE=0"
 %configure --localstatedir=/var/lib --without-rst2html
 
 make %{?_smp_mflags} V=1
-#strip --strip-unneeded **/varnishd
 
 # In 4.0 the built docs need to be copied to the current/4.1 location.
 test -d doc/html || cp -pr doc/sphinx/build/html doc/html
@@ -114,6 +113,7 @@ rm -rf doc/sphinx/build
 make check %{?_smp_mflags} LD_LIBRARY_PATH="../../lib/libvarnish/.libs:../../lib/libvarnishcompat/.libs:../../lib/libvarnishapi/.libs:../../lib/libvcc/.libs:../../lib/libvgz/.libs" VERBOSE=1
 
 %install
+export DONT_STRIP=1
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} INSTALL="install -p"
 
