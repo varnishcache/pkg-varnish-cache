@@ -97,10 +97,10 @@ cp %{SOURCE6} %{SOURCE9} %{SOURCE10} %{SOURCE11} .
 export CFLAGS="$CFLAGS -O2 -g -Wp,-D_FORTIFY_SOURCE=0"
 
 # Fugly dependency override as EL6 provides a modified python 2.6 which works
-sed -e "s/checking whether \$PYTHON version is >= 2.7/checking whether \$PYTHON version is >= 2.6.66/g" \
--e "s/minver = list(map(int, '2.7'/minver = list(map(int, '2.6.66'/g" \
--e "s/checking for a Python interpreter with version >= 2.7/checking for a Python interpreter with version >= 2.6.66/g" \
--e "s/Python >= 2.7 is required./Python >= 2.6.66 is required./g" \
+sed -e "s/checking whether \$PYTHON version is >= 2.7/checking whether \$PYTHON version is >= 2.6.6/g" \
+-e "s/minver = list(map(int, '2.7'/minver = list(map(int, '2.6.6'/g" \
+-e "s/checking for a Python interpreter with version >= 2.7/checking for a Python interpreter with version >= 2.6.6/g" \
+-e "s/Python >= 2.7 is required./Python >= 2.6.6 is required./g" \
 -i configure
 %endif
 
