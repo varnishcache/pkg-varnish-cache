@@ -101,7 +101,7 @@ sed -e "s/checking whether \$PYTHON version is >= 2.7/checking whether \$PYTHON 
 -e "s/minver = list(map(int, '2.7'/minver = list(map(int, '2.6.66'/" \
 -e "s/checking for a Python interpreter with version >= 2.7/checking for a Python interpreter with version >= 2.6.66/" \
 -e "s/Python >= 2.7 is required./Python >= 2.6.66 is required./" \
--i orig configure
+-i configure
 %endif
 
 %configure --localstatedir=/var/lib --without-rst2html
