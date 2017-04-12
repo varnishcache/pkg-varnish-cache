@@ -15,7 +15,7 @@ LimitNOFILE=131072
 
 # Locked shared memory (for ulimit -l)
 # Default log size is 82MB + header
-LimitMEMLOCK=82000
+LimitMEMLOCK=85983232
 
 # On systemd >= 228 enable this to avoid "fork failed" on reload.
 #TasksMax=infinity
