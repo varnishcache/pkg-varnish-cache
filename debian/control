@@ -13,7 +13,8 @@ Build-Depends:
  libtool,
  pkg-config,
  python-docutils,
- python-sphinx
+ python-sphinx,
+ dh-systemd
 Vcs-Git:  git://github.com/varnishcache/pkg-varnish-cache.git
 Homepage: https://www.varnish-cache.org/
 Standards-Version: 3.9.6
