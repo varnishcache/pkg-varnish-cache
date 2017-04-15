@@ -26,6 +26,8 @@ LimitCORE=infinity
 EnvironmentFile=/etc/varnish/varnish.params
 
 Type=forking
+StandardOutput=null
+StandardError=journal
 PIDFile=/var/run/varnish.pid
 PrivateTmp=true
 ExecStart=/usr/sbin/varnishd \
