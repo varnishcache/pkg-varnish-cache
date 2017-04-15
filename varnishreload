@@ -10,14 +10,17 @@ WARMUP=
 SCRIPT="$0"
 
 usage() {
+	test $# -eq 1 &&
+	printf 'Error: %s.\n\n' "$1"
+
 	cat <<-EOF
-	Error: $1.
-
 	Usage: $SCRIPT [-m <maximum>] [-n <workdir>] [-w <warmup>] [<file>]
+	       $SCRIPT -h
 
-	Reload and use a VCL on a running Varnish instance. Options must be
-	specified in that order when used:
+	Reload and use a VCL on a running Varnish instance.
 
+	Available options:
+	-h           : show this help and exit
 	-m <maximum> : maximum number of available reloads to leave behind
 	-n <workdir> : for a different working directory for varnishd
 	-w <warmup>  : the waiting period between load and use operations
@@ -33,7 +36,7 @@ usage() {
 	Afterwards available VCLs created by this script are discarded until
 	<maximum> are left, unless it was empty or undefined.
 	EOF
-	exit 1
+	exit $#
 }
 
 varnishadm() {
@@ -101,28 +104,20 @@ vcl_reload_name() {
 	printf "reload_%s" "$(date +%Y%m%d_%H%M%S)"
 }
 
-if [ $# -gt 0 ] && [ "$1" = -m ]
-then
-	test $# -gt 1 || usage "missing argument to -m"
-	MAXIMUM="$2"
-	shift 2
-fi
+while getopts hm:n:w: OPT
+do
+	case $OPT in
+	h) usage ;;
+	m) MAXIMUM=$OPTARG ;;
+	n) WORK_DIR=$OPTARG ;;
+	w) WARMUP=$OPTARG ;;
+	*) usage "wrong usage" >&2 ;;
+	esac
+done
 
-if [ $# -gt 0 ] && [ "$1" = -n ]
-then
-	test $# -gt 1 || usage "missing argument to -n"
-	WORK_DIR="$2"
-	shift 2
-fi
+shift $((OPTIND - 1))
 
-if [ $# -gt 0 ] && [ "$1" = -w ]
-then
-	test $# -gt 1 || usage "missing argument to -w"
-	WARMUP="$2"
-	shift 2
-fi
-
-test $# -gt 1 && usage "too many arguments"
+test $# -gt 1 && usage "too many arguments" >&2
 test $# -eq 1 && VCL_FILE="$1"
 
 if [ -z "$VCL_FILE" ]
