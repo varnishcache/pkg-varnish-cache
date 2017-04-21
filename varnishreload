@@ -94,7 +94,7 @@ vcl_reload_count() {
 
 vcl_reload_oldest() {
 	VCL_LIST="$(varnishadm vcl.list)" ||
-	fail "failed to get the oldest reload VCLs"
+	fail "failed to get the oldest reload VCL"
 
 	echo "$VCL_LIST" |
 	vcl_reload_match 'print $NF; exit'
