@@ -161,7 +161,7 @@ fi
 
 RELOAD_NAME=$(vcl_reload_name)
 
-varnishadm vcl.load "$RELOAD_NAME" "$VCL_FILE"
+varnishadm vcl.load "$RELOAD_NAME" "$VCL_FILE" warm
 
 test -n "$WARMUP" && sleep "$WARMUP"
 
