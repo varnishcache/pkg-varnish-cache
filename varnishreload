@@ -86,7 +86,7 @@ fail() {
 }
 
 vcl_file() {
-	VCL_SHOW="$(varnishadm vcl.show -v "$1")" ||
+	VCL_SHOW=$(varnishadm vcl.show -v "$1") ||
 	fail "failed to get the VCL file name"
 
 	echo "$VCL_SHOW" |
@@ -94,7 +94,7 @@ vcl_file() {
 }
 
 vcl_active_name() {
-	VCL_LIST="$(varnishadm vcl.list)" ||
+	VCL_LIST=$(varnishadm vcl.list) ||
 	fail "failed to get the active VCL name"
 
 	echo "$VCL_LIST" |
@@ -112,7 +112,7 @@ vcl_reload_match() {
 }
 
 vcl_reload_count() {
-	VCL_LIST="$(varnishadm vcl.list)" ||
+	VCL_LIST=$(varnishadm vcl.list) ||
 	fail "failed to count available reload VCLs"
 
 	echo "$VCL_LIST" |
@@ -122,7 +122,7 @@ vcl_reload_count() {
 }
 
 vcl_reload_oldest() {
-	VCL_LIST="$(varnishadm vcl.list)" ||
+	VCL_LIST=$(varnishadm vcl.list) ||
 	fail "failed to get the oldest reload VCL"
 
 	echo "$VCL_LIST" |
