@@ -48,11 +48,14 @@ usage() {
 	Available options:
 	-h           : show this help and exit
 	-m <maximum> : maximum number of available reloads to leave behind
-	-n <workdir> : for a different working directory for varnishd
-	-w <warmup>  : the waiting period between load and use operations
+	-n <workdir> : specify the name or directory for the varnishd instance
+	-w <warmup>  : the number of seconds between load and use operations
 
 	When <file> is empty or missing, the active VCL's file is used but
-	will fail if the active VCL wasn't loaded from a file.
+	will fail if the active VCL wasn't loaded from a file. The <file>,
+	when specified, is passed as-is to the vcl.load command. Refer to
+	the varnishd manual regarding the handling of absolute or relative
+	paths.
 
 	Upon success, the name of the loaded VCL is constructed from the
 	current date and time, for example:
