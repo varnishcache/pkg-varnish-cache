@@ -90,7 +90,10 @@ vcl_file() {
 	fail "failed to get the VCL file name"
 
 	echo "$VCL_SHOW" |
-	awk '$1 == "//" && $2 == "VCL.SHOW" {print $NF; exit}'
+	awk '$1 == "//" && $2 == "VCL.SHOW" {print; exit}' | {
+		read DELIM VCL_SHOW INDEX SIZE FILE
+		echo "$FILE"
+	}
 }
 
 vcl_active_name() {
