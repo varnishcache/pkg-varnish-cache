@@ -70,6 +70,11 @@ cd ..
 
 # Build binary packages for the requested releases inside chroots.
 for dist in $BINDISTS; do
+    # Legacy distros without systemd support
+    if [ "$dist" = "precise" ] || [ "$dist" = "wheezy" ]; then
+        cp debian/control.nosystemd debian/control
+        cp debian/rules.nosystemd debian/rules
+    fi
 	# Legacy packages embedded the release into the package version.
 	export DEBIAN_OVERRIDE_BINARY_VERSION="$FULL_VERSION~$dist"
 	sbuild -v -A -c "$dist-amd64$chroot_postfix" -d "$dist" varnish_*.dsc
