@@ -72,8 +72,10 @@ cd ..
 for dist in $BINDISTS; do
     # Legacy distros without systemd support
     if [ "$dist" = "precise" ] || [ "$dist" = "wheezy" ]; then
-        sed -i "/^ dh-systemd/d" debian/control
-        sed -i "s|--parallel --with systemd|--parallel|" debian/rules
+        pwd
+        find
+        sed -i "/^ dh-systemd/d" varnish-*/debian/control
+        sed -i "s|--parallel --with systemd|--parallel|" varnish-*/debian/rules
     fi
 	# Legacy packages embedded the release into the package version.
 	export DEBIAN_OVERRIDE_BINARY_VERSION="$FULL_VERSION~$dist"
