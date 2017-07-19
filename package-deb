@@ -44,8 +44,16 @@ else
 	sed -i "s|^#usr/share/varnish/vcl|usr/share/varnish/vcl|" debian/varnish.install
 fi
 
+# Use the non-systemd versions of rules and control for legacy distros
+if [[ $BINDISTS =~ .*precise.* || $BINDISTS =~ .*wheezy.* ]]; then
+    echo "INFO: Building non-systemd packages."
+    cp debian/control.nosystemd debian/control
+    cp debian/rules.nosystemd debian/rules
+fi
+
 cd build/varnish-*
 
+# Copy our debian metadata into the build/varnish-$version directory 
 cp -r ../../debian .
 rm -f debian/.*.sw?    # Delete any vim temporary files.
 
@@ -63,20 +71,16 @@ else
 	dch -v "$V.$MINOR-0${RELEASE}+daily+$(date +%Y%m%d.%H%M%S)" "Automatic build from git"
 fi
 
+# Generate the source package used by subsequent sbuilds
 dpkg-buildpackage -us -uc -S -j10
+
+# Work dir is build/
 cd ..
 
 # By now we are done setting up and building the source package.
 
 # Build binary packages for the requested releases inside chroots.
 for dist in $BINDISTS; do
-    # Legacy distros without systemd support
-    if [ "$dist" = "precise" ] || [ "$dist" = "wheezy" ]; then
-        pwd
-        find
-        sed -i "/^ dh-systemd/d" varnish-*/debian/control
-        sed -i "s|--parallel --with systemd|--parallel|" varnish-*/debian/rules
-    fi
 	# Legacy packages embedded the release into the package version.
 	export DEBIAN_OVERRIDE_BINARY_VERSION="$FULL_VERSION~$dist"
 	sbuild -v -A -c "$dist-amd64$chroot_postfix" -d "$dist" varnish_*.dsc
