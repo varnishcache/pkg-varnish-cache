@@ -26,7 +26,7 @@ VMOD_ABI = $(shell printf '\#include "vrt.h"\nvarnishabi- VRT_MAJOR_VERSION . VR
 
 # Main build rule, leave everything to debhelper
 %:
-	dh $@ --parallel --with systemd
+	dh $@ --parallel
 
 ifeq (,$(filter test,$(LOCAL_BUILD_OPTIONS)))
 # Disable automated build tests
