@@ -47,8 +47,8 @@ fi
 # Use the non-systemd versions of rules and control for legacy distros
 if [[ $BINDISTS =~ .*precise.* || $BINDISTS =~ .*wheezy.* ]]; then
     echo "INFO: Building non-systemd packages."
-    cp debian/control.nosystemd debian/control
-    cp debian/rules.nosystemd debian/rules
+    mv debian/control.nosystemd debian/control
+    mv debian/rules.nosystemd debian/rules
 fi
 
 cd build/varnish-*
