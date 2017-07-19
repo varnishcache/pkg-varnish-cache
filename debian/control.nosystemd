@@ -1,0 +1,76 @@
+Source: varnish
+Section: web
+Priority: optional
+Maintainer: Varnish Software <opensource@varnish-software.com>
+Build-Depends:
+ automake,
+ autotools-dev,
+ debhelper (>= 9),
+ libedit-dev,
+ libjemalloc-dev,
+ libncurses-dev,
+ libpcre3-dev,
+ libtool,
+ pkg-config,
+ python-docutils,
+ python-sphinx
+Vcs-Git:  git://github.com/varnishcache/pkg-varnish-cache.git
+Homepage: https://www.varnish-cache.org/
+Standards-Version: 3.9.6
+
+Package: varnish
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ adduser,
+ gcc,
+ libc6-dev | libc6.1-dev | libc-dev,
+Provides: varnish,
+ libvarnishapi1,
+ ${Varnish:ABI},
+ ${Varnish:strictABI}
+Suggests: varnish-dev
+Replaces:
+ libvarnishapi1,
+ varnish-dbg,
+ varnish-doc
+Conflicts:
+ libvarnishapi1,
+ varnish-dbg,
+ varnish-doc
+Description: state of the art, high-performance web accelerator
+ Varnish Cache is a state of the art web accelerator written with
+ performance and flexibility in mind.
+ .
+ Varnish Cache stores web pages in memory so web servers don't have to
+ create the same web page over and over again. Varnish serves pages
+ much faster than any application server; giving the website a
+ significant speed up.
+ .
+ Some of the features include:
+  * A modern design
+  * VCL - a very flexible configuration language
+  * Load balancing with health checking of backends
+  * Partial support for ESI - Edge Side Includes
+  * URL rewriting
+  * Graceful handling of "dead" backends
+
+Package: varnish-dev
+Section: libdevel
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ varnish (= ${binary:Version}),
+ pkg-config,
+ python
+Provides:
+ libvarnish-dev, 
+ libvarnishapi-dev
+Replaces:
+ libvarnish-dev, 
+ libvarnishapi-dev
+Conflicts:
+ libvarnish-dev, 
+ libvarnishapi-dev
+Description: development files for Varnish Cache
+ Development files for Varnish Cache HTTP accelerator.
