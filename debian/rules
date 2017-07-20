@@ -74,6 +74,7 @@ override_dh_gencontrol:
 override_dh_installinit:
 	dh_systemd_enable varnish.service
 	dh_systemd_enable --no-enable varnishncsa.service
+	dh_installinit --no-start --noscripts
 
 override_dh_compress:
 	dh_compress -X/usr/share/doc/varnish-doc/html
