@@ -73,7 +73,8 @@ override_dh_gencontrol:
 # Override to add several init scripts
 override_dh_installinit:
 	dh_installinit -a
-	dh_installinit --name=varnishncsa
+	# Do not automatically setup the varnishncsa service on systemd systems
+	#dh_installinit --name=varnishncsa
 
 override_dh_compress:
 	dh_compress -X/usr/share/doc/varnish-doc/html
