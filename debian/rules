@@ -70,11 +70,13 @@ override_dh_gencontrol:
 		dh_gencontrol -- -Tdebian/substvars; \
 	fi
 
-# Override to specify which services to enable
-override_dh_installinit:
-	dh_systemd_enable varnish.service
-	dh_systemd_enable --no-enable varnishncsa.service
-	dh_installinit --no-start --noscripts
+override_dh_systemd_enable:
+	dh_systemd_enable -pvarnish --name=varnish varnish.service
+	dh_systemd_enable -pvarnish --no-enable varnishncsa.service
+
+override_dh_systemd_start:
+	dh_systemd_start -pvarnish varnish.service
+	dh_systemd_start -pvarnish --no-start varnishncsa.service
 
 override_dh_compress:
 	dh_compress -X/usr/share/doc/varnish-doc/html
