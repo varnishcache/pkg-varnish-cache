@@ -18,7 +18,7 @@ NPROCS="unlimited"
 # DAEMON_COREFILE_LIMIT="unlimited"
 
 # Init script support to reload/switch vcl without restart.
-# To make this work, you need to explicitly set VARNISH_VCL_CONF
+# To make this work, you need to explicitly set VARNISH_VCL_CONF.
 RELOAD_VCL=1
 
 # Set WARMUP_TIME to force a delay in reload-vcl between vcl.load and vcl.use
