@@ -8,9 +8,7 @@
 # see the LICENSE file in the Varnish documentation directory
 #
 # The following environment variables have to be set:
-# RELOAD_VCL, VARNISH_VCL_CONF, VARNISH_ADMIN_LISTEN_PORT
-# The following are optional:
-# VARNISH_SECRET_FILE, VARNISH_ADMIN_LISTEN_ADDRESS
+# RELOAD_VCL, VARNISH_VCL_CONF
 #
 # Requires GNU bash and GNU date
 #
@@ -27,9 +25,6 @@ print_debug() {
 Parsed configuration:
 RELOAD_VCL=\"$RELOAD_VCL\"
 VARNISH_VCL_CONF=\"$VARNISH_VCL_CONF\"
-VARNISH_ADMIN_LISTEN_ADDRESS=\"$VARNISH_ADMIN_LISTEN_ADDRESS\"
-VARNISH_ADMIN_LISTEN_PORT=\"$VARNISH_ADMIN_LISTEN_PORT\"
-VARNISH_SECRET_FILE=\"$VARNISH_SECRET_FILE\"
 "
 }
 
@@ -55,32 +50,10 @@ elif [ -z "$VARNISH_VCL_CONF" ]; then
 elif [ ! -s "$VARNISH_VCL_CONF" ]; then
 	echo "Eror: VCL config $VARNISH_VCL_CONF is unreadable or empty"
 	exit 2
-
-elif [ -z "$VARNISH_SECRET_FILE" ]; then
-	echo "Warning: VARNISH_SECRET_FILE is not set"
-	secret=""
-
-elif [ ! -s "$VARNISH_SECRET_FILE" ]; then
-	echo "Error: varnish secret file $VARNISH_SECRET_FILE is unreadable or empty"
-	exit 2
-else
-	secret="-S $VARNISH_SECRET_FILE"
-fi
-
-if [ -z "$VARNISH_ADMIN_LISTEN_ADDRESS" -a -z "$VARNISH_ADMIN_LISTEN_PORT" ]; then
-	mgmt_interface=""
-
-elif [ -n "$VARNISH_ADMIN_LISTEN_ADDRESS" -a -n "$VARNISH_ADMIN_LISTEN_PORT" ]; then
-	mgmt_interface="-T $VARNISH_ADMIN_LISTEN_ADDRESS:$VARNISH_ADMIN_LISTEN_PORT"
-
-else
-	echo "Error: only one of VARNISH_ADMIN_LISTEN_ADDRESS or VARNISH_ADMIN_LISTEN_PORT was defined"
-        echo "       Both or none must be specified"
-	exit 2
 fi
 
 # Done parsing, set up command
-VARNISHADM="varnishadm $secret $mgmt_interface"
+VARNISHADM="varnishadm"
 
 # Now do the real work
 new_config="reload_$(date +%FT%H%M%S)"
