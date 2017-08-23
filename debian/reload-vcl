@@ -117,10 +117,9 @@ then
     exit 1
 fi
 
-if [ -z "$mgmt_interface" ]
+if [ -n "$mgmt_interface" ]
 then
-    printf >&2 "$msg_no_management"
-    exit 1
+	mgmt_interface="-T $mgmt_interface"
 fi
 
 if [ -z "$vcl_file" ]
@@ -137,6 +136,7 @@ if [ -f "$secret" ]
 		printf >&2 "$msg_secret_not_readable" $secret
 		exit 1
 	fi
+	secret="-S $secret"
 else
 	printf >&2 "$msg_secret_not_there" $secret
 	exit 1
@@ -145,14 +145,14 @@ fi
 logfile=$($tempfile -n /tmp/$vcl_label)
 
 # Compile and maybe reload
-if $varnishadm -T $mgmt_interface -S ${secret} vcl.load $vcl_label $vcl_file
+if $varnishadm $mgmt_interface ${secret} vcl.load $vcl_label $vcl_file
 then
     if [ -n "$compile_only" ]
     then
 	printf "$msg_compile_only" $varnishadm $mgmt_interface $vcl_label
     else
     sleep $warmup_time
-	if $varnishadm -T $mgmt_interface -S ${secret} vcl.use $vcl_label
+	if $varnishadm $mgmt_interface ${secret} vcl.use $vcl_label
 	then
 	    printf "$msg_use_ok" $vcl_label
 	else

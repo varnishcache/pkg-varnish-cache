@@ -56,14 +56,6 @@ elif [ ! -s "$VARNISH_VCL_CONF" ]; then
 	echo "Eror: VCL config $VARNISH_VCL_CONF is unreadable or empty"
 	exit 2
 
-elif [ -z "$VARNISH_ADMIN_LISTEN_ADDRESS" ]; then
-	echo "Warning: VARNISH_ADMIN_LISTEN_ADDRESS is not set, using 127.0.0.1"
-	VARNISH_ADMIN_LISTEN_ADDRESS="127.0.0.1"
-
-elif [ -z "$VARNISH_ADMIN_LISTEN_PORT" ]; then
-	echo "Error: VARNISH_ADMIN_LISTEN_PORT is not set"
-	exit 2
-
 elif [ -z "$VARNISH_SECRET_FILE" ]; then
 	echo "Warning: VARNISH_SECRET_FILE is not set"
 	secret=""
@@ -75,8 +67,20 @@ else
 	secret="-S $VARNISH_SECRET_FILE"
 fi
 
+if [ -z "$VARNISH_ADMIN_LISTEN_ADDRESS" -a -z "$VARNISH_ADMIN_LISTEN_PORT" ]; then
+	mgmt_interface=""
+
+elif [ -n "$VARNISH_ADMIN_LISTEN_ADDRESS" -a -n "$VARNISH_ADMIN_LISTEN_PORT" ]; then
+	mgmt_interface="-T $VARNISH_ADMIN_LISTEN_ADDRESS:$VARNISH_ADMIN_LISTEN_PORT"
+
+else
+	echo "Error: only one of VARNISH_ADMIN_LISTEN_ADDRESS or VARNISH_ADMIN_LISTEN_PORT was defined"
+        echo "       Both or none must be specified"
+	exit 2
+fi
+
 # Done parsing, set up command
-VARNISHADM="varnishadm $secret -T $VARNISH_ADMIN_LISTEN_ADDRESS:$VARNISH_ADMIN_LISTEN_PORT"
+VARNISHADM="varnishadm $secret $mgmt_interface"
 
 # Now do the real work
 new_config="reload_$(date +%FT%H%M%S)"
