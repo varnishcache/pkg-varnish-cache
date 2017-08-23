@@ -43,7 +43,7 @@ Requires: logrotate
 Requires: ncurses
 Requires: pcre
 Requires(pre): shadow-utils
-Requires(post): /sbin/chkconfig, /usr/bin/uuidgen
+Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig
 Requires(preun): /sbin/service
 %if %{undefined suse_version}
@@ -219,7 +219,6 @@ exit 0
 /sbin/chkconfig --add varnishncsa
 %endif
 
-test -f /etc/varnish/secret || (uuidgen > /etc/varnish/secret && chmod 0600 /etc/varnish/secret)
 chown varnishlog:varnish /var/log/varnish/
 /sbin/ldconfig
 

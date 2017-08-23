@@ -13,7 +13,6 @@ worker_user="vcache"
 log_user="varnishlog"
 daemon_dir=/var/lib/varnish/$(uname -n)
 log_dir="/var/log/varnish"
-secret_file=/etc/varnish/secret
 
 
 ensure_users() {
@@ -44,18 +43,6 @@ varnish_setup_logdir() {
     fi
 }
 
-varnish_create_secret() {
-    if ! [ -f "${secret_file}" ]; then
-        if [ -f /proc/sys/kernel/random/uuid ]; then
-            install -m 0600 /proc/sys/kernel/random/uuid "${secret_file}"
-        else
-            install -m 0600 /dev/null "${secret_file}"
-            dd if=/dev/urandom count=1 bs=128 2>/dev/null \
-                | tr -dc "A-Za-z0-9" > "${secret_file}"
-        fi
-    fi
-}
-
 # In varnish 4.1, the varnish shared memory log is readable by the "varnish"
 # group, instead of by everyone.  We need to update the "varnishlog" user to
 # reflect this, as well as the permissions on /var/log/varnish
@@ -72,8 +59,6 @@ case ${1:-} in
 
         varnish_create_storagedir
         varnish_setup_logdir
-
-        varnish_create_secret
 
         if dpkg --compare-versions "4.1.0-2~" "gt-nl" "${2:-}"; then
             change_group_for_varnishlog_user
