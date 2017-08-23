@@ -17,7 +17,6 @@ tempfile=/bin/tempfile
 # Messages
 # msg_no_varnishadm: varnishadm
 msg_no_varnishadm="Error: Cannot execute %s\n"
-msg_no_management="Management port disabled. \$DAEMON_OPTS must contain '-T hostname:port'\n"
 # msg_defaults_not_readable: defaults
 msg_defaults_not_readable="Error: %s is not readable\n"
 # msg_defaults_not_there: defaults
