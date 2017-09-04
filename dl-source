@@ -35,7 +35,7 @@ if [ ! -d $OUTPUTDIR ]; then
 fi
 
 if [ "$SOURCEURL" == "" ]; then
-    SOURCEURL="http://varnish-cache.org/_downloads/"
+    SOURCEURL="http://varnish-cache.org/_downloads"
 fi
 
 echo "Downloading Varnish Cache $RELEASEVERSION."
