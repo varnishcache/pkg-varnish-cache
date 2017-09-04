@@ -11,8 +11,10 @@ set -o errexit
 dl() {
     # Need to accept gzip to avoid getting the tarball unpacked in transit
     if [ "$2" == "gzip" ]; then
+        echo "wget with Accept-encoding: gzip"
 	    wget --header="Accept-encoding: gzip" --no-verbose --no-clobber -4 --directory-prefix=$TMPDIR $1
 	else
+        echo "wget with no Accept-encoding"
         wget --no-verbose --no-clobber -4 --directory-prefix=$TMPDIR $1
     fi
 }
