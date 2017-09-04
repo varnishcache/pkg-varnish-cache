@@ -30,10 +30,7 @@ set -o errexit
 rm -rf build
 mkdir -p build
 
-SOURCE=$(ls -1 sources/varnish-*.tar.gz)
-if [ "$SOURCE" == "" ]; then
-    SOURCE=$(ls -1 sources/varnish-*.tgz)
-fi
+SOURCE=$(ls -1 sources/varnish-*.tar.gz 2>/dev/null || ls -1 sources/varnish-*.tgz 2>/dev/null)
 
 findversion "$SOURCE"
 
