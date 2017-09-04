@@ -9,7 +9,12 @@ TMPDIR=$(mktemp -d)
 set -o errexit
 
 dl() {
-	wget --no-verbose --no-clobber -4 --directory-prefix=$TMPDIR $1
+    # Need to accept gzip to avoid getting the tarball unpacked in transit
+    if [ "$2" == "gzip" ]; then
+	    wget --header="Accept-encoding: gzip" --no-verbose --no-clobber -4 --directory-prefix=$TMPDIR $1
+	else
+        wget --no-verbose --no-clobber -4 --directory-prefix=$TMPDIR $1
+    fi
 }
 
 RELEASEVERSION=$1
@@ -30,28 +35,33 @@ if [ ! -d $OUTPUTDIR ]; then
 fi
 
 if [ "$SOURCEURL" == "" ]; then
-    SOURCEURL="https://repo.varnish-cache.org/source"
+    SOURCEURL="http://varnish-cache.org/_downloads/"
 fi
 
 echo "Downloading Varnish Cache $RELEASEVERSION."
-dl $SOURCEURL/varnish-${RELEASEVERSION}.tar.gz
+dl $SOURCEURL/varnish-${RELEASEVERSION}.tgz gzip
 
 if [ "$VERIFY" == "false" ]; then
     echo "WARNING: Skipping verification of source tarball"
 else
     echo "Verifying Varnish Cache $RELEASEVERSION."
-    dl $SOURCEURL/SHA256SUM
-    dl $SOURCEURL/SHA256SUM.gpg
+    # SHA=7439c93ca581340f3722b8c790160f46dc6c5328188e4c0bc233c42f3f04a54e
+    dl https://raw.githubusercontent.com/varnishcache/homepage/master/R1/source/releases/rel$RELEASEVERSION.rst 
+    SHASUM=$(sed -n -e '/.*SHA=/ s/.*\=//p' $TMPDIR/rel$RELEASEVERSION.rst)
+    echo "$SHASUM  varnish-${RELEASEVERSION}.tgz" > $TMPDIR/SHA256SUM
+    
+    #dl $SOURCEURL/SHA256SUM.gpg
 
-    if ! gpg --list-key C4DEFFEB 1>/dev/null; then
-	    gpg --recv-key C4DEFFEB
-    fi
+    #if ! gpg --list-key C4DEFFEB 1>/dev/null; then
+	#    gpg --recv-key C4DEFFEB
+    #fi
 
     # Do file verification.
-    (cd $TMPDIR && gpg --verify SHA256SUM.gpg SHA256SUM)
+    #(cd $TMPDIR && gpg --verify SHA256SUM.gpg SHA256SUM)
 
     # Release must be a part of the signed signature file to be valid.
-    (cd $TMPDIR && grep "varnish-$RELEASEVERSION.tar.gz" SHA256SUM | sha256sum -c - )
+    (cd $TMPDIR && grep "varnish-$RELEASEVERSION.tgz" SHA256SUM | sha256sum -c - )
+    
 fi
 
 mv $TMPDIR/*gz $OUTPUTDIR
