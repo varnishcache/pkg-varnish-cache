@@ -14,7 +14,7 @@ rm -rf build
 mkdir -p build
 cd build
 
-SOURCE=$(ls -1 ../sources/varnish-*.tar.gz)
+SOURCE=$(ls -1 ../sources/varnish-*.tar.gz ../sources/varnish-*.tgz)
 tar xf "$SOURCE"
 
 cp -r ../redhat/* .
