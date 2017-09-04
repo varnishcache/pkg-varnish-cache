@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #
 # Download and verify a public source tarball of Varnish Cache.
 #
@@ -41,7 +41,7 @@ if [ "$SOURCEURL" == "" ]; then
 fi
 
 echo "Downloading Varnish Cache $RELEASEVERSION."
-dl $SOURCEURL/varnish-${RELEASEVERSION}.tgz gzip
+dl $SOURCEURL/varnish-${RELEASEVERSION}.tgz
 
 if [ "$VERIFY" == "false" ]; then
     echo "WARNING: Skipping verification of source tarball"
