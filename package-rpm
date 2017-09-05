@@ -14,7 +14,7 @@ rm -rf build
 mkdir -p build
 cd build
 
-SOURCE=$(ls -1 sources/varnish-*.tar.gz 2>/dev/null || ls -1 sources/varnish-*.tgz 2>/dev/null)
+SOURCE=$(ls -1 ../sources/varnish-*.tar.gz 2>/dev/null || ls -1 ../sources/varnish-*.tgz 2>/dev/null)
 
 tar xf "$SOURCE"
 
