@@ -1,4 +1,6 @@
 usr/include/varnish
 usr/share/aclocal
 usr/share/varnish/vmodtool.py
+# may cause issues with VC4.x packages! XXX
+usr/share/varnish/vsctool.py
 usr/lib/pkgconfig/*.pc
