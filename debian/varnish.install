@@ -4,6 +4,8 @@ usr/sbin/*
 usr/lib/varnish
 usr/share/man
 usr/share/varnish/vcl
+# may cause issues with VC4.x packages! XXX
+usr/share/varnish/vcstool.py
 debian/*.service lib/systemd/system/
 usr/share/doc/varnish/*.vcl
 # from libvarnishapi1
