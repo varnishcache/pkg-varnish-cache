@@ -43,4 +43,5 @@ mock -r "$CHROOT" $MOPT --clean
 mock -v -r "$CHROOT" $MOPT \
   -D "_smp_mflags -j10" \
   -D "dist .${ELVER}" \
+  -D "releasetag ${RPMRELEASE}" \
   --rebuild varnish-${V}/${ELVER}/varnish*.src.rpm
