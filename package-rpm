@@ -35,6 +35,7 @@ mock -r "$CHROOT" $MOPT --init
 mock -v -r "$CHROOT" $MOPT --buildsrpm \
   -D "_smp_mflags -j10" \
   -D "dist .${ELVER}" \
+  -D "releasetag ${RPMRELEASE}" \
   --source .\
   --spec ./*.spec
 
