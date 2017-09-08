@@ -7,7 +7,7 @@ After=network.target
 # /etc/systemd/system/varnish.service and make your changes there.
 # This will override the file kept at /lib/systemd/system/varnish.service
 #
-# Enviroment variables may be found in /etc/varnish/varnish.params
+# Environment variables may be found in /etc/varnish/varnish.params
 #
 
 # Maximum number of open files (for ulimit -n)
