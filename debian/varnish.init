@@ -105,11 +105,14 @@ status_varnishd() {
 configtest() {
 	log_daemon_msg "Checking syntax" "$SERVICE"
 
-	$DAEMON ${DAEMON_OPTS} -C -n /tmp 1>/dev/null 2>&1
+	# Do not try to bind to any ports for configtest
+	CONFIGTEST_OPTS=$(echo $DAEMON_OPTS | sed -r 's/\-a\s+\S+//g')
+
+	$DAEMON ${CONFIGTEST_OPTS} -C -n /tmp 1>/dev/null 2>&1
 	local ret=${?:-1}
 	log_end_msg $ret
 	if [ $ret != 0 ]; then
-		$DAEMON ${DAEMON_OPTS} -C -n /tmp
+		$DAEMON ${CONFIGTEST_OPTS} -C -n /tmp
 	fi
 
 	return $ret
