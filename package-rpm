@@ -23,6 +23,9 @@ cp -r ../redhat/* .
 ln "$SOURCE" `basename "$SOURCE"`
 
 findversion "$SOURCE"
+if [ "$RELEASE" == "" ]; then
+    RELEASE="%{nil}"
+fi
 sed -i -e "s/^Version:.*/Version: $V.$MINOR/" ./*.spec
 sed -i -e "s/.*define v_rc.*/\%define v_rc $RELEASE/" ./*.spec
 
