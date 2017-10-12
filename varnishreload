@@ -94,7 +94,9 @@ fail() {
 }
 
 vcl_reload_name() {
-	printf "reload_%s" "$(date +%Y%m%d_%H%M%S)"
+	# NB: The PID compensates the lack of sub-second resolution.
+	# Varnish will vcl.list in chronological vcl.load order anyway.
+	printf "reload_%s" "$(date -u +%Y%m%d_%H%M%S_$$)"
 }
 
 awk_vcl_list() {
