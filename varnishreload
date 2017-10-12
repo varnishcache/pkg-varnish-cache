@@ -115,6 +115,7 @@ find_vcl_file() {
 
 	echo "$VCL_SHOW" |
 	awk '$1 == "//" && $2 == "VCL.SHOW" {print; exit}' | {
+		# all this ceremony to handle blanks in FILE
 		read -r DELIM VCL_SHOW INDEX SIZE FILE
 		echo "$FILE"
 	}
