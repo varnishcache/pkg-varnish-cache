@@ -110,11 +110,14 @@ find_label_ref() {
 }
 
 find_vcl_file() {
-	VCL_SOURCE=$(varnishadm vcl.show -v "$VCL_NAME") ||
+	VCL_SHOW=$(varnishadm vcl.show -v "$VCL_NAME") ||
 	fail "failed to get the VCL file name"
 
-	echo "$VCL_SOURCE" |
-	awk '$1 == "//" && $2 == "VCL.SHOW" {print $5; exit}'
+	echo "$VCL_SHOW" |
+	awk '$1 == "//" && $2 == "VCL.SHOW" {print; exit}' | {
+		read -r DELIM VCL_SHOW INDEX SIZE FILE
+		echo "$FILE"
+	}
 }
 
 find_vcl_reloads() {
