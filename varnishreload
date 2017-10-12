@@ -30,9 +30,12 @@ set -e
 set -u
 
 MAXIMUM=
-WORK_DIR=
 VCL_FILE=
+VCL_LABEL=
+VCL_NAME=
 WARMUP=
+WORK_DIR=
+
 SCRIPT="$0"
 
 usage() {
@@ -40,22 +43,26 @@ usage() {
 	printf 'Error: %s.\n\n' "$1"
 
 	cat <<-EOF
-	Usage: $SCRIPT [-m <maximum>] [-n <workdir>] [-w <warmup>] [<file>]
+	Usage: $SCRIPT [-l <label>] [-m <max>] [-n <workdir>] [-w <warmup>] [<file>]
 	       $SCRIPT -h
 
 	Reload and use a VCL on a running Varnish instance.
 
 	Available options:
 	-h           : show this help and exit
-	-m <maximum> : maximum number of available reloads to leave behind
+	-l <label>   : name of the VCL label to reload
+	-m <max>     : maximum number of available reloads to leave behind
 	-n <workdir> : specify the name or directory for the varnishd instance
 	-w <warmup>  : the number of seconds between load and use operations
 
-	When <file> is empty or missing, the active VCL's file is used but
-	will fail if the active VCL wasn't loaded from a file. The <file>,
-	when specified, is passed as-is to the vcl.load command. Refer to
-	the varnishd manual regarding the handling of absolute or relative
-	paths.
+	When <label> is empty or missing, the active VCL is reloaded. If the
+	reloaded VCL is a label, the underlying VCL program is reloaded, and
+	the label is updated to reference the new program.
+
+	When <file> is empty or missing, the selected VCL's file is used but
+	reload will fail if it wasn't loaded from a file. The <file>, when
+	specified, is passed as-is to the vcl.load command. Refer to the
+	varnishd manual regarding the handling of absolute or relative paths.
 
 	Upon success, the name of the loaded VCL is constructed from the
 	current date and time, for example:
@@ -63,7 +70,8 @@ usage() {
 	    $(vcl_reload_name)
 
 	Afterwards available VCLs created by this script are discarded until
-	<maximum> are left, unless it was empty or undefined.
+	<max> are left, unless it was empty or undefined. VCLs referenced by
+	a label aren't discarded.
 	EOF
 	exit $#
 }
@@ -75,7 +83,7 @@ varnishadm() {
 		echo
 		echo "$OUTPUT"
 		echo
-		exit 1
+		return 1
 	fi >&2
 	echo "$OUTPUT"
 }
@@ -85,61 +93,41 @@ fail() {
 	exit 1
 }
 
-vcl_file() {
-	VCL_SHOW=$(varnishadm vcl.show -v "$1") ||
-	fail "failed to get the VCL file name"
-
-	echo "$VCL_SHOW" |
-	awk '$1 == "//" && $2 == "VCL.SHOW" {print; exit}' | {
-		read DELIM VCL_SHOW INDEX SIZE FILE
-		echo "$FILE"
-	}
-}
-
-vcl_active_name() {
-	VCL_LIST=$(varnishadm vcl.list) ||
-	fail "failed to get the active VCL name"
-
-	echo "$VCL_LIST" |
-	awk '$1 == "active" {print $NF}'
-}
-
-vcl_active_file() {
-	set -e
-	VCL_NAME=$(vcl_active_name)
-	vcl_file "$VCL_NAME"
-}
-
-vcl_reload_match() {
-	awk '$1 == "available" && $NF ~ /^reload_[0-9]+_[0-9]+$/'" {$1}"
-}
-
-vcl_reload_count() {
-	VCL_LIST=$(varnishadm vcl.list) ||
-	fail "failed to count available reload VCLs"
-
-	echo "$VCL_LIST" |
-	vcl_reload_match print |
-	sed '=;d' |
-	tail -1
-}
-
-vcl_reload_oldest() {
-	VCL_LIST=$(varnishadm vcl.list) ||
-	fail "failed to get the oldest reload VCL"
-
-	echo "$VCL_LIST" |
-	vcl_reload_match 'print $NF; exit'
-}
-
 vcl_reload_name() {
 	printf "reload_%s" "$(date +%Y%m%d_%H%M%S)"
 }
 
-while getopts hm:n:w: OPT
+awk_vcl_list() {
+	printf '%s' "$VCL_LIST" | awk "$@"
+}
+
+active_vcl() {
+	awk_vcl_list '$1 == "active" {print $4}'
+}
+
+find_label_ref() {
+	awk_vcl_list '$4 == "'"$VCL_LABEL"'" {print $6}'
+}
+
+find_vcl_file() {
+	VCL_SOURCE=$(varnishadm vcl.show -v "$VCL_NAME") ||
+	fail "failed to get the VCL file name"
+
+	echo "$VCL_SOURCE" |
+	awk '$1 == "//" && $2 == "VCL.SHOW" {print $5; exit}'
+}
+
+find_vcl_reloads() {
+	awk_vcl_list 'NF == 4 &&
+		$1 == "available" &&
+		$4 ~ /^reload_[0-9]+_[0-9]+$/ {print $4}'
+}
+
+while getopts hl:m:n:w: OPT
 do
 	case $OPT in
 	h) usage ;;
+	l) VCL_LABEL=$OPTARG ;;
 	m) MAXIMUM=$OPTARG ;;
 	n) WORK_DIR=$OPTARG ;;
 	w) WARMUP=$OPTARG ;;
@@ -152,36 +140,73 @@ shift $((OPTIND - 1))
 test $# -gt 1 && usage "too many arguments" >&2
 test $# -eq 1 && VCL_FILE="$1"
 
+VCL_LIST=$(varnishadm vcl.list) ||
+fail "failed to get the VCL list"
+
+if [ -z "$VCL_LABEL" ]
+then
+	VCL_NAME=$(active_vcl)
+	VCL_LABEL=$VCL_NAME
+	VCL_REF=$(find_label_ref)
+	if [ -n "$VCL_REF" ]
+	then
+		# active VCL is a label, swap
+		VCL_LABEL=$VCL_NAME
+		VCL_NAME=$VCL_REF
+	else
+		# not a label after all
+		VCL_LABEL=
+	fi
+else
+	VCL_NAME=$(find_label_ref)
+fi
+
+test -n "$VCL_NAME" ||
+fail "'$VCL_LABEL' is not a label"
+
 if [ -z "$VCL_FILE" ]
 then
-	VCL_FILE=$(vcl_active_file)
+	VCL_FILE=$(find_vcl_file)
 
 	case $VCL_FILE in
 	/*) ;;
-	*) fail "active VCL file not found (got $VCL_FILE)" ;;
+	*) fail "VCL file not found for $VCL_NAME (got $VCL_FILE)" ;;
 	esac
 fi
 
 RELOAD_NAME=$(vcl_reload_name)
 
-varnishadm vcl.load "$RELOAD_NAME" "$VCL_FILE"
+varnishadm vcl.load "$RELOAD_NAME" "$VCL_FILE" >/dev/null
+echo "VCL '$RELOAD_NAME' compiled"
 
 test -n "$WARMUP" && sleep "$WARMUP"
 
-varnishadm vcl.use  "$RELOAD_NAME"
+if [ -n "$VCL_LABEL" ]
+then
+	varnishadm vcl.label "$VCL_LABEL" "$RELOAD_NAME" >/dev/null
+	echo "VCL label '$VCL_LABEL' references '$RELOAD_NAME'"
+fi
 
-safe_test() {
-	test -z "$1" && return 1
-	test "$@"
-}
+if [ "$VCL_NAME" = "$(active_vcl)" ]
+then
+	varnishadm vcl.use "$RELOAD_NAME"
+fi
 
-safe_test "$MAXIMUM" -ge 0 || exit 0
+test -n "$MAXIMUM" || exit 0
+test "$MAXIMUM" -ge 0 || exit 0
 
-while true
+VCL_LIST=$(varnishadm vcl.list) ||
+fail "failed to refresh the VCL list"
+
+AVAILABLE=$(find_vcl_reloads | wc -l)
+DISCARDED=$((AVAILABLE - MAXIMUM))
+
+test "$DISCARDED" -gt 0 || exit 0
+
+find_vcl_reloads |
+head -n "$DISCARDED" |
+while read -r DISCARD_NAME
 do
-	COUNT=$(vcl_reload_count)
-	safe_test "$COUNT" -gt "$MAXIMUM" || exit 0
-	OLDEST=$(vcl_reload_oldest)
-	varnishadm vcl.discard "$OLDEST" >/dev/null
-	echo "VCL '$OLDEST' was discarded"
+	varnishadm vcl.discard "$DISCARD_NAME" >/dev/null
+	echo "VCL '$DISCARD_NAME' discarded"
 done
