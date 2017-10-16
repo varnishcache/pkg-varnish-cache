@@ -126,7 +126,7 @@ find_vcl_file() {
 find_vcl_reloads() {
 	awk_vcl_list 'NF == 4 &&
 		$1 == "available" &&
-		$4 ~ /^reload_[0-9]+_[0-9]+$/ {print $4}'
+		$4 ~ /^reload_[0-9]+_[0-9]+_[0-9]+$/ {print $4}'
 }
 
 while getopts hl:m:n:w: OPT
