@@ -108,7 +108,7 @@ active_vcl() {
 }
 
 find_label_ref() {
-	awk_vcl_list '$4 == "'"$VCL_LABEL"'" {print $6}'
+	awk_vcl_list '$4 == "'"$VCL_LABEL"'" && $5 == "->" {print $6}'
 }
 
 find_vcl_file() {
