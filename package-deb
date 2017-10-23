@@ -64,7 +64,10 @@ ln "../../$SOURCE" "../varnish_$V.$MINOR.orig.tar.gz"
 sed -i -e "s|^Section: \([^/]*\)\$|Section: varnish-$V/\1|" debian/control
 
 # Take version override set on Jenkins builds into account.
-if [[ -n "${DEBVERSION}" ]]; then
+if [ -n "$WEEKLY_VERSION" ]; then
+    FULL_VERSION="${WEEKLY_VERSION}-1"
+    dch -v "$FULL_VERSION" "Release build #$BUILD_NUMBER ID: $BUILD_ID"
+elif [[ -n "${DEBVERSION}" ]]; then
     if [ "$RELEASE" == "" ]; then
 	    FULL_VERSION="$V.$MINOR-$DEBVERSION"
     else
