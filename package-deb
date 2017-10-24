@@ -65,7 +65,7 @@ sed -i -e "s|^Section: \([^/]*\)\$|Section: varnish-$V/\1|" debian/control
 
 # Take version override set on Jenkins builds into account.
 if [ -n "$WEEKLY_VERSION" ]; then
-    FULL_VERSION="${WEEKLY_VERSION}-1"
+    FULL_VERSION="trunk-${WEEKLY_VERSION}"
     dch -v "$FULL_VERSION" "Release build #$BUILD_NUMBER ID: $BUILD_ID"
 elif [[ -n "${DEBVERSION}" ]]; then
     if [ "$RELEASE" == "" ]; then
