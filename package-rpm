@@ -23,8 +23,8 @@ cp -r ../redhat/* .
 ln "$SOURCE" `basename "$SOURCE"`
 
 if [ -n "$WEEKLY_VERSION" ]; then
-    sed -i -e "s/^Version:.*/Version: trunk/" ./*.spec
-    sed -i -e "s/.*define v_rc.*/\%define v_rc $WEEKLY_VERSION/" ./*.spec
+    sed -i -e "s/^Version:.*/Version: $WEEKLY_VERSION/" ./*.spec
+    sed -i -e "s/.*define v_rc.*/\%define v_rc 0/" ./*.spec
 else
     findversion "$SOURCE"
     sed -i -e "s/^Version:.*/Version: $V.$MINOR/" ./*.spec
