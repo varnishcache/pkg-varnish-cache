@@ -137,12 +137,6 @@ case "$1" in
         status_varnishd
         ;;
     restart|force-reload)
-	if status_of_proc -p "${PIDFILE}" "${DAEMON}" "${SERVICE}" 1>/dev/null; then
-	    if ! configtest; then
-		log_failure_msg "Syntax check failed, not restarting"
-		exit 1
-	    fi
-	fi
         $0 stop
         $0 start
         ;;
