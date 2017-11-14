@@ -40,9 +40,11 @@ tar xf "${SOURCE}" -C build
 if [ "$V" = "3.0" ] || [ "$V" = "4.0" ] || [ "$V" = "4.1" ]; then
 	# Legacy packages don't have separate directory with VCL files
 	sed -i "s|^usr/share/varnish/vcl|#usr/share/varnish/vcl|" debian/varnish.install
+    sed -i "s|^usr/share/varnish/vsctool.py|#usr/share/varnish/vsctool.py|" debian/varnish-dev.install
 else
 	# Make sure to revert if mangled by older build-job
 	sed -i "s|^#usr/share/varnish/vcl|usr/share/varnish/vcl|" debian/varnish.install
+    sed -i "s|^#usr/share/varnish/vsctool.py|usr/share/varnish/vsctool.py|" debian/varnish-dev.install
 fi
 
 # Use the non-systemd versions of rules and control for legacy distros
