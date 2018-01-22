@@ -20,7 +20,7 @@ endif
 VMOD_strictABI = $(shell printf '\#include "vcs_version.h"\nVCS_Version\n' \
         | cpp - -Iinclude | sed -e '/^"/!d' -e 's/\"//g' -e 's/^/varnishabi-strict-/')
 
-VMOD_ABI = $(shell printf '\#include "vrt.h"\nvarnishabi- VRT_MAJOR_VERSION . VRT_MINOR_VERSION\n' \
+VMOD_ABI = $(shell printf '\#include "vdef.h"\n\#include "vrt.h"\nvarnishabi- VRT_MAJOR_VERSION . VRT_MINOR_VERSION\n' \
         | cpp - -Iinclude \
         | sed -e '/^varnishabi-/!d' -e 's/U//g' -e 's/ //g')
 
