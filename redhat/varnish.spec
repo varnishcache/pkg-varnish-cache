@@ -17,7 +17,7 @@ Source0: %{name}-%{version}%{?vd_rc}.tgz
 Source1: varnish.initrc
 Source2: varnish.sysconfig
 Source3: varnish.logrotate
-Source4: varnish_reload_vcl
+Source4: varnishreload
 Source5: varnish.params
 Source6: varnish.service
 Source9: varnishncsa.initrc
@@ -128,6 +128,7 @@ find %{buildroot}/%{_libdir}/ -name '*.la' -exec rm -f {} ';'
 mkdir -p %{buildroot}/var/lib/varnish
 mkdir -p %{buildroot}/var/log/varnish
 mkdir -p %{buildroot}/var/run/varnish
+mkdir -p %{buildroot}%{_datadir}/varnish
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d/
 install -D -m 0644 etc/example.vcl %{buildroot}%{_sysconfdir}/varnish/default.vcl
 install -D -m 0644 varnish.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/varnish
@@ -136,16 +137,14 @@ install -D -m 0644 varnish.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/varn
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 mkdir -p %{buildroot}%{_unitdir}
 install -D -m 0644 varnish.service %{buildroot}%{_unitdir}/varnish.service
-install -D -m 0644 varnish.params %{buildroot}%{_sysconfdir}/varnish/varnish.params
 install -D -m 0644 varnishncsa.service %{buildroot}%{_unitdir}/varnishncsa.service
-sed -i 's,sysconfig/varnish,varnish/varnish.params,' varnish_reload_vcl
 # default is standard sysvinit
 %else
 install -D -m 0644 varnish.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/varnish
 install -D -m 0755 varnish.initrc %{buildroot}%{_initrddir}/varnish
 install -D -m 0755 varnishncsa.initrc %{buildroot}%{_initrddir}/varnishncsa
 %endif
-install -D -m 0755 varnish_reload_vcl %{buildroot}%{_sbindir}/varnish_reload_vcl
+install -D -m 0755 varnishreload %{buildroot}%{_datadir}/varnish/varnishreload
 
 echo %{_libdir}/varnish > %{buildroot}%{_sysconfdir}/ld.so.conf.d/varnish-%{_arch}.conf
 

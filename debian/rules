@@ -49,10 +49,10 @@ override_dh_auto_install:
 
 override_dh_install-arch:
 	dh_install -a --fail-missing
-	@ # Override to add the "reload-vcl" script
+	@ # Override to add the "varnishreload" script
 	install -o root -g root -m 755 \
-		$(CURDIR)/debian/reload-vcl \
-		$(CURDIR)/debian/varnish/usr/share/varnish/reload-vcl
+		$(CURDIR)/debian/varnishreload \
+		$(CURDIR)/debian/varnish/usr/share/varnish/varnishreload
 
 override_dh_installdocs:
 # In 4.0 the built docs need to be copied to the current/4.1 location.
