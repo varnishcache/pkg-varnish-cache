@@ -18,11 +18,10 @@ Source1: varnish.initrc
 Source2: varnish.sysconfig
 Source3: varnish.logrotate
 Source4: varnishreload
-Source5: varnish.params
-Source6: varnish.service
-Source9: varnishncsa.initrc
-Source10: varnishncsa.service
-Source11: find-provides
+Source5: varnish.service
+Source6: varnishncsa.initrc
+Source7: varnishncsa.service
+Source8: find-provides
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: automake
@@ -144,7 +143,7 @@ install -D -m 0644 varnish.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/varnis
 install -D -m 0755 varnish.initrc %{buildroot}%{_initrddir}/varnish
 install -D -m 0755 varnishncsa.initrc %{buildroot}%{_initrddir}/varnishncsa
 %endif
-install -D -m 0755 varnishreload %{buildroot}%{_datadir}/varnish/varnishreload
+install -D -m 0755 varnishreload %{buildroot}%{_sbindir}/varnish/varnishreload
 
 echo %{_libdir}/varnish > %{buildroot}%{_sysconfdir}/ld.so.conf.d/varnish-%{_arch}.conf
 
@@ -173,7 +172,6 @@ rm -rf %{buildroot}
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 %{_unitdir}/varnish.service
 %{_unitdir}/varnishncsa.service
-%config(noreplace)%{_sysconfdir}/varnish/varnish.params
 
 # default is standard sysvinit
 %else
