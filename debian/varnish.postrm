@@ -39,7 +39,6 @@ case "$1" in
                 rm -r /var/lib/varnish > /dev/null 2>&1 || exit 78
         fi
 
-        rm -f /etc/varnish/secret
         dpkg-statoverride --remove /var/log/varnish || true
 
         ;;

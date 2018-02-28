@@ -216,7 +216,6 @@ exit 0
 /sbin/chkconfig --add varnishncsa
 %endif
 
-test -f /etc/varnish/secret || (uuidgen > /etc/varnish/secret && chmod 0600 /etc/varnish/secret)
 chown varnishlog:varnish /var/log/varnish/
 /sbin/ldconfig
 
