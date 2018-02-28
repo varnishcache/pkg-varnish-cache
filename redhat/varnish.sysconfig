@@ -35,8 +35,6 @@ VARNISH_LISTEN_PORT=6081
 VARNISH_ADMIN_LISTEN_ADDRESS=127.0.0.1
 VARNISH_ADMIN_LISTEN_PORT=6082
 #
-# Shared secret file for admin interface
-VARNISH_SECRET_FILE=/etc/varnish/secret
 #
 # The minimum number of worker threads to start
 VARNISH_MIN_THREADS=50
@@ -56,8 +54,6 @@ VARNISH_TTL=120
 # DAEMON_OPTS is used by the init script.
 DAEMON_OPTS="-a ${VARNISH_LISTEN_ADDRESS}:${VARNISH_LISTEN_PORT} \
              -f ${VARNISH_VCL_CONF} \
-             -T ${VARNISH_ADMIN_LISTEN_ADDRESS}:${VARNISH_ADMIN_LISTEN_PORT} \
              -p thread_pool_min=${VARNISH_MIN_THREADS} \
              -p thread_pool_max=${VARNISH_MAX_THREADS} \
-             -S ${VARNISH_SECRET_FILE} \
              -s ${VARNISH_STORAGE}"
