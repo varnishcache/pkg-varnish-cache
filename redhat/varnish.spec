@@ -32,6 +32,7 @@ BuildRequires: libtool
 BuildRequires: ncurses-devel
 BuildRequires: pcre-devel
 BuildRequires: pkgconfig
+BuildRequires: python(abi) >= 2.7
 BuildRequires: python-docutils >= 0.6
 BuildRequires: python-sphinx
 Requires: jemalloc
