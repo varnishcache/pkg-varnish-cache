@@ -1,4 +1,4 @@
-#!/bin/bash -x
+# -/bin/bash -x
 #
 # This script builds Varnish Cache in chroot from a tarball.
 #
@@ -18,7 +18,7 @@ SOURCE=$(ls -1 ../sources/varnish-*.tar.gz 2>/dev/null || ls -1 ../sources/varni
 
 tar xf "$SOURCE"
 
-cp -r ../redhat/* .
+cp -r -L ../redhat/* .
 
 ln "$SOURCE" `basename "$SOURCE"`
 
