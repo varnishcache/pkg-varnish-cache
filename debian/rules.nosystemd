@@ -52,7 +52,7 @@ override_dh_install-arch:
 	@ # Override to add the "varnishreload" script
 	install -o root -g root -m 755 \
 		$(CURDIR)/debian/varnishreload \
-		$(CURDIR)/debian/varnish/usr/share/varnish/varnishreload
+		$(CURDIR)/debian/varnish/usr/sbin/varnishreload
 
 override_dh_installdocs:
 # In 4.0 the built docs need to be copied to the current/4.1 location.
