@@ -14,8 +14,8 @@ LimitNOFILE=131072
 # unit is bytes
 LimitMEMLOCK=85983232
 
-# On systemd >= 228 enable this to avoid "fork failed" on reload.
-#TasksMax=infinity
+# Enable this to avoid "fork failed" on reload.
+TasksMax=infinity
 
 # Maximum size of the corefile.
 LimitCORE=infinity
