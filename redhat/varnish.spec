@@ -77,7 +77,7 @@ Provides: varnish-libs-devel
 Obsoletes: varnish-libs-devel
 Requires: varnish = %{version}-%{release}
 Requires: pkgconfig
-Requires: python
+Requires: python >= 2.7
 
 %description devel
 Development files for %{name}-libs
