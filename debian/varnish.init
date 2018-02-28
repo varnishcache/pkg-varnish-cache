@@ -88,7 +88,7 @@ reload_varnishd() {
     log_daemon_msg "Reloading $DESC" "$SERVICE"
     # Workaround for the reload script to make it work with instances
     export DAEMON_OPTS
-    if /usr/share/varnish/varnishreload -q; then
+    if /usr/share/varnish/varnishreload; then
         log_end_msg 0
     else
         log_end_msg 1
