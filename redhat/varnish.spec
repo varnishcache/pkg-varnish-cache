@@ -18,10 +18,10 @@ Source1: varnish.initrc
 Source2: varnish.sysconfig
 Source3: varnish.logrotate
 Source4: varnishreload
-Source5: varnish.service
-Source6: varnishncsa.initrc
-Source7: varnishncsa.service
-Source8: find-provides
+Source6: varnish.service
+Source9: varnishncsa.initrc
+Source10: varnishncsa.service
+Source11: find-provides
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: automake
@@ -87,7 +87,7 @@ Varnish Cache is a high-performance HTTP accelerator
 %prep
 %setup -n varnish-%{version}%{?vd_rc}
 #%setup -q -n varnish-trunk
-cp %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} .
+cp %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} .
 cp %{SOURCE6} %{SOURCE9} %{SOURCE10} %{SOURCE11} .
 
 %build
