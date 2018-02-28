@@ -19,7 +19,7 @@ NPROCS="unlimited"
 
 # Init script support to reload/switch vcl without restart.
 # To make this work, you need to set the following variables
-# explicit: VARNISH_VCL_CONF, VARNISH_SECRET_FILE. 
+# explicit: VARNISH_VCL_CONF.
 RELOAD_VCL=1
 
 # Main configuration file.
