@@ -57,7 +57,7 @@ fi
 cd build/varnish-*
 
 # Copy our debian metadata into the build/varnish-$version directory 
-cp -r ../../debian .
+cp -r -L ../../debian .
 rm -f debian/.*.sw?    # Delete any vim temporary files.
 
 ln "../../$SOURCE" "../varnish_$V.$MINOR.orig.tar.gz"
