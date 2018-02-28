@@ -19,8 +19,7 @@ NPROCS="unlimited"
 
 # Init script support to reload/switch vcl without restart.
 # To make this work, you need to set the following variables
-# explicit: VARNISH_VCL_CONF, VARNISH_ADMIN_LISTEN_ADDRESS,
-# VARNISH_ADMIN_LISTEN_PORT, VARNISH_SECRET_FILE.
+# explicit: VARNISH_VCL_CONF, VARNISH_SECRET_FILE. 
 RELOAD_VCL=1
 
 # Main configuration file.
@@ -30,10 +29,6 @@ VARNISH_VCL_CONF=/etc/varnish/default.vcl
 # Blank address means all IPv4 and IPv6 interfaces, otherwise specify
 # a host name, an IPv4 dotted quad, or an IPv6 address in brackets.
 VARNISH_LISTEN_PORT=6081
-#
-# Telnet admin interface listen address and port
-VARNISH_ADMIN_LISTEN_ADDRESS=127.0.0.1
-VARNISH_ADMIN_LISTEN_PORT=6082
 #
 #
 # The minimum number of worker threads to start
