@@ -137,7 +137,7 @@ install -D -m 0644 varnish.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/varnis
 install -D -m 0755 varnish.initrc %{buildroot}%{_initrddir}/varnish
 install -D -m 0755 varnishncsa.initrc %{buildroot}%{_initrddir}/varnishncsa
 %endif
-install -D -m 0755 varnishreload %{buildroot}%{_sbindir}/varnish/varnishreload
+install -D -m 0755 varnishreload %{buildroot}%{_sbindir}/varnishreload
 
 echo %{_libdir}/varnish > %{buildroot}%{_sysconfdir}/ld.so.conf.d/varnish-%{_arch}.conf
 
