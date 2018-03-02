@@ -16,18 +16,15 @@ Group: System Environment/Daemons
 URL: https://www.varnish-cache.org/
 Source: %{srcname}.tgz
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: automake
-BuildRequires: autoconf
 BuildRequires: jemalloc-devel
 BuildRequires: libedit-devel
-BuildRequires: libtool
 BuildRequires: ncurses-devel
 BuildRequires: pcre-devel
 BuildRequires: pkgconfig
 BuildRequires: python(abi) >= 2.7
 BuildRequires: python-docutils >= 0.6
 BuildRequires: python-sphinx
+
 Requires: jemalloc
 Requires: libedit
 Requires: logrotate
@@ -66,7 +63,6 @@ available on: https://www.varnish-cache.org/
 %package devel
 Summary: Development files for %{name}
 Group: System Environment/Libraries
-BuildRequires: ncurses-devel
 Provides: varnish-libs-devel
 Obsoletes: varnish-libs-devel
 Requires: varnish = %{version}-%{release}
