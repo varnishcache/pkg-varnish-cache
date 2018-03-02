@@ -51,6 +51,7 @@ mock() {
 		--define "dist .${ELVER}" \
 		--define "versiontag ${RPMVERSION}" \
 		--define "releasetag ${RPMRELEASE:-1}" \
+		--define "srcname $DIST_DIR" \
 		--define "v_rc ${RELEASE}" \
 		"$@"
 }
