@@ -27,8 +27,8 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  libc6-dev | libc6.1-dev | libc-dev,
 Provides: varnish,
  libvarnishapi1,
- ${Varnish:ABI},
- ${Varnish:strictABI}
+ ${varnishd:ABI},
+ ${varnishd:VRT},
 Suggests: varnish-dev
 Replaces:
  libvarnishapi1,
