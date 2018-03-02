@@ -86,14 +86,6 @@ export CFLAGS="$CFLAGS -O2 -g -Wp,-D_FORTIFY_SOURCE=0"
 
 %make_build V=1
 
-# In 4.0 the built docs need to be copied to the current/4.1 location.
-test -d doc/html || cp -pr doc/sphinx/build/html doc/html
-
-rm -rf doc/html/_sources
-#rm -rf doc/sphinx/build/html/_sources
-#mv doc/sphinx/build/html doc
-rm -rf doc/sphinx/build
-
 
 %check
 %if 0%{?nocheck} == 0
