@@ -131,7 +131,6 @@ echo %{_libdir}/varnish > %{buildroot}%{_sysconfdir}/ld.so.conf.d/varnish-%{_arc
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %{_sbindir}/*
 %{_bindir}/*
 %{_var}/lib/varnish
@@ -160,14 +159,12 @@ rm -rf %{buildroot}
 %{_initrddir}/varnishncsa
 %endif
 
-%defattr(-,root,root,-)
 %{_libdir}/*.so.*
 %{_libdir}/varnish
 %doc LICENSE
 %config %{_sysconfdir}/ld.so.conf.d/varnish-%{_arch}.conf
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/lib*.so
 %dir %{_includedir}/varnish
 %{_includedir}/varnish/*
