@@ -18,17 +18,19 @@ SOURCE=$(ls ../sources/varnish-*gz 2>/dev/null | tail -1)
 
 tar xf "$SOURCE"
 
-VERSION=$(./varnish-*/configure --version | awk 'NR == 1 {print $3}')
+DIST_DIR=$(ls)
+
+VERSION=$("$DIST_DIR"/configure --version | awk 'NR == 1 {print $3}')
 MAJOR=${VERSION%.*}
 MINOR=${VERSION##*.}
 MINOR=${MINOR%%-*}
 RELEASE=${VERSION#*-} # eg. beta1
 
-cp -r -L ../redhat/* ./varnish-*/
+cp -r -L ../redhat/* "$DIST_DIR"/
 
 TGZ_SOURCE=$(basename "$SOURCE" .tar.gz)
 TGZ_SOURCE=$(basename "$TGZ_SOURCE" .tgz)
-tar zcf "$TGZ_SOURCE.tgz" varnish-*/
+tar zcf "$TGZ_SOURCE.tgz" "$DIST_DIR"/
 
 if [ -n "${WEEKLY_VERSION:-}" ]; then
 	RPMVERSION="${WEEKLY_VERSION}"
@@ -38,7 +40,7 @@ else
 fi
 
 # while debugging, disable make check since it takes 15-20 minutes to run.
-sed -i -e 's/^make check/# make check/' */varnish.spec
+sed -i -e 's/^make check/# make check/' "$DIST_DIR"/varnish.spec
 
 MOCK_ROOT="epel-${ELVER#el}-x86_64"
 RESULT_DIR="varnish-${MAJOR}/${ELVER}"
@@ -56,5 +58,5 @@ mock() {
 		"$@"
 }
 
-mock --buildsrpm --source . --spec ./*/varnish.spec
+mock --buildsrpm --source . --spec "$DIST_DIR"/varnish.spec
 mock --rebuild "$RESULT_DIR"/varnish-*.src.rpm
