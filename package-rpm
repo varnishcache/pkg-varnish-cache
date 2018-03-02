@@ -1,14 +1,15 @@
-#!/bin/bash -x
+#!/bin/sh
 #
 # This script builds Varnish Cache in chroot from a tarball.
 #
 # Author: Lasse Karstensen <lkarsten@varnish-software.com>, March 2015.
-set -o errexit
+# Author: Dridi Boukelmoune <dridi.boukelmoune@gmail.com>, March 2018.
+
+set -e
+set -u
 
 ELVER=${ELVER:-el7}
-CHROOT="epel-${ELVER:2:1}-x86_64"
-
-. common.sh
+CHROOT="epel-${ELVER#el}-x86_64"
 
 rm -rf build
 mkdir -p build
@@ -18,35 +19,37 @@ SOURCE=$(ls -1 ../sources/varnish-*.tar.gz 2>/dev/null || ls -1 ../sources/varni
 
 tar xf "$SOURCE"
 
+VERSION=$(./varnish-*/configure --version | awk 'NR == 1 {print $3}')
+MAJOR=${VERSION%.*}
+MINOR=${VERSION##*.}
+MINOR=${MINOR%%-*}
+RELEASE=${VERSION#*-}
+
 cp -r -L ../redhat/* .
 
 ln "$SOURCE" `basename "$SOURCE"`
 
-if [ -n "$WEEKLY_VERSION" ]; then
+if [ -n "${WEEKLY_VERSION:-}" ]; then
     sed -i -e "s/^Version:.*/Version: $WEEKLY_VERSION/" ./*.spec
     sed -i -e "s/.*define v_rc.*/\%define v_rc 0/" ./*.spec
 else
-    findversion "$SOURCE"
-    sed -i -e "s/^Version:.*/Version: $V.$MINOR/" ./*.spec
+    sed -i -e "s/^Version:.*/Version: $MAJOR.$MINOR/" ./*.spec
     sed -i -e "s/.*define v_rc.*/\%define v_rc $RELEASE/" ./*.spec
 fi
 
 # while debugging, disable make check since it takes 15-20 minutes to run.
 sed -i -e 's/^make check/# make check/' *.spec
 
-MOPT="--uniqueext=worker${EXECUTOR_NUMBER} --resultdir=varnish-${V}/${ELVER}"
+mock() {
+	command mock --old-chroot \
+		--root "$CHROOT" \
+		--uniqueext "worker${EXECUTOR_NUMBER:-}" \
+		--resultdir "varnish-${MAJOR}/${ELVER}" \
+		--define "_smp_mflags -j10" \
+		--define "dist .${ELVER}" \
+		--define "releasetag ${RPMRELEASE:-1}" \
+		"$@"
+}
 
-mock -r "$CHROOT" $MOPT --init
-mock -v -r "$CHROOT" $MOPT --buildsrpm \
-  -D "_smp_mflags -j10" \
-  -D "dist .${ELVER}" \
-  -D "releasetag ${RPMRELEASE}" \
-  --source .\
-  --spec ./*.spec
-
-mock -r "$CHROOT" $MOPT --clean
-mock -v -r "$CHROOT" $MOPT \
-  -D "_smp_mflags -j10" \
-  -D "dist .${ELVER}" \
-  -D "releasetag ${RPMRELEASE}" \
-  --rebuild varnish-${V}/${ELVER}/varnish*.src.rpm
+mock --buildsrpm --source . --spec ./*.spec
+mock --rebuild "varnish-${MAJOR}/${ELVER}"/varnish*.src.rpm
