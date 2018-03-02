@@ -5,6 +5,7 @@
 
 %define debug_package %{nil}
 
+
 Summary: High-performance HTTP accelerator
 Name: varnish
 Version: %{versiontag}
@@ -44,6 +45,7 @@ BuildRequires: systemd-units
 Provides: varnish-libs, varnish-docs, varnish-debuginfo
 Obsoletes: varnish-libs, varnish-docs, varnish-debuginfo
 
+
 %description
 This is Varnish Cache, a high-performance HTTP accelerator.
 
@@ -55,6 +57,7 @@ significant speed up.
 Documentation wiki and additional information about Varnish Cache is
 available on: https://www.varnish-cache.org/
 
+
 %package devel
 Summary: Development files for %{name}
 Group: System Environment/Libraries
@@ -64,12 +67,15 @@ Requires: varnish = %{version}-%{release}
 Requires: pkgconfig
 Requires: python(abi) >= 2.7
 
+
 %description devel
 Development files for %{name}
 Varnish Cache is a high-performance HTTP accelerator
 
+
 %prep
 %setup -q -n %{srcname}
+
 
 %build
 %if 0%{?rhel} == 6
@@ -88,8 +94,10 @@ rm -rf doc/html/_sources
 #mv doc/sphinx/build/html doc
 rm -rf doc/sphinx/build
 
+
 %check
 make check %{?_smp_mflags} LD_LIBRARY_PATH="../../lib/libvarnish/.libs:../../lib/libvarnishcompat/.libs:../../lib/libvarnishapi/.libs:../../lib/libvcc/.libs:../../lib/libvgz/.libs" VERBOSE=1
+
 
 %install
 export DONT_STRIP=1
@@ -122,8 +130,10 @@ install -D -m 0755 varnishreload %{buildroot}%{_sbindir}/varnishreload
 
 echo %{_libdir}/varnish > %{buildroot}%{_sysconfdir}/ld.so.conf.d/varnish-%{_arch}.conf
 
+
 %clean
 rm -rf %{buildroot}
+
 
 %files
 %{_sbindir}/*
@@ -182,6 +192,7 @@ useradd -r -g varnish -d /var/lib/varnish -s /sbin/nologin \
 
 exit 0
 
+
 %post
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
@@ -192,6 +203,7 @@ exit 0
 
 chown varnishlog:varnish /var/log/varnish/
 /sbin/ldconfig
+
 
 %preun
 if [ $1 -lt 1 ]; then
@@ -208,7 +220,9 @@ if [ $1 -lt 1 ]; then
   %endif
 fi
 
+
 %postun -p /sbin/ldconfig
+
 
 %changelog
 * Thu Jul 24 2014 Varnish Software <opensource@varnish-software.com> - 3.0.0-1
