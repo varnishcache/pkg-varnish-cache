@@ -53,8 +53,10 @@ mock() {
 		--define "releasetag ${RPMRELEASE:-1}" \
 		--define "srcname $DIST_DIR" \
 		--define "v_rc ${RELEASE}" \
+		--define "nocheck 1" \
 		"$@"
+	# XXX: no mechanism to make nocheck conditional
 }
 
 mock --buildsrpm --source . --spec "$DIST_DIR"/varnish.spec
-mock --rebuild "$RESULT_DIR"/varnish-*.src.rpm --nocheck
+mock --rebuild "$RESULT_DIR"/varnish-*.src.rpm
