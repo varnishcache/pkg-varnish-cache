@@ -9,7 +9,6 @@ set -e
 set -u
 
 ELVER=${ELVER:-el7}
-CHROOT="epel-${ELVER#el}-x86_64"
 
 rm -rf build
 mkdir -p build
@@ -23,7 +22,7 @@ VERSION=$(./varnish-*/configure --version | awk 'NR == 1 {print $3}')
 MAJOR=${VERSION%.*}
 MINOR=${VERSION##*.}
 MINOR=${MINOR%%-*}
-RELEASE=${VERSION#*-}
+RELEASE=${VERSION#*-} # eg. beta1
 
 cp -r -L ../redhat/* ./varnish-*/
 
@@ -41,11 +40,14 @@ fi
 # while debugging, disable make check since it takes 15-20 minutes to run.
 sed -i -e 's/^make check/# make check/' */varnish.spec
 
+MOCK_ROOT="epel-${ELVER#el}-x86_64"
+RESULT_DIR="varnish-${MAJOR}/${ELVER}"
+
 mock() {
 	command mock --old-chroot \
-		--root "$CHROOT" \
+		--root "$MOCK_ROOT" \
 		--uniqueext "worker${EXECUTOR_NUMBER:-}" \
-		--resultdir "varnish-${MAJOR}/${ELVER}" \
+		--resultdir "$RESULT_DIR" \
 		--define "_smp_mflags -j10" \
 		--define "dist .${ELVER}" \
 		--define "versiontag ${RPMVERSION}" \
@@ -55,4 +57,4 @@ mock() {
 }
 
 mock --buildsrpm --source . --spec ./*/varnish.spec
-mock --rebuild "varnish-${MAJOR}/${ELVER}"/varnish*.src.rpm
+mock --rebuild "$RESULT_DIR"/varnish-*.src.rpm
