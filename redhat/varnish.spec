@@ -133,6 +133,8 @@ rm -rf %{buildroot}
 %files
 %{_sbindir}/*
 %{_bindir}/*
+%{_libdir}/*.so.*
+%{_libdir}/varnish
 %{_var}/lib/varnish
 %{_var}/log/varnish
 %{_mandir}/man1/*.1*
@@ -141,11 +143,13 @@ rm -rf %{buildroot}
 %{_docdir}/varnish/
 %{_datadir}/varnish
 %exclude %{_datadir}/varnish/vmodtool*
+%doc LICENSE
 %doc doc/html
 %doc doc/changes*.html
 %dir %{_sysconfdir}/varnish/
 %config(noreplace) %{_sysconfdir}/varnish/default.vcl
 %config(noreplace) %{_sysconfdir}/logrotate.d/varnish
+%config %{_sysconfdir}/ld.so.conf.d/varnish-%{_arch}.conf
 
 # systemd from fedora 17 and rhel 7
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
@@ -159,10 +163,6 @@ rm -rf %{buildroot}
 %{_initrddir}/varnishncsa
 %endif
 
-%{_libdir}/*.so.*
-%{_libdir}/varnish
-%doc LICENSE
-%config %{_sysconfdir}/ld.so.conf.d/varnish-%{_arch}.conf
 
 %files devel
 %{_libdir}/lib*.so
