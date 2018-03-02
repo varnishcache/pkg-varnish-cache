@@ -9,9 +9,7 @@ VERSION=${RPM_BUILD_ROOT##*varnish-}
 FIND_PROVIDES=$1
 shift
 
-# No $RPM_BUILD_ROOT on el6
-VMOD_VERSION=
-test -n "$VERSION" && VMOD_VERSION=" = ${VERSION%.*}" # remove arch
+VMOD_VERSION=" = ${VERSION%.*}" # remove arch
 
 VMOD_BITS=
 test "$(rpm --eval %__isa_bits)" -eq 64 && VMOD_BITS='(64bit)'

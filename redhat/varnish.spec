@@ -21,24 +21,15 @@ BuildRequires: pkgconfig
 BuildRequires: python(abi) >= 2.7
 BuildRequires: python-docutils >= 0.6
 BuildRequires: python-sphinx
+BuildRequires: systemd-units
 
 Requires: gcc
 Requires: logrotate
 
-Requires(pre): shadow-utils
-Requires(post): /sbin/chkconfig, /usr/bin/uuidgen
-Requires(preun): /sbin/chkconfig
-Requires(preun): /sbin/service
-%if %{undefined suse_version}
-Requires(preun): initscripts
-%endif
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
-Requires(post): systemd-units
-Requires(post): systemd-sysv
-Requires(preun): systemd-units
+Requires(post):   systemd-units
+Requires(post):   systemd-sysv
+Requires(preun):  systemd-units
 Requires(postun): systemd-units
-BuildRequires: systemd-units
-%endif
 
 Provides:  varnish-libs%{?_isa} = %{version}-%{release}
 Provides:  varnish-libs = %{version}-%{release}
@@ -85,10 +76,6 @@ Varnish Cache is a high-performance HTTP accelerator
 
 
 %build
-%if 0%{?rhel} == 6
-export CFLAGS="$CFLAGS -O2 -g -Wp,-D_FORTIFY_SOURCE=0"
-%endif
-
 %configure --localstatedir=/var/lib --without-rst2html
 %make_build V=1
 
@@ -113,17 +100,9 @@ mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d/
 install -D -m 0644 etc/example.vcl %{buildroot}%{_sysconfdir}/varnish/default.vcl
 install -D -m 0644 varnish.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/varnish
 
-# systemd support
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 mkdir -p %{buildroot}%{_unitdir}
 install -D -m 0644 varnish.service %{buildroot}%{_unitdir}/varnish.service
 install -D -m 0644 varnishncsa.service %{buildroot}%{_unitdir}/varnishncsa.service
-# default is standard sysvinit
-%else
-install -D -m 0644 varnish.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/varnish
-install -D -m 0755 varnish.initrc %{buildroot}%{_initrddir}/varnish
-install -D -m 0755 varnishncsa.initrc %{buildroot}%{_initrddir}/varnishncsa
-%endif
 install -D -m 0755 varnishreload %{buildroot}%{_sbindir}/varnishreload
 
 echo %{_libdir}/varnish > %{buildroot}%{_sysconfdir}/ld.so.conf.d/varnish-%{_arch}.conf
@@ -145,6 +124,7 @@ rm -rf %{buildroot}
 %{_mandir}/man7/*.7*
 %{_docdir}/varnish/
 %{_datadir}/varnish
+%{_unitdir}/*
 %exclude %{_datadir}/varnish/vmodtool*
 %doc LICENSE
 %doc doc/html
@@ -153,18 +133,6 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/varnish/default.vcl
 %config(noreplace) %{_sysconfdir}/logrotate.d/varnish
 %config %{_sysconfdir}/ld.so.conf.d/varnish-%{_arch}.conf
-
-# systemd from fedora 17 and rhel 7
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
-%{_unitdir}/varnish.service
-%{_unitdir}/varnishncsa.service
-
-# default is standard sysvinit
-%else
-%config(noreplace) %{_sysconfdir}/sysconfig/varnish
-%{_initrddir}/varnish
-%{_initrddir}/varnishncsa
-%endif
 
 
 %files devel
@@ -191,13 +159,7 @@ exit 0
 
 
 %post
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-%else
-/sbin/chkconfig --add varnish
-/sbin/chkconfig --add varnishncsa
-%endif
-
 chown varnishlog:varnish /var/log/varnish/
 /sbin/ldconfig
 
@@ -205,16 +167,9 @@ chown varnishlog:varnish /var/log/varnish/
 %preun
 if [ $1 -lt 1 ]; then
   # Package removal, not upgrade
-  %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
   /bin/systemctl --no-reload disable varnish.service > /dev/null 2>&1 || :
   /bin/systemctl stop varnish.service > /dev/null 2>&1 || :
   /bin/systemctl stop varnishncsa.service > /dev/null 2>&1 || :
-  %else
-  /sbin/service varnish stop > /dev/null 2>&1
-  /sbin/service varnishncsa stop > /dev/null 2>%1
-  /sbin/chkconfig --del varnish
-  /sbin/chkconfig --del varnishncsa
-  %endif
 fi
 
 
