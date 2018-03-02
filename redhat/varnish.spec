@@ -1,7 +1,8 @@
 %define vd_rc %{?v_rc:-%{?v_rc}}
 
-%define    _use_internal_dependency_generator 0
+%define _use_internal_dependency_generator 0
 %define __find_provides %{_builddir}/%{srcname}/find-provides
+
 %define debug_package %{nil}
 
 Summary: High-performance HTTP accelerator
@@ -22,11 +23,9 @@ BuildRequires: python(abi) >= 2.7
 BuildRequires: python-docutils >= 0.6
 BuildRequires: python-sphinx
 
-Requires: jemalloc
-Requires: libedit
+Requires: gcc
 Requires: logrotate
-Requires: ncurses
-Requires: pcre
+
 Requires(pre): shadow-utils
 Requires(post): /sbin/chkconfig, /usr/bin/uuidgen
 Requires(preun): /sbin/chkconfig
@@ -41,7 +40,6 @@ Requires(preun): systemd-units
 Requires(postun): systemd-units
 BuildRequires: systemd-units
 %endif
-Requires: gcc
 
 Provides: varnish-libs, varnish-docs, varnish-debuginfo
 Obsoletes: varnish-libs, varnish-docs, varnish-debuginfo
