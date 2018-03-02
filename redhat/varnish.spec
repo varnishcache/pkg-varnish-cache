@@ -174,13 +174,17 @@ rm -rf %{buildroot}
 
 
 %pre
-getent group varnish    >/dev/null || groupadd -r varnish
-getent passwd varnishlog >/dev/null || \
-	useradd -r -g varnish -d /dev/null -s /sbin/nologin \
-		-c "varnishlog user" varnishlog
-getent passwd varnish >/dev/null || \
-	useradd -r -g varnish -d /var/lib/varnish -s /sbin/nologin \
-		-c "Varnish Cache" varnish
+getent group varnish >/dev/null ||
+groupadd -r varnish
+
+getent passwd varnishlog >/dev/null ||
+useradd -r -g varnish -d /dev/null -s /sbin/nologin \
+	-c "varnishlog user" varnishlog
+
+getent passwd varnish >/dev/null ||
+useradd -r -g varnish -d /var/lib/varnish -s /sbin/nologin \
+	-c "Varnish Cache" varnish
+
 exit 0
 
 %post
