@@ -1,7 +1,7 @@
 %define v_rc beta1
 %define vd_rc %{?v_rc:-%{?v_rc}}
 %define    _use_internal_dependency_generator 0
-%define __find_provides %{_builddir}/../SOURCES/find-provides
+%define __find_provides %{_builddir}/%{name}-%{version}%{?vd_rc}/find-provides
 %define debug_package %{nil}
 %define _enable_debug_package 0
 %define __os_install_post /usr/lib/rpm/brp-compress %{nil}
@@ -13,15 +13,7 @@ Release: %{releasetag}%{?dist}
 License: BSD
 Group: System Environment/Daemons
 URL: https://www.varnish-cache.org/
-Source0: %{name}-%{version}%{?vd_rc}.tgz
-Source1: varnish.initrc
-Source2: varnish.sysconfig
-Source3: varnish.logrotate
-Source4: varnishreload
-Source6: varnish.service
-Source9: varnishncsa.initrc
-Source10: varnishncsa.service
-Source11: find-provides
+Source: %{name}-%{version}%{?vd_rc}.tgz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: automake
@@ -87,8 +79,6 @@ Varnish Cache is a high-performance HTTP accelerator
 %prep
 %setup -n varnish-%{version}%{?vd_rc}
 #%setup -q -n varnish-trunk
-cp %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} .
-cp %{SOURCE6} %{SOURCE9} %{SOURCE10} %{SOURCE11} .
 
 %build
 %if 0%{?rhel} == 6
