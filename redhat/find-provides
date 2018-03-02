@@ -1,21 +1,50 @@
-#!/bin/bash
+#!/bin/sh
+#
 # This script is used to inject the Varnish ABI into the RPM Provides.
 
-set -o errexit
+#set -e
 
-if [ -x /usr/lib/rpm/redhat/find-provides ]; then
-    /usr/lib/rpm/redhat/find-provides "$@"
-elif [ -x /usr/lib/rpm/find-provides ]; then
-    /usr/lib/rpm/find-provides "$@"
-fi
+BUILD_DIR=$(dirname "$0")
+FIND_PROVIDES="$1"
+shift
 
-# We don't install vcs_version.h, so we can't use RPM_BUILD_ROOT directly.
-cd /builddir/build/BUILD/varnish* || true
-cd ${RPM_BUILD_ROOT}/../../BUILD/varnish* || true
+expand_macro() {
+	cpp - -Iinclude <<-EOF |
+	#include "vcs_version.h"
+	#include "vdef.h"
+	#include "vrt.h"
+	$1
+	EOF
+	tail -1
+}
 
-printf '#include "vcs_version.h"\nVCS_Version\n' \
-        | cpp - -Iinclude | sed -e '/^"/!d' -e 's/\"//g' -e 's/^/varnishabi-strict-/'
+varnishd_provides() (
+	cd "$BUILD_DIR"
 
-printf '#include "vrt.h"\nvarnishabi- VRT_MAJOR_VERSION . VRT_MINOR_VERSION\n' \
-	| cpp - -Iinclude \
-	| sed -e '/^varnishabi-/!d' -e 's/U//g' -e 's/ //g'
+	ABI=$(expand_macro VCS_Version | tr -d '"')
+	VRT_MAJOR=$(expand_macro VRT_MAJOR_VERSION | tr -c -d '[0-9]')
+	VRT_MINOR=$(expand_macro VRT_MINOR_VERSION | tr -c -d '[0-9]')
+
+	cat <<-EOF
+	varnishd(abi) = $ABI
+	varnishd(vrt) = $VRT_MAJOR.$VRT_MINOR
+	EOF
+)
+
+while read -r FILE
+do
+	case $FILE in
+	*bin/varnishd)
+		varnishd_provides
+		printf "%s\n" "$FILE" | $FIND_PROVIDES "$@"
+		;;
+	*/libvmod_*.so)
+		VMOD=${FILE##*/libvmod_}
+		VMOD=${VMOD%.so}
+		printf 'vmod(%s)\n' "$VMOD"
+		;;
+	*)
+		printf "%s\n" "$FILE" | $FIND_PROVIDES "$@"
+		;;
+	esac
+done
