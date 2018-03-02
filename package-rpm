@@ -39,9 +39,6 @@ else
 	RPMVERSION="${MAJOR}.${MINOR}"
 fi
 
-# while debugging, disable make check since it takes 15-20 minutes to run.
-sed -i -e 's/^make check/# make check/' "$DIST_DIR"/varnish.spec
-
 MOCK_ROOT="epel-${ELVER#el}-x86_64"
 RESULT_DIR="varnish-${MAJOR}/${ELVER}"
 
@@ -59,4 +56,4 @@ mock() {
 }
 
 mock --buildsrpm --source . --spec "$DIST_DIR"/varnish.spec
-mock --rebuild "$RESULT_DIR"/varnish-*.src.rpm
+mock --rebuild "$RESULT_DIR"/varnish-*.src.rpm --nocheck
