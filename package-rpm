@@ -43,7 +43,7 @@ MOCK_ROOT="epel-${ELVER#el}-x86_64"
 RESULT_DIR="varnish-${MAJOR}/${ELVER}"
 
 mock() {
-	command mock --old-chroot \
+	command mock \
 		--root "$MOCK_ROOT" \
 		--uniqueext "worker${EXECUTOR_NUMBER:-}" \
 		--resultdir "$RESULT_DIR" \
