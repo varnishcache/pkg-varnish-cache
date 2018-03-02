@@ -83,7 +83,6 @@ export CFLAGS="$CFLAGS -O2 -g -Wp,-D_FORTIFY_SOURCE=0"
 %endif
 
 %configure --localstatedir=/var/lib --without-rst2html
-
 %make_build V=1
 
 
@@ -95,10 +94,8 @@ export CFLAGS="$CFLAGS -O2 -g -Wp,-D_FORTIFY_SOURCE=0"
 
 %install
 export DONT_STRIP=1
-rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} INSTALL="install -p"
 
-# None of these for fedora
 find %{buildroot}/%{_libdir}/ -name '*.la' -exec rm -f {} ';'
 
 mkdir -p %{buildroot}/var/lib/varnish
