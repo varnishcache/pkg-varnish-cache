@@ -67,6 +67,7 @@ else
 	VERSION="$MAJOR.$MINOR"
 	DEBVERSION="0${RELEASE}+daily+$(date +%Y%m%d.%H%M%S)"
 	RELEASE=
+	# XXX: why move the RELEASE inside the DEBVERSION?
 	DCH_TEXT="Automatic build from git"
 fi
 
