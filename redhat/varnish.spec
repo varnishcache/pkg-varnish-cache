@@ -4,8 +4,6 @@
 %define    _use_internal_dependency_generator 0
 %define __find_provides %{_builddir}/%{srcname}/find-provides
 %define debug_package %{nil}
-%define _enable_debug_package 0
-%define __os_install_post /usr/lib/rpm/brp-compress %{nil}
 
 Summary: High-performance HTTP accelerator
 Name: varnish
