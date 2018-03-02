@@ -196,19 +196,6 @@ exit 0
 chown varnishlog:varnish /var/log/varnish/
 /sbin/ldconfig
 
-%triggerun -- varnish < 3.0.2-1
-# Save the current service runlevel info
-# User must manually run systemd-sysv-convert --apply varnish
-# to migrate them to systemd targets
-%{_bindir}/systemd-sysv-convert --save varnish >/dev/null 2>&1 ||:
-
-# If the package is allowed to autostart:
-#/bin/systemctl --no-reload enable varnish.service >/dev/null 2>&1 ||:
-
-# Run these because the SysV package being removed won't do them
-/sbin/chkconfig --del varnish >/dev/null 2>&1 || :
-#/bin/systemctl try-restart varnish.service >/dev/null 2>&1 || :
-
 %preun
 if [ $1 -lt 1 ]; then
   # Package removal, not upgrade
