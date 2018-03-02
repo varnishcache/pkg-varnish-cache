@@ -32,11 +32,10 @@ TGZ_SOURCE=$(basename "$TGZ_SOURCE" .tgz)
 tar zcf "$TGZ_SOURCE.tgz" varnish-*/
 
 if [ -n "${WEEKLY_VERSION:-}" ]; then
-    sed -i -e "s/^Version:.*/Version: $WEEKLY_VERSION/" ./*/varnish.spec
-    sed -i -e "s/.*define v_rc.*/\%define v_rc 0/" ./*/varnish.spec
+	RPMVERSION="${WEEKLY_VERSION}"
+	RELEASE=weekly
 else
-    sed -i -e "s/^Version:.*/Version: $MAJOR.$MINOR/" ./*/varnish.spec
-    sed -i -e "s/.*define v_rc.*/\%define v_rc $RELEASE/" ./*/varnish.spec
+	RPMVERSION="${MAJOR}.${MINOR}"
 fi
 
 # while debugging, disable make check since it takes 15-20 minutes to run.
@@ -49,7 +48,9 @@ mock() {
 		--resultdir "varnish-${MAJOR}/${ELVER}" \
 		--define "_smp_mflags -j10" \
 		--define "dist .${ELVER}" \
+		--define "versiontag ${RPMVERSION}" \
 		--define "releasetag ${RPMRELEASE:-1}" \
+		--define "v_rc ${RELEASE}" \
 		"$@"
 }
 

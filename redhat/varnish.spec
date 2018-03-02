@@ -1,19 +1,20 @@
-%define v_rc beta1
 %define vd_rc %{?v_rc:-%{?v_rc}}
+%define srcname %{name}-%{version}%{?vd_rc}
+
 %define    _use_internal_dependency_generator 0
-%define __find_provides %{_builddir}/%{name}-%{version}%{?vd_rc}/find-provides
+%define __find_provides %{_builddir}/%{srcname}/find-provides
 %define debug_package %{nil}
 %define _enable_debug_package 0
 %define __os_install_post /usr/lib/rpm/brp-compress %{nil}
 
 Summary: High-performance HTTP accelerator
 Name: varnish
-Version: 3.0.0
+Version: %{versiontag}
 Release: %{releasetag}%{?dist}
 License: BSD
 Group: System Environment/Daemons
 URL: https://www.varnish-cache.org/
-Source: %{name}-%{version}%{?vd_rc}.tgz
+Source: %{srcname}.tgz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: automake
@@ -77,8 +78,7 @@ Development files for %{name}-libs
 Varnish Cache is a high-performance HTTP accelerator
 
 %prep
-%setup -n varnish-%{version}%{?vd_rc}
-#%setup -q -n varnish-trunk
+%setup -q -n %{srcname}
 
 %build
 %if 0%{?rhel} == 6
