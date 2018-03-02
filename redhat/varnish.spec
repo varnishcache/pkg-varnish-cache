@@ -1,9 +1,9 @@
-%define vd_rc %{?v_rc:-%{?v_rc}}
+%global vd_rc %{?v_rc:-%{?v_rc}}
 
-%define _use_internal_dependency_generator 0
-%define __find_provides %{_builddir}/%{srcname}/find-provides
+%global _use_internal_dependency_generator 0
+%global __find_provides %{_builddir}/%{srcname}/find-provides %__find_provides
 
-%define debug_package %{nil}
+%global debug_package %{nil}
 
 
 Summary: High-performance HTTP accelerator
