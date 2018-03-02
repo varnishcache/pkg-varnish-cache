@@ -17,12 +17,18 @@ ifneq ($(filter $(DEB_HOST_ARCH),$(DISABLE_JEMALLOC_ARCH_LIST)),)
 LOCAL_CONFIGURE_FLAGS += --disable-jemalloc
 endif
 
-VMOD_strictABI = $(shell printf '\#include "vcs_version.h"\nVCS_Version\n' \
-        | cpp - -Iinclude | sed -e '/^"/!d' -e 's/\"//g' -e 's/^/varnishabi-strict-/')
+VARNISHD_ABI = $(shell \
+	printf '\#include "vcs_version.h"\nVCS_Version\n' | \
+	cpp - -Iinclude | \
+	tail -1 | \
+	tr -d '"')
 
-VMOD_ABI = $(shell printf '\#include "vrt.h"\nvarnishabi- VRT_MAJOR_VERSION . VRT_MINOR_VERSION\n' \
-        | cpp - -Iinclude \
-        | sed -e '/^varnishabi-/!d' -e 's/U//g' -e 's/ //g')
+VARNISHD_VRT = $(shell \
+	printf '\#include "vdef.h"\n\#include "vrt.h"\n%s.%s\n' \
+		VRT_MAJOR_VERSION VRT_MINOR_VERSION | \
+	cpp - -Iinclude | \
+	tail -1 | \
+	tr -c -d '[0-9.]')
 
 # Main build rule, leave everything to debhelper
 %:
@@ -61,8 +67,8 @@ override_dh_installdocs:
 
 
 override_dh_gencontrol:
-	echo "Varnish:strictABI=$(VMOD_strictABI)" >> debian/substvars
-	echo "Varnish:ABI=$(VMOD_ABI)" >> debian/substvars
+	echo "varnishd:ABI=varnishd-abi-$(VARNISHD_ABI)" >> debian/substvars
+	echo "varnishd:VRT=varnishd-vrt (= $(VARNISHD_VRT))" >> debian/substvars
 
 	if [ -n "$$DEBIAN_OVERRIDE_BINARY_VERSION" ]; then \
  		dh_gencontrol -- -Tdebian/substvars -v$$DEBIAN_OVERRIDE_BINARY_VERSION; \
