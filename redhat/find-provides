@@ -2,7 +2,7 @@
 #
 # This script is used to inject the Varnish ABI into the RPM Provides.
 
-#set -e
+set -e
 
 BUILD_DIR=$(dirname "$0")
 FIND_PROVIDES="$1"
