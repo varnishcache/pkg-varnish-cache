@@ -65,7 +65,7 @@ Requires: pkgconfig
 Requires: python(abi) >= 2.7
 
 %description devel
-Development files for %{name}-libs
+Development files for %{name}
 Varnish Cache is a high-performance HTTP accelerator
 
 %prep
