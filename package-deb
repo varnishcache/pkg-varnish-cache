@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Build Debian and Ubuntu packages from a tarball.
 #
@@ -13,78 +13,72 @@
 # To ENTER an image snapshot: schroot -c jessie-amd64
 # To BUILD within a snapshot: sbuild -A -d jessie-amd64 PACKAGE*.dsc
 
+set -e
+set -u
+
 BINDISTS=${BINDISTS:-jessie}
 
-if [[ -n "${JENKINS_HOME}" ]]; then
+if [ -n "${JENKINS_HOME:-}" ]; then
 	set -x
-	if [ "$HOSTNAME" != "cbuild" ]; then
+	if [ "${HOSTNAME:-}" != "cbuild" ]; then
 		# Handle old chroot naming on our jenkins servers. Used in the bottom.
 		chroot_postfix="-sbuild";
 	fi
 fi
 
-set -o errexit
-
-. common.sh
-
 rm -rf build
 mkdir -p build
+cd build
 
-SOURCE=$(ls -1 sources/varnish-*.tar.gz 2>/dev/null || ls -1 sources/varnish-*.tgz 2>/dev/null)
+SOURCE=$(ls ../sources/varnish-*gz 2>/dev/null | tail -1)
 
-findversion "$SOURCE"
+tar xf "$SOURCE"
 
-tar xf "${SOURCE}" -C build
+DIST_DIR=$(ls)
 
-# Modify varnish.install to match version
-if [ "$V" = "3.0" ] || [ "$V" = "4.0" ] || [ "$V" = "4.1" ]; then
-	# Legacy packages don't have separate directory with VCL files
-	sed -i "s|^usr/share/varnish/vcl|#usr/share/varnish/vcl|" debian/varnish.install
-    sed -i "s|^usr/share/varnish/vsctool.py|#usr/share/varnish/vsctool.py|" debian/varnish-dev.install
-else
-	# Make sure to revert if mangled by older build-job
-	sed -i "s|^#usr/share/varnish/vcl|usr/share/varnish/vcl|" debian/varnish.install
-    sed -i "s|^#usr/share/varnish/vsctool.py|usr/share/varnish/vsctool.py|" debian/varnish-dev.install
-fi
+VERSION=$("$DIST_DIR"/configure --version | awk 'NR == 1 {print $3}')
+MAJOR=${VERSION%.*}
+MINOR=${VERSION##*.}
+MINOR=${MINOR%%-*}
+RELEASE=${VERSION#*-} # eg. beta1
 
-# Use the non-systemd versions of rules and control for legacy distros
-if [[ $BINDISTS =~ .*precise.* || $BINDISTS =~ .*wheezy.* ]]; then
-    echo "INFO: Building non-systemd packages."
-    mv debian/control.nosystemd debian/control
-    mv debian/rules.nosystemd debian/rules
-fi
-
-cd build/varnish-*
-
-# Copy our debian metadata into the build/varnish-$version directory 
-cp -r -L ../../debian .
-rm -f debian/.*.sw?    # Delete any vim temporary files.
-
-ln "../../$SOURCE" "../varnish_$V.$MINOR.orig.tar.gz"
+cp -r -L ../debian "$DIST_DIR"/
 
 # Modify Section to suit our repository software.
-sed -i -e "s|^Section: \([^/]*\)\$|Section: varnish-$V/\1|" debian/control
+sed -i -e "s|^Section: \([^/]*\)\$|Section: varnish-$MAJOR/\1|" "$DIST_DIR/debian/control"
+
+TGZ_SOURCE=$(basename "$SOURCE" .tar.gz)
+TGZ_SOURCE=$(basename "$TGZ_SOURCE" .tgz)
+tar zcf "$TGZ_SOURCE.orig.tar.gz" "$DIST_DIR"/
 
 # Take version override set on Jenkins builds into account.
-if [ -n "$WEEKLY_VERSION" ]; then
-    FULL_VERSION="${WEEKLY_VERSION}+${DEBVERSION}"
-    dch -v "$FULL_VERSION" "Release build #$BUILD_NUMBER ID: $BUILD_ID"
-elif [[ -n "${DEBVERSION}" ]]; then
-    if [ "$RELEASE" == "" ]; then
-	    FULL_VERSION="$V.$MINOR-$DEBVERSION"
-    else
-	    FULL_VERSION="$V.$MINOR~$RELEASE-$DEBVERSION"
-    fi
-	dch -v "$FULL_VERSION" "Release build #$BUILD_NUMBER ID: $BUILD_ID"
+if [ -n "${WEEKLY_VERSION:-}" ]
+then
+	VERSION=$WEEKLY_VERSION
+	RELEASE=
+	DEBVERSION=weekly
+	DCH_TEXT="Release build #$BUILD_NUMBER ID: $BUILD_ID"
+elif [ -n "${DEBVERSION:-}" ]
+then
+	VERSION="$MAJOR.$MINOR"
+	DEBVERSION="${DEBVERSION:-}"
+	DCH_TEXT="Release build #$BUILD_NUMBER ID: $BUILD_ID"
 else
-	FULL_VERSION="$V.$MINOR-0${RELEASE}+daily+$(date +%Y%m%d.%H%M%S)"
-	dch -v "$V.$MINOR-0${RELEASE}+daily+$(date +%Y%m%d.%H%M%S)" "Automatic build from git"
+	VERSION="$MAJOR.$MINOR"
+	DEBVERSION="0${RELEASE}+daily+$(date +%Y%m%d.%H%M%S)"
+	RELEASE=
+	DCH_TEXT="Automatic build from git"
 fi
+
+cd "$DIST_DIR"
+
+FULL_VERSION="$VERSION${RELEASE:+~}$RELEASE-$DEBVERSION"
+dch -v "$FULL_VERSION" "$DCH_TEXT"
 
 # Generate the source package used by subsequent sbuilds
 dpkg-buildpackage -us -uc -S -j10
 
-# Work dir is build/
+# Back to build/
 cd ..
 
 # By now we are done setting up and building the source package.
