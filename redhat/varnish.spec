@@ -1,19 +1,17 @@
 %global vd_rc %{?v_rc:-%{?v_rc}}
-
+%global debug_package %{nil}
 %global _use_internal_dependency_generator 0
 %global __find_provides %{_builddir}/%{srcname}/find-provides %__find_provides
 
-%global debug_package %{nil}
-
 
 Summary: High-performance HTTP accelerator
-Name: varnish
+Name:    varnish
 Version: %{versiontag}
 Release: %{releasetag}%{?dist}
 License: BSD
-Group: System Environment/Daemons
-URL: https://www.varnish-cache.org/
-Source: %{srcname}.tgz
+Group:   System Environment/Daemons
+URL:     https://www.varnish-cache.org/
+Source:  %{srcname}.tgz
 
 BuildRequires: jemalloc-devel
 BuildRequires: libedit-devel
@@ -42,7 +40,7 @@ Requires(postun): systemd-units
 BuildRequires: systemd-units
 %endif
 
-Provides: varnish-libs, varnish-docs, varnish-debuginfo
+Provides:  varnish-libs, varnish-docs, varnish-debuginfo
 Obsoletes: varnish-libs, varnish-docs, varnish-debuginfo
 
 
@@ -59,13 +57,13 @@ available on: https://www.varnish-cache.org/
 
 
 %package devel
-Summary: Development files for %{name}
-Group: System Environment/Libraries
-Provides: varnish-libs-devel
+Summary:   Development files for %{name}
+Group:     System Environment/Libraries
+Requires:  varnish = %{version}-%{release}
+Requires:  pkgconfig
+Requires:  python(abi) >= 2.7
+Provides:  varnish-libs-devel
 Obsoletes: varnish-libs-devel
-Requires: varnish = %{version}-%{release}
-Requires: pkgconfig
-Requires: python(abi) >= 2.7
 
 
 %description devel
