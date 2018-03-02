@@ -94,7 +94,7 @@ export CFLAGS="$CFLAGS -O2 -g -Wp,-D_FORTIFY_SOURCE=0"
 
 %install
 export DONT_STRIP=1
-make install DESTDIR=%{buildroot} INSTALL="install -p"
+%make_install
 
 find %{buildroot}/%{_libdir}/ -name '*.la' -exec rm -f {} ';'
 
