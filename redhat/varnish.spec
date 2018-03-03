@@ -1,4 +1,4 @@
-%global vd_rc %{?v_rc:-%{?v_rc}}
+%global vd_rc %{?v_rc:0.%{?v_rc}.}
 %global debug_package %{nil}
 %global _use_internal_dependency_generator 0
 %global __find_provides %{_builddir}/%{srcname}/find-provides %__find_provides
@@ -7,7 +7,7 @@
 Summary: High-performance HTTP accelerator
 Name:    varnish
 Version: %{versiontag}
-Release: %{releasetag}%{?dist}
+Release: %{?vd_rc}%{releasetag}%{?dist}
 License: BSD
 Group:   System Environment/Daemons
 URL:     https://www.varnish-cache.org/
