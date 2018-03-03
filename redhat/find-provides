@@ -48,4 +48,6 @@ do
 		printf "%s\n" "$FILE" | $FIND_PROVIDES "$@"
 		;;
 	esac
-done
+done |
+sort |
+uniq
