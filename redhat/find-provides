@@ -11,10 +11,10 @@ shift
 
 # No $RPM_BUILD_ROOT on el6
 VMOD_VERSION=
-if [ -n "$VERSION" ]
-then
-	VMOD_VERSION=" = ${VERSION%.*}" # remove arch
-fi
+test -n "$VERSION" && VMOD_VERSION=" = ${VERSION%.*}" # remove arch
+
+VMOD_BITS=
+test "$(rpm --eval %__isa_bits)" -eq 64 && VMOD_BITS='(64bit)'
 
 expand_macro() {
 	cpp - -Iinclude <<-EOF |
@@ -49,7 +49,7 @@ do
 	*/libvmod_*.so)
 		VMOD=${FILE##*/libvmod_}
 		VMOD=${VMOD%.so}
-		printf 'vmod(%s)%s\n' "$VMOD" "$VMOD_VERSION"
+		printf 'vmod(%s)%s%s\n' "$VMOD" "$VMOD_BITS" "$VMOD_VERSION"
 		;;
 	*)
 		printf "%s\n" "$FILE" | $FIND_PROVIDES "$@"
