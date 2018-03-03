@@ -40,11 +40,15 @@ Requires(postun): systemd-units
 BuildRequires: systemd-units
 %endif
 
+Provides:  varnish-libs%{?_isa} = %{version}-%{release}
 Provides:  varnish-libs = %{version}-%{release}
-Provides:  varnish-docs = %{version}-%{release}
-Provides:  varnish-debuginfo = %{version}-%{release}
 Obsoletes: varnish-libs
+
+Provides:  varnish-docs = %{version}-%{release}
 Obsoletes: varnish-docs
+
+Provides:  varnish-debuginfo%{?_isa} = %{version}-%{release}
+Provides:  varnish-debuginfo = %{version}-%{release}
 Obsoletes: varnish-debuginfo
 
 
@@ -63,9 +67,10 @@ available on: https://www.varnish-cache.org/
 %package devel
 Summary:   Development files for %{name}
 Group:     System Environment/Libraries
-Requires:  varnish = %{version}-%{release}
+Requires:  varnish%{?_isa} = %{version}-%{release}
 Requires:  pkgconfig
 Requires:  python(abi) >= 2.7
+Provides:  varnish-libs-devel%{?_isa} = %{version}-%{release}
 Provides:  varnish-libs-devel = %{version}-%{release}
 Obsoletes: varnish-libs-devel
 
