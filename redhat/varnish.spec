@@ -40,8 +40,12 @@ Requires(postun): systemd-units
 BuildRequires: systemd-units
 %endif
 
-Provides:  varnish-libs, varnish-docs, varnish-debuginfo
-Obsoletes: varnish-libs, varnish-docs, varnish-debuginfo
+Provides:  varnish-libs = %{version}-%{release}
+Provides:  varnish-docs = %{version}-%{release}
+Provides:  varnish-debuginfo = %{version}-%{release}
+Obsoletes: varnish-libs
+Obsoletes: varnish-docs
+Obsoletes: varnish-debuginfo
 
 
 %description
@@ -62,7 +66,7 @@ Group:     System Environment/Libraries
 Requires:  varnish = %{version}-%{release}
 Requires:  pkgconfig
 Requires:  python(abi) >= 2.7
-Provides:  varnish-libs-devel
+Provides:  varnish-libs-devel = %{version}-%{release}
 Obsoletes: varnish-libs-devel
 
 
