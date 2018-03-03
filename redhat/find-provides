@@ -5,7 +5,8 @@
 set -e
 
 BUILD_DIR=$(dirname "$0")
-FIND_PROVIDES="$1"
+VERSION=${RPM_BUILD_ROOT##*varnish-}
+FIND_PROVIDES=$1
 shift
 
 expand_macro() {
@@ -41,7 +42,7 @@ do
 	*/libvmod_*.so)
 		VMOD=${FILE##*/libvmod_}
 		VMOD=${VMOD%.so}
-		printf 'vmod(%s)\n' "$VMOD"
+		printf 'vmod(%s) = %s\n' "$VMOD" "$VERSION"
 		;;
 	*)
 		printf "%s\n" "$FILE" | $FIND_PROVIDES "$@"
