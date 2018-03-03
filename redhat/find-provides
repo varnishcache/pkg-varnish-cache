@@ -9,6 +9,13 @@ VERSION=${RPM_BUILD_ROOT##*varnish-}
 FIND_PROVIDES=$1
 shift
 
+# No $RPM_BUILD_ROOT on el6
+VMOD_VERSION=
+if [ -n "$VERSION" ]
+then
+	VMOD_VERSION=" = $VERSION"
+fi
+
 expand_macro() {
 	cpp - -Iinclude <<-EOF |
 	#include "vcs_version.h"
@@ -42,7 +49,7 @@ do
 	*/libvmod_*.so)
 		VMOD=${FILE##*/libvmod_}
 		VMOD=${VMOD%.so}
-		printf 'vmod(%s) = %s\n' "$VMOD" "$VERSION"
+		printf 'vmod(%s)%s\n' "$VMOD" "$VMOD_VERSION"
 		;;
 	*)
 		printf "%s\n" "$FILE" | $FIND_PROVIDES "$@"
