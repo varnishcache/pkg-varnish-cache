@@ -13,7 +13,7 @@ shift
 VMOD_VERSION=
 if [ -n "$VERSION" ]
 then
-	VMOD_VERSION=" = $VERSION"
+	VMOD_VERSION=" = ${VERSION%.*}" # remove arch
 fi
 
 expand_macro() {
