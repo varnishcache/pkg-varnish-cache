@@ -1,0 +1,10 @@
+/var/log/varnish/varnishncsa.log {
+  daily
+  rotate 7
+  compress
+  delaycompress
+  missingok
+  postrotate
+    /bin/kill -HUP `cat /var/run/varnishncsa.pid /run/varnishncsa/varnishncsa.pid 2>/dev/null` 2> /dev/null || true
+  endscript
+}
