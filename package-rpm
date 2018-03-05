@@ -34,7 +34,6 @@ tar zcf "$TGZ_SOURCE.tgz" "$DIST_DIR"/
 
 if [ -n "${WEEKLY_VERSION:-}" ]; then
 	RPMVERSION="${WEEKLY_VERSION}"
-	RELEASE=weekly
 else
 	RPMVERSION="${MAJOR}.${MINOR}"
 fi
