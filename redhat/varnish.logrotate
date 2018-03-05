@@ -1,1 +1,1 @@
-../common/varnish.logrotate
+../systemd/varnish.logrotate

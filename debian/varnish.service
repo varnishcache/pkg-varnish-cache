@@ -1,1 +1,1 @@
-../common/varnish.service
+../systemd/varnish.service

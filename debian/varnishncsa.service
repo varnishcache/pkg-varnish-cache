@@ -1,1 +1,1 @@
-../common/varnishncsa.service
+../systemd/varnishncsa.service
