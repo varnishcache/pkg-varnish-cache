@@ -16,7 +16,7 @@
 set -e
 set -u
 
-BINDISTS=${BINDISTS:-jessie}
+BINDISTS=${BINDISTS:-stretch}
 
 if [ -n "${JENKINS_HOME:-}" ]; then
 	set -x

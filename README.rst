@@ -45,7 +45,7 @@ Debian/Ubuntu
 
 * install sbuild_, schroot_ and other required tools::
 
-     sudo apt-get install sbuild schroot debootstrap
+     sudo apt-get install sbuild schroot debootstrap devscripts
 
 * use ``sbuild-createchroot`` to set up a standard chroot for building
   packages, see sbuild_
