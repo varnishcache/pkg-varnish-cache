@@ -58,7 +58,7 @@ available on: https://www.varnish-cache.org/
 %package devel
 Summary:   Development files for %{name}
 Group:     System Environment/Libraries
-Requires:  varnish%{?_isa} = %{version}-%{release}
+Requires:  %{name}%{?_isa} = %{version}-%{release}
 Requires:  pkgconfig
 Requires:  python(abi) >= 2.7
 Provides:  varnish-libs-devel%{?_isa} = %{version}-%{release}
@@ -95,7 +95,7 @@ find %{buildroot}/%{_libdir}/ -name '*.la' -exec rm -f {} ';'
 mkdir -p %{buildroot}/var/lib/varnish
 mkdir -p %{buildroot}/var/log/varnish
 mkdir -p %{buildroot}/var/run/varnish
-mkdir -p %{buildroot}%{_datadir}/varnish
+mkdir -p %{buildroot}%{_datadir}/%{name}
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d/
 install -D -m 0644 etc/example.vcl %{buildroot}%{_sysconfdir}/varnish/default.vcl
 install -D -m 0644 varnish.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/varnish
@@ -105,7 +105,7 @@ install -D -m 0644 varnish.service %{buildroot}%{_unitdir}/varnish.service
 install -D -m 0644 varnishncsa.service %{buildroot}%{_unitdir}/varnishncsa.service
 install -D -m 0755 varnishreload %{buildroot}%{_sbindir}/varnishreload
 
-echo %{_libdir}/varnish > %{buildroot}%{_sysconfdir}/ld.so.conf.d/varnish-%{_arch}.conf
+echo %{_libdir}/%{name} > %{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}-%{_arch}.conf
 
 
 %clean
@@ -116,30 +116,30 @@ rm -rf %{buildroot}
 %{_sbindir}/*
 %{_bindir}/*
 %{_libdir}/*.so.*
-%{_libdir}/varnish
+%{_libdir}/%{name}
 %{_var}/lib/varnish
 %{_var}/log/varnish
 %{_mandir}/man1/*.1*
 %{_mandir}/man3/*.3*
 %{_mandir}/man7/*.7*
-%{_docdir}/varnish/
-%{_datadir}/varnish
+%{_docdir}/%{name}/
+%{_datadir}/%{name}
 %{_unitdir}/*
-%exclude %{_datadir}/varnish/vmodtool*
+%exclude %{_datadir}/%{name}/vmodtool*
 %doc LICENSE
 %doc doc/html
 %doc doc/changes*.html
 %dir %{_sysconfdir}/varnish/
 %config(noreplace) %{_sysconfdir}/varnish/default.vcl
 %config(noreplace) %{_sysconfdir}/logrotate.d/varnish
-%config %{_sysconfdir}/ld.so.conf.d/varnish-%{_arch}.conf
+%config %{_sysconfdir}/ld.so.conf.d/%{name}-%{_arch}.conf
 
 
 %files devel
 %{_libdir}/lib*.so
-%{_includedir}/varnish
+%{_includedir}/%{name}
 %{_libdir}/pkgconfig/varnishapi.pc
-%{_datadir}/varnish/vmodtool*
+%{_datadir}/%{name}/vmodtool*
 %{_datadir}/aclocal/*
 
 
