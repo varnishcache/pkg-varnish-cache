@@ -28,7 +28,7 @@ tar xf "$SOURCE"
 
 DIST_DIR=$(ls)
 
-VERSION=$("$DIST_DIR"/configure --version | awk 'NR == 1 {print $3}')
+VERSION=$("$DIST_DIR"/configure --version | awk 'NR == 1 {print $NF}')
 MAJOR=${VERSION%.*}
 MINOR=${VERSION##*.}
 MINOR=${MINOR%%-*}
