@@ -82,5 +82,5 @@ cd ..
 for dist in $BINDISTS; do
 	# Legacy packages embedded the release into the package version.
 	export DEBIAN_OVERRIDE_BINARY_VERSION="$FULL_VERSION~$dist"
-	sbuild -v -A -c "$dist-amd64-sbuild" -d "$dist" varnish_*.dsc
+	sbuild -v -A -c "$dist-amd64-sbuild" -d "$dist" varnish*.dsc
 done
