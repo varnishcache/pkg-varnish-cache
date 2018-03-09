@@ -21,10 +21,13 @@ tar xf "$SOURCE"
 DIST_DIR=$(ls)
 
 VERSION=$("$DIST_DIR"/configure --version | awk 'NR == 1 {print $NF}')
-MAJOR=${VERSION%.*}
-MINOR=${VERSION##*.}
-MINOR=${MINOR%%-*}
-RELEASE=${VERSION#*-} # eg. beta1
+
+# VERSION looks like 5.2.1 or 5.2.0-rc1
+MAJOR=${VERSION%.*}		# 5.2
+MINOR=${VERSION##*.}		# 1 or 0-rc1
+MINOR=${MINOR%%-*}		# 1 or 0
+RELEASE=${VERSION#*-}		# 5.2.1 or rc1
+RELEASE=${RELEASE#$VERSION}	# '' or rc1
 
 cp -r -L ../redhat/* "$DIST_DIR"/
 
