@@ -31,9 +31,7 @@ RELEASE=${RELEASE#$VERSION}	# '' or rc1
 
 cp -r -L ../redhat/* "$DIST_DIR"/
 
-TGZ_SOURCE=$(basename "$SOURCE" .tar.gz)
-TGZ_SOURCE=$(basename "$TGZ_SOURCE" .tgz)
-tar zcf "$TGZ_SOURCE.tgz" "$DIST_DIR"/
+tar zcf "$DIST_DIR.tgz" "$DIST_DIR"/
 
 if [ -n "${WEEKLY_VERSION:-}" ]; then
 	RPMVERSION="${WEEKLY_VERSION}"

@@ -42,9 +42,7 @@ cp -r -L ../debian "$DIST_DIR"/
 # Modify Section to suit our repository software.
 sed -i -e "s|^Section: \([^/]*\)\$|Section: varnish-$MAJOR/\1|" "$DIST_DIR/debian/control"
 
-TGZ_SOURCE=$(basename "$SOURCE" .tar.gz)
-TGZ_SOURCE=$(basename "$TGZ_SOURCE" .tgz)
-tar zcf "$TGZ_SOURCE.orig.tar.gz" "$DIST_DIR"/
+tar zcf "$DIST_DIR.orig.tar.gz" "$DIST_DIR"/
 
 # Take version override set on Jenkins builds into account.
 if [ -n "${WEEKLY_VERSION:-}" ]
