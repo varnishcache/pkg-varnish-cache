@@ -21,11 +21,13 @@ Standards-Version: 3.9.6
 
 Package: varnish
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends},
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
  adduser,
  gcc,
  libc6-dev | libc6.1-dev | libc-dev,
-Provides: varnish,
+Provides:
  libvarnishapi1,
  ${varnishd:ABI},
  ${varnishd:VRT},
