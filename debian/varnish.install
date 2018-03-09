@@ -7,5 +7,5 @@ usr/share/varnish/vcl
 debian/*.service lib/systemd/system/
 usr/share/doc/varnish/*.vcl
 # from libvarnishapi1
-usr/lib/lib*.so.*
+usr/lib/lib*.so*
 usr/lib/libvarnishapi.so
