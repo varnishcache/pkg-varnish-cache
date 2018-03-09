@@ -43,6 +43,10 @@ MOCK_ROOT="epel-${ELVER#el}-x86_64"
 RESULT_DIR="varnish-${MAJOR}/${ELVER}"
 
 mock() {
+	if [ -n "$RELEASE" ]
+	then
+		set -- --define "v_rc $RELEASE" "$@"
+	fi
 	command mock \
 		--root "$MOCK_ROOT" \
 		--uniqueext "worker${EXECUTOR_NUMBER:-}" \
@@ -52,7 +56,6 @@ mock() {
 		--define "versiontag ${RPMVERSION}" \
 		--define "releasetag ${RPMRELEASE:-1}" \
 		--define "srcname $DIST_DIR" \
-		--define "v_rc ${RELEASE}" \
 		--define "nocheck 1" \
 		"$@"
 	# XXX: no mechanism to make nocheck conditional
