@@ -1,5 +1,5 @@
 Source: varnish
-Section: web
+Section: @SECTION@/web
 Priority: optional
 Maintainer: Varnish Software <opensource@varnish-software.com>
 Build-Depends:

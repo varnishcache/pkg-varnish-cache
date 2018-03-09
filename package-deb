@@ -37,13 +37,6 @@ MINOR=${MINOR%%-*}		# 1 or 0
 RELEASE=${VERSION#*-}		# 5.2.1 or rc1
 RELEASE=${RELEASE#$VERSION}	# '' or rc1
 
-cp -r -L ../debian "$DIST_DIR"/
-
-# Modify Section to suit our repository software.
-sed -i -e "s|^Section: \([^/]*\)\$|Section: varnish-$MAJOR/\1|" "$DIST_DIR/debian/control"
-
-tar zcf "$DIST_DIR.orig.tar.gz" "$DIST_DIR"/
-
 # Take version override set on Jenkins builds into account.
 if [ -n "${WEEKLY_VERSION:-}" ]
 then
@@ -64,9 +57,17 @@ else
 	DCH_TEXT="Automatic build from git"
 fi
 
+FULL_VERSION="$VERSION${RELEASE:+~}$RELEASE-$DEBVERSION"
+
+cp -r -L ../debian "$DIST_DIR"/
+
+sed -i -e "s|@SECTION@|varnish-$MAJOR|" "$DIST_DIR/debian/control"
+sed -i -e "s|@VERSION@|$FULL_VERSION|"  "$DIST_DIR/debian/changelog"
+
+tar zcf "$DIST_DIR.orig.tar.gz" "$DIST_DIR"/
+
 cd "$DIST_DIR"
 
-FULL_VERSION="$VERSION${RELEASE:+~}$RELEASE-$DEBVERSION"
 dch -v "$FULL_VERSION" "$DCH_TEXT"
 
 # Generate the source package used by subsequent sbuilds

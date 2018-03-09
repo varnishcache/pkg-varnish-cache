@@ -1,4 +1,4 @@
-varnish (6.0.0-0) UNRELEASED; urgency=medium
+varnish (@VERSION@) UNRELEASED; urgency=medium
 
   * This changelog is not in use. See doc/changes.rst for release notes.
 
