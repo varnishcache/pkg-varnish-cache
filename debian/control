@@ -56,7 +56,7 @@ Description: state of the art, high-performance web accelerator
   * Graceful handling of "dead" backends
 
 Package: varnish-dev
-Section: libdevel
+Section: @SECTION@/libdevel
 Architecture: any
 Depends:
  ${shlibs:Depends},
