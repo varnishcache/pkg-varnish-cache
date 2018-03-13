@@ -126,6 +126,7 @@ rm -rf %{buildroot}
 %{_datadir}/%{name}
 %{_unitdir}/*
 %exclude %{_datadir}/%{name}/vmodtool*
+%exclude %{_datadir}/%{name}/vsctool*
 %doc LICENSE
 %doc doc/html
 %doc doc/changes*.html
@@ -140,6 +141,7 @@ rm -rf %{buildroot}
 %{_includedir}/%{name}
 %{_libdir}/pkgconfig/varnishapi.pc
 %{_datadir}/%{name}/vmodtool*
+%{_datadir}/%{name}/vsctool*
 %{_datadir}/aclocal/*
 
 
