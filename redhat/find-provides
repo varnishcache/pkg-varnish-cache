@@ -10,9 +10,7 @@ FIND_PROVIDES=$1
 shift
 
 VMOD_VERSION=" = ${VERSION%.*}" # remove arch
-
-ABI_BITS=
-test "$(rpm --eval %__isa_bits)" -eq 64 && ABI_BITS='(64bit)'
+ABI_ISA=$(rpm --eval '%{?_isa}')
 
 expand_macro() {
 	cpp - -Iinclude <<-EOF |
@@ -32,8 +30,8 @@ varnishd_provides() (
 	VRT_MINOR=$(expand_macro VRT_MINOR_VERSION | tr -c -d '[0-9]')
 
 	cat <<-EOF
-	varnishd(abi)$ABI_BITS = $ABI
-	varnishd(vrt)$ABI_BITS = $VRT_MAJOR.$VRT_MINOR
+	varnishd(abi)$ABI_ISA = $ABI
+	varnishd(vrt)$ABI_ISA = $VRT_MAJOR.$VRT_MINOR
 	EOF
 )
 
@@ -47,7 +45,7 @@ do
 	*/libvmod_*.so)
 		VMOD=${FILE##*/libvmod_}
 		VMOD=${VMOD%.so}
-		printf 'vmod(%s)%s%s\n' "$VMOD" "$ABI_BITS" "$VMOD_VERSION"
+		printf 'vmod(%s)%s%s\n' "$VMOD" "$ABI_ISA" "$VMOD_VERSION"
 		;;
 	*)
 		printf "%s\n" "$FILE" | $FIND_PROVIDES "$@"
