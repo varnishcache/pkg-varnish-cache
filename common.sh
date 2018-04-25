@@ -20,7 +20,7 @@ function findversion() {
 	else
 		# 4.1.1
 		# 4.1.1-beta1
-		MINOR="${V:4:1}"
+		MINOR="${V:4:2}"
 		RELEASE="${V:6}"
 		V="${V:0:3}"
 	fi
