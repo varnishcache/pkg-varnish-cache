@@ -11,7 +11,7 @@ varnish: unstripped-binary-or-object usr/bin/varnishstat
 varnish: unstripped-binary-or-object usr/bin/varnishtest
 varnish: unstripped-binary-or-object usr/bin/varnishtop
 
-varnish: unstripped-binary-or-object usr/lib/libvarnishapi.so.2.0.0
+varnish: unstripped-binary-or-object usr/lib/libvarnishapi.so.*
 varnish: unstripped-binary-or-object usr/lib/varnish/vmods/libvmod_*.so
 
 varnish: versioned-provides varnishd-vrt (= 7.0)
