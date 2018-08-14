@@ -1,1 +1,19 @@
-varnish: embedded-library usr/lib/varnish/libvgz.so: zlib
+varnish: embedded-library usr/bin/varnishtest: zlib
+varnish: embedded-library usr/sbin/varnishd: zlib
+
+
+varnish: unstripped-binary-or-object usr/sbin/varnishd
+varnish: unstripped-binary-or-object usr/bin/varnishadm
+varnish: unstripped-binary-or-object usr/bin/varnishhist
+varnish: unstripped-binary-or-object usr/bin/varnishlog
+varnish: unstripped-binary-or-object usr/bin/varnishncsa
+varnish: unstripped-binary-or-object usr/bin/varnishstat
+varnish: unstripped-binary-or-object usr/bin/varnishtest
+varnish: unstripped-binary-or-object usr/bin/varnishtop
+
+varnish: unstripped-binary-or-object usr/lib/libvarnishapi.so.2.0.0
+varnish: unstripped-binary-or-object usr/lib/varnish/vmods/libvmod_*.so
+
+varnish: versioned-provides varnishd-vrt (= 7.0)
+
+varnish: init.d-script-not-included-in-package etc/init.d/varnish
