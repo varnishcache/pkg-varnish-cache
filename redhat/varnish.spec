@@ -127,6 +127,7 @@ rm -rf %{buildroot}
 %{_unitdir}/*
 %exclude %{_datadir}/%{name}/vmodtool*
 %exclude %{_datadir}/%{name}/vsctool*
+%doc README*
 %doc LICENSE
 %doc doc/html
 %doc doc/changes*.html
