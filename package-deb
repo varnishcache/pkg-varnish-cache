@@ -61,7 +61,6 @@ FULL_VERSION="$VERSION${RELEASE:+~}$RELEASE-$DEBVERSION"
 
 cp -r -L ../debian "$DIST_DIR"/
 
-sed -i -e "s|@SECTION@|varnish-$MAJOR|" "$DIST_DIR/debian/control"
 sed -i -e "s|@VERSION@|$FULL_VERSION|"  "$DIST_DIR/debian/changelog"
 
 tar zcf "$DIST_DIR.orig.tar.gz" "$DIST_DIR"/
