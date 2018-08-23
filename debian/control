@@ -1,5 +1,5 @@
 Source: varnish
-Section: @SECTION@/web
+Section: web
 Priority: optional
 Maintainer: Varnish Software <opensource@varnish-software.com>
 Build-Depends:
@@ -58,7 +58,7 @@ Description: state of the art, high-performance web accelerator
   * Graceful handling of "dead" backends
 
 Package: varnish-dev
-Section: @SECTION@/libdevel
+Section: libdevel
 Architecture: any
 Depends:
  ${shlibs:Depends},
