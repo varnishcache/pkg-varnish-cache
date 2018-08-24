@@ -131,6 +131,7 @@ rm -rf %{buildroot}
 %doc LICENSE
 %doc doc/html
 %doc doc/changes*.html
+%doc doc/changes*.rst
 %dir %{_sysconfdir}/varnish/
 %config(noreplace) %{_sysconfdir}/varnish/default.vcl
 %config(noreplace) %{_sysconfdir}/logrotate.d/varnish
