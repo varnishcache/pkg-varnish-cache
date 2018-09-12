@@ -5,6 +5,7 @@ After=network-online.target
 [Service]
 Type=forking
 KillMode=process
+Restart=on-abnormal
 
 # Maximum number of open files (for ulimit -n)
 LimitNOFILE=131072
