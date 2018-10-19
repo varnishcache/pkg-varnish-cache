@@ -21,7 +21,17 @@ TasksMax=infinity
 # Maximum size of the corefile.
 LimitCORE=infinity
 
-ExecStart=/usr/sbin/varnishd -a :6081 -f /etc/varnish/default.vcl -s malloc,256m
+EnvironmentFile=/etc/varnish/varnish.params
+
+ExecStart=/usr/sbin/varnishd \
+	-P /var/run/varnish.pid \
+	-f $VARNISH_VCL_CONF \
+	-a ${VARNISH_LISTEN_ADDRESS}:${VARNISH_LISTEN_PORT} \
+	-T ${VARNISH_ADMIN_LISTEN_ADDRESS}:${VARNISH_ADMIN_LISTEN_PORT} \
+	-S $VARNISH_SECRET_FILE \
+	-s $VARNISH_STORAGE \
+	$DAEMON_OPTS
+  
 ExecReload=/usr/sbin/varnishreload
 
 [Install]
