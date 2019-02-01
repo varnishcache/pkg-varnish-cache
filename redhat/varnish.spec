@@ -152,7 +152,7 @@ getent group varnish >/dev/null ||
 groupadd -r varnish
 
 getent passwd varnishlog >/dev/null ||
-useradd -r -g varnish -d /dev/null -s /sbin/nologin \
+useradd -r -g varnishlog -d /dev/null -s /sbin/nologin \
 	-c "varnishlog user" varnishlog
 
 getent passwd varnish >/dev/null ||
