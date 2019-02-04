@@ -3,14 +3,11 @@ Section: web
 Priority: optional
 Maintainer: Varnish Software <opensource@varnish-software.com>
 Build-Depends:
- automake,
- autotools-dev,
  debhelper (>= 9),
  libedit-dev,
  libjemalloc-dev,
  libncurses-dev,
  libpcre3-dev,
- libtool,
  pkg-config,
  python-docutils,
  python-sphinx,
