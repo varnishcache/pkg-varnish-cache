@@ -70,7 +70,7 @@ cd "$DIST_DIR"
 dch -v "$FULL_VERSION" "$DCH_TEXT"
 
 # Generate the source package used by subsequent sbuilds
-dpkg-buildpackage -us -uc -S -j10
+dpkg-buildpackage -us -uc -S -j10 -d
 
 # Back to build/
 cd ..
