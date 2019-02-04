@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Varnish Software <opensource@varnish-software.com>
 Build-Depends:
  debhelper (>= 9),
+ dh-systemd,
  libedit-dev,
  libjemalloc-dev,
  libncurses-dev,
@@ -11,7 +12,6 @@ Build-Depends:
  pkg-config,
  python-docutils,
  python-sphinx,
- dh-systemd
 Vcs-Git:  git://github.com/varnishcache/pkg-varnish-cache.git
 Homepage: https://www.varnish-cache.org/
 Standards-Version: 3.9.6
