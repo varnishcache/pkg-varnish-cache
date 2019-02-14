@@ -25,11 +25,7 @@ BuildRequires: systemd-units
 
 Requires: gcc
 Requires: logrotate
-
-Requires(post):   systemd-units
-Requires(post):   systemd-sysv
-Requires(preun):  systemd-units
-Requires(postun): systemd-units
+%systemd_requires
 
 Provides:  varnish-libs%{?_isa} = %{version}-%{release}
 Provides:  varnish-libs = %{version}-%{release}
@@ -118,13 +114,13 @@ rm -rf %{buildroot}
 %{_libdir}/*.so.*
 %{_libdir}/%{name}
 %{_var}/lib/varnish
-%{_var}/log/varnish
 %{_mandir}/man1/*.1*
 %{_mandir}/man3/*.3*
 %{_mandir}/man7/*.7*
 %{_docdir}/%{name}/
 %{_datadir}/%{name}
 %{_unitdir}/*
+%attr(-,varnishlog,varnish) %{_var}/log/varnish
 %exclude %{_datadir}/%{name}/vmodtool*
 %exclude %{_datadir}/%{name}/vsctool*
 %doc README*
@@ -163,21 +159,17 @@ exit 0
 
 
 %post
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-chown varnishlog:varnish /var/log/varnish/
 /sbin/ldconfig
+%systemd_post varnish varnishncsa
 
 
 %preun
-if [ $1 -lt 1 ]; then
-  # Package removal, not upgrade
-  /bin/systemctl --no-reload disable varnish.service > /dev/null 2>&1 || :
-  /bin/systemctl stop varnish.service > /dev/null 2>&1 || :
-  /bin/systemctl stop varnishncsa.service > /dev/null 2>&1 || :
-fi
+%systemd_preun varnish varnishncsa
 
 
-%postun -p /sbin/ldconfig
+%postun
+/sbin/ldconfig
+%systemd_postun_with_restart varnish varnishncsa
 
 
 %changelog
