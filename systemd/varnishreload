@@ -104,7 +104,7 @@ awk_vcl_list() {
 }
 
 active_vcl() {
-	awk_vcl_list '$1 == "active" {print $4}'
+	awk_vcl_list '$1 == "active" {print $5}'
 }
 
 find_label_ref() {
