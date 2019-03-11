@@ -108,7 +108,7 @@ active_vcl() {
 }
 
 find_label_ref() {
-	awk_vcl_list '$4 == "'"$VCL_LABEL"'" && $5 == "->" {print $6}'
+	awk_vcl_list '$5 == "'"$VCL_LABEL"'" && $6 == "->" {print $7}'
 }
 
 find_vcl_file() {
@@ -132,9 +132,9 @@ find_vcl_file() {
 }
 
 find_vcl_reloads() {
-	awk_vcl_list 'NF == 4 &&
+	awk_vcl_list 'NF == 5 &&
 		$1 == "available" &&
-		$4 ~ /^reload_[0-9]+_[0-9]+_[0-9]+$/ {print $4}'
+		$5 ~ /^reload_[0-9]+_[0-9]+_[0-9]+$/ {print $5}'
 }
 
 while getopts hl:m:n:w: OPT
