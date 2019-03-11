@@ -100,7 +100,7 @@ vcl_reload_name() {
 }
 
 awk_vcl_list() {
-	printf '%s' "$VCL_LIST" | awk "$@"
+	printf '%s' "$VCL_LIST" | awk -F ' *|/' "$@"
 }
 
 active_vcl() {
