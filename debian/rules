@@ -11,7 +11,9 @@ DISABLE_JEMALLOC_ARCH_LIST := hppa m68k
 DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 
 # Set local state dir for FHS
-LOCAL_CONFIGURE_FLAGS = --localstatedir=/var/lib --libdir=/usr/lib
+LOCAL_CONFIGURE_FLAGS  = --localstatedir=/var/lib --libdir=/usr/lib
+LOCAL_CONFIGURE_FLAGS += --with-sphinx-build=sphinx-build-3
+LOCAL_CONFIGURE_FLAGS += RST2MAN=/usr/share/docutils/scripts/python3/rst2man
 
 ifneq ($(filter $(DEB_HOST_ARCH),$(DISABLE_JEMALLOC_ARCH_LIST)),)
 LOCAL_CONFIGURE_FLAGS += --disable-jemalloc
