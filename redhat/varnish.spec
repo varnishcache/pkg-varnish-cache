@@ -18,9 +18,8 @@ BuildRequires: libedit-devel
 BuildRequires: ncurses-devel
 BuildRequires: pcre-devel
 BuildRequires: pkgconfig
-BuildRequires: python(abi) >= 2.7
-BuildRequires: python-docutils >= 0.6
-BuildRequires: python-sphinx
+BuildRequires: python34-docutils
+BuildRequires: python34-sphinx
 BuildRequires: systemd-units
 
 Requires: gcc
@@ -56,7 +55,7 @@ Summary:   Development files for %{name}
 Group:     System Environment/Libraries
 Requires:  %{name}%{?_isa} = %{version}-%{release}
 Requires:  pkgconfig
-Requires:  python(abi) >= 2.7
+Requires:  python(abi) >= 3.4
 Provides:  varnish-libs-devel%{?_isa} = %{version}-%{release}
 Provides:  varnish-libs-devel = %{version}-%{release}
 Obsoletes: varnish-libs-devel
@@ -72,7 +71,8 @@ Varnish Cache is a high-performance HTTP accelerator
 
 
 %build
-%configure --localstatedir=/var/lib --without-rst2html
+%configure --localstatedir=/var/lib --without-rst2html \
+	--with-sphinx-build=sphinx-build-3.4 RST2MAN=rst2man-3.4
 %make_build V=1
 
 
