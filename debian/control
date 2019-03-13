@@ -10,8 +10,8 @@ Build-Depends:
  libncurses-dev,
  libpcre3-dev,
  pkg-config,
- python-docutils,
- python-sphinx,
+ python3-docutils,
+ python3-sphinx,
 Vcs-Git:  git://github.com/varnishcache/pkg-varnish-cache.git
 Homepage: https://www.varnish-cache.org/
 Standards-Version: 3.9.6
@@ -62,7 +62,7 @@ Depends:
  ${misc:Depends},
  varnish (= ${binary:Version}),
  pkg-config,
- python
+ python3
 Provides:
  libvarnish-dev,
  libvarnishapi-dev
