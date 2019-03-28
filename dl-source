@@ -47,9 +47,8 @@ if [ "$VERIFY" == "false" ]; then
     echo "WARNING: Skipping verification of source tarball"
 else
     echo "Verifying Varnish Cache $RELEASEVERSION."
-    # SHA=7439c93ca581340f3722b8c790160f46dc6c5328188e4c0bc233c42f3f04a54e
     dl https://raw.githubusercontent.com/varnishcache/homepage/master/R1/source/releases/rel$RELEASEVERSION.rst 
-    SHASUM=$(sed -n -e '/.*SHA=/ s/.*\=//p' $TMPDIR/rel$RELEASEVERSION.rst)
+    SHASUM=$(sed -n -e '/.*SHA256=/ s/.*\=//p' $TMPDIR/rel$RELEASEVERSION.rst)
     echo "$SHASUM  varnish-${RELEASEVERSION}.tgz" > $TMPDIR/SHA256SUM
     
     #dl $SOURCEURL/SHA256SUM.gpg
