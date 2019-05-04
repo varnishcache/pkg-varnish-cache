@@ -18,8 +18,7 @@ BuildRequires: libedit-devel
 BuildRequires: ncurses-devel
 BuildRequires: pcre-devel
 BuildRequires: pkgconfig
-BuildRequires: python34-docutils
-BuildRequires: python34-sphinx
+BuildRequires: python3-sphinx
 BuildRequires: systemd-units
 
 Requires: gcc
@@ -75,8 +74,8 @@ Varnish Cache is a high-performance HTTP accelerator
 
 
 %build
-%configure --localstatedir=/var/lib --without-rst2html \
-	--with-sphinx-build=sphinx-build-3.4 RST2MAN=rst2man-3.4
+%configure --localstatedir=/var/lib RST2HTML=rst2html-3 \
+	RST2MAN=rst2man-3 --with-sphinx-build=sphinx-build-3
 %make_build V=1
 
 
