@@ -62,4 +62,4 @@ mock() {
 }
 
 mock --buildsrpm --source . --spec "$DIST_DIR"/varnish.spec
-mock --rebuild "$RESULT_DIR"/varnish-*.src.rpm
+mock --rebuild "$RESULT_DIR"/varnish-*.src.rpm "$@"
