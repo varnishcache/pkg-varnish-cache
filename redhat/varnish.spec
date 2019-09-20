@@ -1,3 +1,4 @@
+%global __python %{__python3}
 %global vd_rc %{?v_rc:0.%{?v_rc}.}
 %global debug_package %{nil}
 %global _use_internal_dependency_generator 0
