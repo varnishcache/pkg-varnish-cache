@@ -113,13 +113,34 @@ find_label_ref() {
 
 find_vcl_file() {
 	VCL_SHOW=$(varnishadm vcl.show -v "$VCL_NAME" 2>&1) || :
-	VCL_FILE=$(
-		echo "$VCL_SHOW" |
-		awk '$1 == "//" && $2 == "VCL.SHOW" {print; exit}' | {
-			# all this ceremony to handle blanks in FILE
-			read -r DELIM VCL_SHOW INDEX SIZE FILE
-			echo "$FILE"
-		}
+	# The below regexp serves to reliably extract the file name from
+	# the _first_ VCL's C-styled comment encountered.
+	#
+	# The comments have the following format:
+	# // VCL.SHOW <POS> <CHARCOUNT> <FILENAME>
+	# Where POS is a counter for files included in the output (starting from 0)
+	# and CHARCOUNT is the character count of FILENAME.
+	#
+	# Note that a filename can itself contain numbers and spaces,
+	# so the following is a valid input:
+	#
+	# // VCL.SHOW 0 1337 file with 3 spaces.vcl
+	#
+	# ...where the full file name is "file with 3 spaces.vcl"
+	VCL_FILE=$(echo "$VCL_SHOW" | sed -En '
+			# Using the GNU extension "0,regexp" to make sure we match the
+			# very first line of input in the range as well.
+			0,/^\/\/ VCL.SHOW/ {
+				# Match <POS> <CHARCNT> <FNAME> and capture FNAME
+				s/.*[0-9]+ [0-9]+ (.*)$/\1/
+
+				h  # Copy the capture from pattern space to hold space
+			}
+			# match the last line of input
+			${
+				g  # copy the contents of hold space to pattern space
+				p  # print the current line in pattern space
+			}'
 	) || :
 
 	if [ -z "$VCL_FILE" ]
