@@ -190,7 +190,7 @@ fi
 
 RELOAD_NAME=$(vcl_reload_name)
 
-varnishadm vcl.load "$RELOAD_NAME" "$VCL_FILE" >/dev/null
+varnishadm vcl.load "$RELOAD_NAME" "\"$VCL_FILE\"" >/dev/null
 echo "VCL '$RELOAD_NAME' compiled"
 
 test -n "$WARMUP" && sleep "$WARMUP"
