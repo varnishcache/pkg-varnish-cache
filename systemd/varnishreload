@@ -36,7 +36,7 @@ VCL_NAME=
 WARMUP=
 WORK_DIR=
 
-SCRIPT="$0"
+SCRIPT=$0
 
 usage() {
 	test $# -eq 1 &&
@@ -142,7 +142,7 @@ done
 shift $((OPTIND - 1))
 
 test $# -gt 1 && usage "too many arguments" >&2
-test $# -eq 1 && VCL_FILE="$1"
+test $# -eq 1 && VCL_FILE=$1
 
 VCL_LIST=$(varnishadm vcl.list) ||
 fail "failed to get the VCL list"
