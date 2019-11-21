@@ -112,23 +112,13 @@ find_label_ref() {
 }
 
 find_vcl_file() {
-	VCL_SHOW=$(varnishadm vcl.show -v "$VCL_NAME" 2>&1) || :
-	VCL_FILE=$(
-		echo "$VCL_SHOW" |
-		awk '$1 == "//" && $2 == "VCL.SHOW" {print; exit}' | {
-			# all this ceremony to handle blanks in FILE
-			read -r DELIM VCL_SHOW INDEX SIZE FILE
-			echo "$FILE"
-		}
-	) || :
-
-	if [ -z "$VCL_FILE" ]
-	then
-		echo "$VCL_SHOW" >&2
-		fail "failed to get the VCL file name"
-	fi
-
-	echo "$VCL_FILE"
+	varnishadm vcl.show -v "$VCL_NAME" |
+	awk '$1 == "//" && $2 == "VCL.SHOW" {print; exit}' | {
+		# all this ceremony to handle blanks in FILE
+		read -r DELIM VCL_SHOW INDEX SIZE FILE &&
+		echo "$FILE"
+	} ||
+	fail "failed to get the VCL file name"
 }
 
 find_vcl_reloads() {
