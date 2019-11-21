@@ -85,7 +85,7 @@ varnishadm() {
 		echo
 		return 1
 	fi >&2
-	echo "$OUTPUT"
+	echo "$OUTPUT" 2>/dev/null # silence "broken pipe" diagnostics
 }
 
 fail() {
