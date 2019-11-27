@@ -19,7 +19,6 @@ BuildRequires: ncurses-devel
 BuildRequires: pcre-devel
 BuildRequires: pkgconfig
 BuildRequires: python3-sphinx
-BuildRequires: systemd-units
 
 Requires: gcc
 Requires: logrotate
