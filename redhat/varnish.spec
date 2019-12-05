@@ -69,8 +69,7 @@ Varnish Cache is a high-performance HTTP accelerator
 
 
 %build
-%configure --localstatedir=/var/lib RST2HTML=rst2html-3 \
-	RST2MAN=rst2man-3 --with-sphinx-build=sphinx-build-3
+%configure --localstatedir=/var/lib
 %make_build V=1
 
 
