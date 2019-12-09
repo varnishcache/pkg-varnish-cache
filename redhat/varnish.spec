@@ -23,6 +23,9 @@ BuildRequires: python3-sphinx
 Requires: gcc
 Requires: logrotate
 %systemd_requires
+%if 0%{?rhel} >= 8
+Requires: redhat-rpm-config
+%endif
 
 Provides:  varnish-libs%{?_isa} = %{version}-%{release}
 Provides:  varnish-libs = %{version}-%{release}
