@@ -21,7 +21,7 @@ options="!check" # tests pass, but ran before packaging
 depends="gcc libc-dev libgcc"
 depends_dev=
 makedepends="$depends_dev pcre-dev ncurses-dev libedit-dev py-docutils
-	linux-headers libunwind-dev python py-sphinx"
+	linux-headers libunwind-dev python py3-sphinx"
 install="$pkgname.pre-install"
 subpackages="$pkgname-dbg $pkgname-dev $pkgname-doc $pkgname-libs"
 pkgusers="varnish"
