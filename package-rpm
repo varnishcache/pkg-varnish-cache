@@ -52,7 +52,6 @@ mock() {
 		--uniqueext "worker${EXECUTOR_NUMBER:-}" \
 		--resultdir "$RESULT_DIR" \
 		--define "_smp_mflags -j10" \
-		--define "dist .${ELVER}" \
 		--define "versiontag ${RPMVERSION}" \
 		--define "releasetag ${RPMRELEASE:-1}" \
 		--define "srcname $DIST_DIR" \
