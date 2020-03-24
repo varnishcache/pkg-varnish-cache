@@ -51,7 +51,7 @@ then
 	VERSION="$MAJOR.$MINOR"
 	DEBVERSION="${DEBVERSION:-}"
 	DCH_TEXT="Release build #$BUILD_NUMBER ID: $BUILD_ID"
-elif [ "${VERSION}" == "trunk" ]
+elif [ "${VERSION}" = "trunk" ]
 then
 	VERSION=$(date +%Y%m%d%H%M%S)
 	RELEASE=
