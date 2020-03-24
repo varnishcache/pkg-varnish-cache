@@ -51,6 +51,12 @@ then
 	VERSION="$MAJOR.$MINOR"
 	DEBVERSION="${DEBVERSION:-}"
 	DCH_TEXT="Release build #$BUILD_NUMBER ID: $BUILD_ID"
+elif [ "${VERSION}" == "trunk" ]
+then
+	VERSION=$(date +%Y%m%d%H%M%S)
+	RELEASE=
+	DEBVERSION=trunk
+	DCH_TEXT="Trunk build from git"
 else
 	VERSION="$MAJOR.$MINOR"
 	DEBVERSION="0${RELEASE}+daily+$(date +%Y%m%d.%H%M%S)"
