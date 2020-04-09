@@ -18,7 +18,11 @@ BuildRequires: libedit-devel
 BuildRequires: ncurses-devel
 BuildRequires: pcre-devel
 BuildRequires: pkgconfig
+BuildRequires: python3
 BuildRequires: python3-sphinx
+BuildRequires: make
+BuildRequires: gcc
+BuildRequires: diffutils
 
 Requires: gcc
 Requires: logrotate
