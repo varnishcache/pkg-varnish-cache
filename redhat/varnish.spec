@@ -1,3 +1,4 @@
+%global __python %{__python3}
 %global vd_rc %{?v_rc:0.%{?v_rc}.}
 %global debug_package %{nil}
 %global _use_internal_dependency_generator 0
@@ -13,11 +14,15 @@ Group:   System Environment/Daemons
 URL:     https://www.varnish-cache.org/
 Source:  %{srcname}.tgz
 
+BuildRequires: diffutils
+BuildRequires: gcc
 BuildRequires: jemalloc-devel
 BuildRequires: libedit-devel
+BuildRequires: make
 BuildRequires: ncurses-devel
 BuildRequires: pcre-devel
 BuildRequires: pkgconfig
+BuildRequires: python3
 BuildRequires: python3-sphinx
 
 Requires: gcc

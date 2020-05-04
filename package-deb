@@ -36,6 +36,8 @@ MINOR=${VERSION##*.}		# 1 or 0-rc1
 MINOR=${MINOR%%-*}		# 1 or 0
 RELEASE=${VERSION#*-}		# 5.2.1 or rc1
 RELEASE=${RELEASE#$VERSION}	# '' or rc1
+BUILD_NUMBER=${BUILD_NUMBER:-none}
+BUILD_ID=${BUILD_ID:-none}
 
 # Take version override set on Jenkins builds into account.
 if [ -n "${WEEKLY_VERSION:-}" ]
@@ -49,6 +51,12 @@ then
 	VERSION="$MAJOR.$MINOR"
 	DEBVERSION="${DEBVERSION:-}"
 	DCH_TEXT="Release build #$BUILD_NUMBER ID: $BUILD_ID"
+elif [ "${VERSION}" = "trunk" ]
+then
+	VERSION=$(date +%Y%m%d%H%M%S)
+	RELEASE=
+	DEBVERSION=trunk
+	DCH_TEXT="Trunk build from git"
 else
 	VERSION="$MAJOR.$MINOR"
 	DEBVERSION="0${RELEASE}+daily+$(date +%Y%m%d.%H%M%S)"
