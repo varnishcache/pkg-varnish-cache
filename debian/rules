@@ -18,13 +18,13 @@ LOCAL_CONFIGURE_FLAGS += --disable-jemalloc
 endif
 
 VARNISHD_ABI = $(shell \
-	printf '\#include "vcs_version.h"\nVCS_Version\n' | \
+	printf '#include "vcs_version.h"\nVCS_Version\n' | \
 	cpp - -Iinclude | \
 	tail -1 | \
 	tr -d '"')
 
 VARNISHD_VRT = $(shell \
-	printf '\#include "vdef.h"\n\#include "vrt.h"\n%s.%s\n' \
+	printf '#include "vdef.h"\n#include "vrt.h"\n%s.%s\n' \
 		VRT_MAJOR_VERSION VRT_MINOR_VERSION | \
 	cpp - -Iinclude | \
 	tail -1 | \
