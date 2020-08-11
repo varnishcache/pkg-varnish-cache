@@ -23,6 +23,7 @@ LimitCORE=infinity
 
 ExecStart=/usr/sbin/varnishd \
 	  -a :6081 \
+	  -a localhost:8443,PROXY \
 	  -f /etc/varnish/default.vcl \
 	  -s malloc,256m
 ExecReload=/usr/sbin/varnishreload
