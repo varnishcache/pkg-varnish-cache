@@ -1,9 +1,10 @@
 #!/bin/sh
 #
-# Copyright (c) 2006-2017 Varnish Software AS
+# Copyright (c) 2006-2021 Varnish Software AS
 # All rights reserved.
 #
 # Author: Dridi Boukelmoune <dridi.boukelmoune@gmail.com>
+# Author: Javier Bartley <javierbartley@yahoo.com>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -43,7 +44,8 @@ usage() {
 	printf 'Error: %s.\n\n' "$1"
 
 	cat <<-EOF
-	Usage: $SCRIPT [-l <label>] [-m <max>] [-n <workdir>] [-w <warmup>] [<file>]
+	Usage: $SCRIPT [-l <label>] [-m <max>] [-n <workdir>]
+	           [-p <prefix>] [-w <warmup>] [<file>]
 	       $SCRIPT -h
 
 	Reload and use a VCL on a running Varnish instance.
@@ -53,11 +55,15 @@ usage() {
 	-l <label>   : name of the VCL label to reload
 	-m <max>     : maximum number of available reloads to leave behind
 	-n <workdir> : specify the name or directory for the varnishd instance
+	-p <prefix>  : prefix for the name of the loaded and discarded VCLs
 	-w <warmup>  : the number of seconds between load and use operations
 
 	When <label> is empty or missing, the active VCL is reloaded. If the
 	reloaded VCL is a label, the underlying VCL program is reloaded, and
 	the label is updated to reference the new program.
+
+	When <prefix> is empty or missing, the names of the loaded and later
+	discarded VCLs will start with 'reload'.
 
 	When <file> is empty or missing, the selected VCL's file is used but
 	reload will fail if it wasn't loaded from a file. The <file>, when
@@ -65,7 +71,7 @@ usage() {
 	varnishd manual regarding the handling of absolute or relative paths.
 
 	Upon success, the name of the loaded VCL is constructed from the
-	current date and time, for example:
+	prefix, current date and time, like for example:
 
 	    $(vcl_reload_name)
 
@@ -96,7 +102,7 @@ fail() {
 vcl_reload_name() {
 	# NB: The PID compensates the lack of sub-second resolution.
 	# Varnish will vcl.list in chronological vcl.load order anyway.
-	printf "reload_%s" "$(date -u +%Y%m%d_%H%M%S_$$)"
+	printf "%s_%s" "$VCL_PREFIX" "$(date -u +%Y%m%d_%H%M%S_$$)"
 }
 
 awk_vcl_list() {
@@ -122,18 +128,19 @@ find_vcl_file() {
 }
 
 find_vcl_reloads() {
-	awk_vcl_list 'NF == 5 &&
+	awk_vcl_list -v regex="^${VCL_PREFIX}_[0-9]+_[0-9]+_[0-9]+$"  'NF == 5 &&
 		$1 == "available" &&
-		$5 ~ /^reload_[0-9]+_[0-9]+_[0-9]+$/ {print $5}'
+		$5 ~ regex {print $5}'
 }
 
-while getopts hl:m:n:w: OPT
+while getopts hl:m:n:p:w: OPT
 do
 	case $OPT in
 	h) usage ;;
 	l) VCL_LABEL=$OPTARG ;;
 	m) MAXIMUM=$OPTARG ;;
 	n) WORK_DIR=$OPTARG ;;
+	p) VCL_PREFIX=$OPTARG ;;
 	w) WARMUP=$OPTARG ;;
 	*) usage "wrong usage" >&2 ;;
 	esac
@@ -146,6 +153,26 @@ test $# -eq 1 && VCL_FILE=$1
 
 VCL_LIST=$(varnishadm vcl.list) ||
 fail "failed to get the VCL list"
+
+VCL_PREFIX=${VCL_PREFIX:-reload}
+
+VCL_PREFIX_CHK="$(printf '%s' "$VCL_PREFIX" | tr '[:space:]' :)"
+
+test "$VCL_PREFIX" = "$VCL_PREFIX_CHK" ||
+fail "illegal character in VCL prefix ('\\n')"
+
+VCL_PREFIX_CHK="$(printf '%s' "$VCL_PREFIX" | tr -d A-Za-z0-9-_)"
+
+if [ -n "$VCL_PREFIX_CHK" ]
+then
+	VCL_PREFIX_CHK="$(printf '%c' "$VCL_PREFIX_CHK")"
+	fail "illegal character in VCL prefix ('$VCL_PREFIX_CHK')"
+fi
+
+VCL_PREFIX_CHK=$(printf '%c' "$VCL_PREFIX")
+
+test "$VCL_PREFIX_CHK" != _ ||
+fail "illegal leading character in VCL prefix ('_')"
 
 if [ -z "$VCL_LABEL" ]
 then
