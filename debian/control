@@ -8,6 +8,7 @@ Build-Depends:
  libedit-dev,
  libjemalloc-dev,
  libncurses-dev,
+ libpcre2-dev,
  libpcre3-dev,
  pkg-config,
  python3-docutils,
