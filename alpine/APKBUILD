@@ -61,6 +61,7 @@ package() {
 		"$pkgdir"/var/log/varnish \
 		"$pkgdir"/var/lib/varnish
 	install -d -o root -g varnish -m750 "$pkgdir"/etc/varnish
+	install    -o root -g varnish -m755 "$startdir"/varnishreload "$pkgdir"/usr/bin
 }
 
 sha512sums="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  varnish-$pkgver.tar.gz"
