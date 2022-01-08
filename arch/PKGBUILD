@@ -1,0 +1,63 @@
+# adapted from https://github.com/archlinux/svntogit-packages/blob/packages/varnish/trunk/PKGBUILD
+
+# before building, be sure to:
+# - replace @VERSION@ with the proper Varnish version to use
+# - run `makepkg -fg >> PKGBUILD` to generate the checksum entries
+
+pkgname=varnish
+pkgver=@VERSION@
+pkgrel=1
+pkgdesc="High-performance HTTP accelerator"
+arch=('x86_64')
+url="https://www.varnish-cache.org/"
+license=('BSD')
+depends=('gcc' 'libnsl' 'pcre2')
+makedepends=('python-docutils' 'python-sphinx' )
+optdepends=('python: needed for vmod development')
+backup=('etc/varnish/default.vcl')
+install=$pkgname.install
+source=("https://varnish-cache.org/_downloads/varnish-$pkgver.tgz"
+	varnishreload
+	varnish.install
+	varnish.logrotate
+	varnish.service
+	varnishncsa.service
+	varnish.sysusers)
+
+build() {
+  cd "varnish-$pkgver"
+
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var/lib \
+    --sbindir=/usr/bin
+
+  make
+}
+
+check() {
+  cd "varnish-$pkgver"
+
+  make check
+}
+
+package() {
+  cd "varnish-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+
+  install -Dm644 "$srcdir/varnish.service" "$pkgdir/usr/lib/systemd/system/varnish.service"
+  install -Dm644 "$srcdir/varnishncsa.service" "$pkgdir/usr/lib/systemd/system/varnishncsa.service"
+  install -Dm755 "$srcdir/varnishreload" "$pkgdir/usr/bin/varnishreload"
+  install -Dm755 "$srcdir/varnish.logrotate" "$pkgdir/etc/logrotate.d/varnish"
+
+  # create varnish:varnish user/group
+  install -Dm644 "$srcdir/varnish.sysusers" "$pkgdir/usr/lib/sysusers.d/varnish.conf"
+
+  # config
+  install -Dm644 "etc/example.vcl" "$pkgdir/etc/varnish/default.vcl"
+
+  # license
+  install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
