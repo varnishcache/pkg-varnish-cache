@@ -25,13 +25,13 @@ BuildRequires: pcre2-devel
 BuildRequires: pkgconfig
 BuildRequires: python3
 BuildRequires: python3-sphinx
+%if 0%{?fedora}
+BuildRequires: systemd-rpm-macros
+%endif
+%{?systemd_requires}
 
 Requires: gcc
 Requires: logrotate
-%systemd_requires
-%if 0%{?rhel} >= 8
-Requires: redhat-rpm-config
-%endif
 
 Provides:  varnish-libs%{?_isa} = %{version}-%{release}
 Provides:  varnish-libs = %{version}-%{release}
