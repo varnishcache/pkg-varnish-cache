@@ -24,10 +24,13 @@ BuildRequires: pcre-devel
 BuildRequires: pkgconfig
 BuildRequires: python3
 BuildRequires: python3-sphinx
+%if 0%{?fedora}
+BuildRequires: systemd-rpm-macros
+%endif
 
 Requires: gcc
 Requires: logrotate
-%systemd_requires
+%{?systemd_requires}
 %if 0%{?rhel} >= 8
 Requires: redhat-rpm-config
 %endif
