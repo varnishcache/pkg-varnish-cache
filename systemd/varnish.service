@@ -9,11 +9,11 @@ KillMode=process
 # Maximum number of open files (for ulimit -n)
 LimitNOFILE=131072
 
-# Locked shared memory - should suffice to lock the shared memory log
-# (varnishd -l argument)
-# Default log size is 80MB vsl + 1M vsm + header -> 82MB
-# unit is bytes
-LimitMEMLOCK=85983232
+# Shared memory (VSM) segments are tentatively locked in memory. The
+# default value for vsl_space (or shorthand varnishd -l option) is 80MB.
+# There are other types of segments that would benefit from allowing
+# more memory to be locked.
+LimitMEMLOCK=100M
 
 # Enable this to avoid "fork failed" on reload.
 TasksMax=infinity
