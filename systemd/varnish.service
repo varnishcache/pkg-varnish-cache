@@ -4,7 +4,7 @@ After=network-online.target nss-lookup.target
 
 [Service]
 Type=forking
-KillMode=process
+KillMode=mixed
 
 # Maximum number of open files (for ulimit -n)
 LimitNOFILE=131072
