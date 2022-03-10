@@ -21,11 +21,16 @@ TasksMax=infinity
 # Maximum size of the corefile.
 LimitCORE=infinity
 
+# A PID file makes the main process selection deterministic.
+RuntimeDirectory=%N
+PIDFile=%t/%N/varnishd.pid
+
 ExecStart=/usr/sbin/varnishd \
 	  -a :6081 \
 	  -a localhost:8443,PROXY \
-	  -p feature=+http2 \
 	  -f /etc/varnish/default.vcl \
+	  -P %t/%N/varnishd.pid \
+	  -p feature=+http2 \
 	  -s malloc,256m
 ExecReload=/usr/sbin/varnishreload
 
