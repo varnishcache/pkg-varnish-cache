@@ -73,7 +73,7 @@ usage() {
 	Upon success, the name of the loaded VCL is constructed from the
 	prefix, current date and time, like for example:
 
-	    $(vcl_reload_name)
+	    $(VCL_PREFIX=reload vcl_reload_name)
 
 	Afterwards available VCLs created by this script are discarded until
 	<max> are left, unless it was empty or undefined. VCLs referenced by
