@@ -41,6 +41,7 @@ build() {
 		--infodir=/usr/share/info \
 		--localstatedir=/var/lib \
 		--without-jemalloc \
+		--with-contrib \
 		--with-unwind
 	make
 }

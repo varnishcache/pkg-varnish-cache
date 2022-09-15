@@ -31,7 +31,8 @@ build() {
     --prefix=/usr \
     --sysconfdir=/etc \
     --localstatedir=/var/lib \
-    --sbindir=/usr/bin
+    --sbindir=/usr/bin \
+    --with-contrib
 
   make
 }
