@@ -17,6 +17,9 @@ ifneq ($(filter $(DEB_HOST_ARCH),$(DISABLE_JEMALLOC_ARCH_LIST)),)
 LOCAL_CONFIGURE_FLAGS += --disable-jemalloc
 endif
 
+# Ship contrib scripts
+LOCAL_CONFIGURE_FLAGS += --with-contrib
+
 num=\#
 VARNISHD_ABI = $(shell \
 	printf '$(num)include "vcs_version.h"\nVCS_Version\n' | \

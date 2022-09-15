@@ -81,7 +81,7 @@ Varnish Cache is a high-performance HTTP accelerator
 
 
 %build
-%configure --localstatedir=/var/lib
+%configure --localstatedir=/var/lib --with-contrib
 %make_build V=1
 
 
