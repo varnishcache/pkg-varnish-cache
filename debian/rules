@@ -3,7 +3,7 @@
 DH_VERBOSE=1
 
 # List of architectures where jemalloc is not available
-WITHOUT_JEMALLOC_ARCH_LIST := hppa m68k
+WITHOUT_JEMALLOC_ARCH_LIST := hppa m68k arm64
 
 # Explicitly disable LTO, which became default from Ubuntu 21.04 and onwards
 export DEB_BUILD_MAINT_OPTIONS=optimize=-lto
