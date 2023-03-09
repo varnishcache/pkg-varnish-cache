@@ -16,7 +16,9 @@ Source:  %{srcname}.tgz
 
 BuildRequires: diffutils
 BuildRequires: gcc
+%ifnarch aarch64
 BuildRequires: jemalloc-devel
+%endif
 BuildRequires: libedit-devel
 BuildRequires: make
 BuildRequires: ncurses-devel
