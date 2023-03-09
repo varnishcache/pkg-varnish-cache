@@ -3,7 +3,7 @@
 DH_VERBOSE=1
 
 # List of architectures where jemalloc is not available
-WITHOUT_JEMALLOC_ARCH_LIST := hppa m68k
+WITHOUT_JEMALLOC_ARCH_LIST := hppa m68k arm64
 
 # Explicitly initialize a variable to select architecture, unless it has been
 # defined before.  This is compared against the WITHOUT_*_LIST variables later
