@@ -3,21 +3,21 @@
 DH_VERBOSE=1
 
 # List of architectures where jemalloc is not available
-DISABLE_JEMALLOC_ARCH_LIST := hppa m68k
+WITHOUT_JEMALLOC_ARCH_LIST := hppa m68k
 
 # Explicitly disable LTO, which became default from Ubuntu 21.04 and onwards
 export DEB_BUILD_MAINT_OPTIONS=optimize=-lto
 
 # Explicitly initialize a variable to select architecture, unless it has been
-# defined before.  This is compared against the DISABLE_*_LIST variables later
+# defined before.  This is compared against the WITHOUT_*_LIST variables later
 # in this makefile
 DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 
 # Set local state dir for FHS
 LOCAL_CONFIGURE_FLAGS  = --localstatedir=/var/lib --libdir=/usr/lib
 
-ifneq ($(filter $(DEB_HOST_ARCH),$(DISABLE_JEMALLOC_ARCH_LIST)),)
-LOCAL_CONFIGURE_FLAGS += --disable-jemalloc
+ifneq ($(filter $(DEB_HOST_ARCH),$(WITHOUT_JEMALLOC_ARCH_LIST)),)
+LOCAL_CONFIGURE_FLAGS += --without-jemalloc
 endif
 
 num=\#
