@@ -207,21 +207,19 @@ fi
 
 RELOAD_NAME=$(vcl_reload_name)
 
-varnishadm vcl.load "$RELOAD_NAME" "\"$VCL_FILE\"" >/dev/null
-echo "VCL '$RELOAD_NAME' compiled"
+{
+	echo vcl.load "$RELOAD_NAME" "\"$VCL_FILE\""
 
-test -n "$WARMUP" && sleep "$WARMUP"
+	test -n "$WARMUP" && sleep "$WARMUP"
 
-if [ -n "$VCL_LABEL" ]
-then
-	varnishadm vcl.label "$VCL_LABEL" "$RELOAD_NAME" >/dev/null
-	echo "VCL label '$VCL_LABEL' references '$RELOAD_NAME'"
-fi
+	if [ -n "$VCL_LABEL" ]; then
+		echo vcl.label "$VCL_LABEL" "$RELOAD_NAME"
+	fi
 
-if [ "$VCL_NAME" = "$(active_vcl)" ]
-then
-	varnishadm vcl.use "$RELOAD_NAME"
-fi
+	if [ "$VCL_NAME" = "$(active_vcl)" ]; then
+		echo vcl.use "$RELOAD_NAME"
+	fi
+} | varnishadm
 
 test -n "$MAXIMUM" || exit 0
 test "$MAXIMUM" -ge 0 || exit 0
