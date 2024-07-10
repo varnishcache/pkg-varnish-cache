@@ -46,7 +46,7 @@ usage() {
 
 	cat <<-EOF
 	Usage: $SCRIPT [-l <label>] [-m <max>] [-n <workdir>]
-	           [-p <prefix>] [-w <warmup>] [<file>]
+	           [-p <prefix>] [-t <timeout>] [-w <warmup>] [<file>]
 	       $SCRIPT -h
 
 	Reload and use a VCL on a running Varnish instance.
@@ -57,8 +57,8 @@ usage() {
 	-m <max>     : maximum number of available reloads to leave behind
 	-n <workdir> : specify the name or directory for the varnishd instance
 	-p <prefix>  : prefix for the name of the loaded and discarded VCLs
-	-w <warmup>  : the number of seconds between load and use operations
 	-t <timeout> : the number of seconds to wait for varnishadm to finish
+	-w <warmup>  : the number of seconds between load and use operations
 
 	When <label> is empty or missing, the active VCL is reloaded. If the
 	reloaded VCL is a label, the underlying VCL program is reloaded, and
@@ -135,7 +135,7 @@ find_vcl_reloads() {
 		$5 ~ regex {print $5}'
 }
 
-while getopts hl:m:n:p:w:t: OPT
+while getopts hl:m:n:p:t:w: OPT
 do
 	case $OPT in
 	h) usage ;;
@@ -143,8 +143,8 @@ do
 	m) MAXIMUM=$OPTARG ;;
 	n) WORK_DIR=$OPTARG ;;
 	p) VCL_PREFIX=$OPTARG ;;
-	w) WARMUP=$OPTARG ;;
 	t) TIMEOUT="-t $OPTARG" ;;
+	w) WARMUP=$OPTARG ;;
 	*) usage "wrong usage" >&2 ;;
 	esac
 done
