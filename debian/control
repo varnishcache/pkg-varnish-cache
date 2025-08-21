@@ -9,7 +9,6 @@ Build-Depends:
  libjemalloc-dev,
  libncurses-dev,
  libpcre2-dev,
- libpcre3-dev,
  pkg-config,
  python3-docutils,
  python3-sphinx,
