@@ -8,8 +8,8 @@
 NFILES=131072
 
 # Locked shared memory (for ulimit -l)
-# Default log size is 82MB + header
-MEMLOCK=82000
+# Default is unlimited
+MEMLOCK="unlimited"
 
 # Maximum number of threads (for ulimit -u)
 NPROCS="unlimited"

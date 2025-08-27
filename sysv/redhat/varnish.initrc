@@ -54,7 +54,7 @@ start() {
 	ulimit -n ${NFILES:-131072}
 
 	# Varnish wants to lock shared memory log in memory.
-	ulimit -l ${MEMLOCK:-82000}
+	ulimit -l ${MEMLOCK:-unlimited}
 
 	# Maximum number of threads (default in CentOS is 1024, which
 	# is often too small for varnish)
