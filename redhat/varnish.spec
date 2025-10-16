@@ -23,7 +23,6 @@ BuildRequires: jemalloc-devel
 BuildRequires: libedit-devel
 BuildRequires: make
 BuildRequires: ncurses-devel
-BuildRequires: pcre-devel
 BuildRequires: pcre2-devel
 BuildRequires: pkgconfig
 BuildRequires: python3
