@@ -14,9 +14,8 @@ START=yes
 NFILES=131072
 
 # Maximum locked memory size (for ulimit -l)
-# Used for locking the shared memory log in memory.  If you increase log size,
-# you need to increase this number as well
-MEMLOCK=82000
+# Not limited by default
+MEMLOCK=unlimited
 
 DAEMON_OPTS="-a :6081 \
              -f /etc/varnish/default.vcl \
