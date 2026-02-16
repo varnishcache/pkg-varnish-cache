@@ -1,3 +1,15 @@
+=====================================
+IMPORTANT - THIS REPOSITORY HAS MOVED
+=====================================
+
+New location: https://code.vinyl-cache.org/vinyl-cache/pkg-vinyl-cache
+
+The main branch changes from ``master`` to ``main``.
+
+The last usable version on github has the ``last`` tag.
+
+Read this: https://vinyl-cache.org/organization/moving.html
+
 Packaging files for Varnish Cache
 =================================
 
