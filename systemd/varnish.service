@@ -9,11 +9,11 @@ KillMode=mixed
 # Maximum number of open files (for ulimit -n)
 LimitNOFILE=131072
 
-# Shared memory (VSM) segments are tentatively locked in memory. The
-# default value for vsl_space (or shorthand varnishd -l option) is 80MB.
-# There are other types of segments that would benefit from allowing
-# more memory to be locked.
-LimitMEMLOCK=100M
+# Shared memory (VSM) segments are tentatively locked in memory.
+#
+# Varnish will only lock memory in useful ways, so applying an external limit is
+# not helpful.
+LimitMEMLOCK=infinity
 
 # Enable this to avoid "fork failed" on reload.
 TasksMax=infinity
